@@ -360,7 +360,7 @@ public sealed partial class GunSystem : SharedGunSystem
 
         var spread = component.CurrentAngle.Theta * random;
         var angle = new Angle(direction.Theta + component.CurrentAngle.Theta * random);
-        DebugTools.Assert(Math.Abs(spread) <= maxTheta); // goob edit
+        DebugTools.Assert(Math.Abs(spread) <= Math.Max(Math.Abs(minTheta), Math.Abs(maxTheta))); // goob edit and ares-edit stats-system
         return angle;
     }
 
