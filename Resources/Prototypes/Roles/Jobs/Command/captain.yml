@@ -50,6 +50,14 @@
       - type: CommandStaff
       - type: Condemned # Goobstation - Nanotrasen owns your soul pal.
         soulOwnedNotDevil: true
+  - !type:SetStatsSpecial
+    stats:
+      Vigilance: 3
+      Robustness: 4
+      Toughness: 2
+      Cognition: 60
+      Mechanical: 1
+
 
 - type: startingGear
   id: CaptainGear

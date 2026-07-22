@@ -15,3 +15,8 @@ stat-toughness-desc = TODO
 
 stat-mechanical-name = Механика
 stat-mechanical-desc = TODO
+
+ares-hacking-verb-hack = Взломать
+ares-hacking-verb-hack-tooltip = Сбрасывание требований к доступам: ({$time}с)
+ares-hacking-popup-start = {$user} начинает взламывать интерфейс консоли...
+ares-hacking-popup-success = {$user} завершил взлом консоли. Доступ отключен.
