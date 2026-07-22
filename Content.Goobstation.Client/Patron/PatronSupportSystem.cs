@@ -17,24 +17,6 @@ public sealed class PatronSupportUIController : UIController, IOnStateEntered<Lo
 
     public void OnStateEntered(LobbyState state)
     {
-        if (_hasShownThisSession)
-            return;
-
-        var lastShown = _cfg.GetCVar(GoobCVars.PatronSupportLastShown);
-        var now = DateTime.UtcNow;
-
-        if (!string.IsNullOrEmpty(lastShown))
-        {
-            if (DateTime.TryParse(lastShown, out var lastShownDate))
-            {
-                var daysSinceLastShown = (now - lastShownDate).TotalDays;
-                if (daysSinceLastShown < _cfg.GetCVar(GoobCVars.PatronAskSupport))
-                    return;
-            }
-        }
-
-        _hasShownThisSession = true;
-        ShowSupportWindow();
     }
 
     public void OnStateExited(LobbyState state)
