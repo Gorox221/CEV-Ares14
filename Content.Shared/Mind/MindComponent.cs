@@ -44,6 +44,8 @@ public sealed partial class MindComponent : Component
     [DataField, AutoNetworkedField, Access(typeof(SharedMindSystem))]
     public NetUserId? OriginalOwnerUserId { get; set; }
 
+    internal readonly HashSet<Memory> Memories = new();
+
     /// <summary>
     ///     The first entity that this mind controlled. Used for round end information.
     ///     Might be relevant if the player has ghosted since.
@@ -88,6 +90,17 @@ public sealed partial class MindComponent : Component
     /// </summary>
     [ViewVariables, Obsolete("Use Objectives field")]
     public IEnumerable<EntityUid> AllObjectives => Objectives;
+
+    [ViewVariables]
+    public IEnumerable<Memory> AllMemories => Memories;
+
+    public void AddMemory(Memory memory)
+    {
+        if (Memories.Contains(memory))
+            return;
+
+        Memories.Add(memory);
+    }
 
     /// <summary>
     ///     Prevents user from ghosting out

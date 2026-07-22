@@ -1,0 +1,168 @@
+- type: entity
+  id: ActionBloodWormLeechHatchling
+  name: Leech Blood
+  description: Latch onto a target and continuously drain blood until interrupted.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: leech_blood
+    itemIconStyle: BigAction
+    useDelay: 0
+  - type: TargetAction
+  - type: EntityTargetAction
+    whitelist:
+      components:
+      - Body
+    canTargetSelf: false
+    event: !type:BloodWormLeechActionEvent
+      drainAmount: 28
+      startupDelay: 1
+      tickDelay: 1
+
+- type: entity
+  id: ActionBloodWormLeechJuvenile
+  categories: [ HideSpawnMenu ]
+  parent: ActionBloodWormLeechHatchling
+  components:
+  - type: EntityTargetAction
+    event: !type:BloodWormLeechActionEvent
+      drainAmount: 42
+      startupDelay: 1
+      tickDelay: 1
+
+- type: entity
+  id: ActionBloodWormLeechAdult
+  categories: [ HideSpawnMenu ]
+  parent: ActionBloodWormLeechHatchling
+  components:
+  - type: EntityTargetAction
+    event: !type:BloodWormLeechActionEvent
+      drainAmount: 56
+      startupDelay: 1
+      tickDelay: 1
+
+- type: entity
+  id: ActionBloodWormInvade
+  name: Invade Corpse
+  description: Enter a dead humanoid body and take control.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: invade_corpse
+    itemIconStyle: BigAction
+    useDelay: 3
+  - type: TargetAction
+  - type: EntityTargetAction
+    whitelist:
+      components:
+      - Body
+    canTargetSelf: false
+    event: !type:BloodWormInvadeActionEvent
+      delay: 5
+
+- type: entity
+  id: ActionBloodWormSpitJuvenile
+  name: Spit Blood
+  description: Spit caustic blood at a target, spending stored blood.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: spit_blood
+    itemIconStyle: BigAction
+    useDelay: 3
+  - type: TargetAction
+    checkCanAccess: false
+    range: 0
+  - type: WorldTargetAction
+    event: !type:BloodWormSpitActionEvent
+      bloodCost: 6
+
+- type: entity
+  id: ActionBloodWormSpitAdult
+  categories: [ HideSpawnMenu ]
+  parent: ActionBloodWormSpitJuvenile
+  components:
+  - type: Action
+    useDelay: 2
+  - type: WorldTargetAction
+    event: !type:BloodWormSpitActionEvent
+      bloodCost: 7
+
+- type: entity
+  id: ActionBloodWormMature
+  name: Mature
+  description: Instantly form a cocoon and hatch into the next stage after 30 seconds.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: mature_juveline
+    itemIconStyle: BigAction
+    useDelay: 1
+  - type: InstantAction
+    event: !type:BloodWormMatureActionEvent
+      delay: 30
+
+- type: entity
+  id: ActionBloodWormLeaveHost
+  name: Leave Host
+  description: Forcefully tear yourself out of the host body.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: leave_host
+    itemIconStyle: BigAction
+    checkCanInteract: false
+    checkConsciousness: false
+    useDelay: 1
+  - type: InstantAction
+    event: !type:BloodWormLeaveHostActionEvent
+      delay: 3
+
+- type: entity
+  id: ActionBloodWormInject
+  name: Heal Host
+  description: Spend absorbed blood to heal the host body for 65 damage.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: inject_blood
+    itemIconStyle: BigAction
+    useDelay: 30
+    checkCanInteract: false
+    checkConsciousness: false
+  - type: InstantAction
+    event: !type:BloodWormInjectActionEvent
+      bloodCost: 65
+      healAmount: 65
+      bloodHealAmount: 0
+
+- type: entity
+  id: ActionBloodWormReviveHost
+  name: Revive Host
+  description: Return the host body to life and restore up to 150 total damage.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    icon:
+      sprite: _Ganimed/Interface/Actions/blood_worm.rsi
+      state: revive_host
+    itemIconStyle: BigAction
+    useDelay: 300
+    checkCanInteract: false
+    checkConsciousness: false
+  - type: InstantAction
+    event: !type:BloodWormReviveHostActionEvent
+      bloodCost: 0
+      delay: 6

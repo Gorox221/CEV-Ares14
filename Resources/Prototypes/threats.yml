@@ -5,6 +5,7 @@
   weights:
     Dragon: 1
     # Revenant: 1 # Goob - Removed in favor of LoneOperative
+    BloodWorm: 1 # Ganimed-Bloodworm-Add
     SlaughterDemon: 1 # Goobstation begin
     # Wraith: 1
     LoneOperative: 1
@@ -26,3 +27,10 @@
   id: Colossus
   announcement: terror-colossus
   rule: ColossusSpawn # DeltaV end
+
+# Ganimed-Bloodworm-Add-Start
+- type: ninjaHackingThreat
+  id: BloodWorm
+  announcement: terror-blood-worm
+  rule: BloodWormSpawn
+# Ganimed-Bloodworm-Add-End

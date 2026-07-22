@@ -18,6 +18,7 @@ using Content.Shared.Movement.Systems;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.Slippery;
+using Content.Shared.Stains;
 using Content.Shared.StepTrigger.Components;
 using Content.Shared.StepTrigger.Systems;
 using Robust.Shared.Audio.Systems;
@@ -68,6 +69,7 @@ public abstract partial class SharedPuddleSystem : EntitySystem
         SubscribeLocalEvent<PuddleComponent, AnchorStateChangedEvent>(OnAnchorChanged);
         SubscribeLocalEvent<PuddleComponent, SolutionContainerChangedEvent>(OnSolutionUpdate);
         SubscribeLocalEvent<PuddleComponent, GetFootstepSoundEvent>(OnGetFootstepSound);
+        SubscribeLocalEvent<PuddleComponent, GetStainableSolutionEvent>(OnGetStainableSolution);
         SubscribeLocalEvent<PuddleComponent, ExaminedEvent>(HandlePuddleExamined);
         SubscribeLocalEvent<PuddleComponent, EntRemovedFromContainerMessage>(OnEntRemoved);
 
@@ -149,6 +151,18 @@ public abstract partial class SharedPuddleSystem : EntitySystem
         {
             args.Sound = proto.FootstepSound;
         }
+    }
+
+    private void OnGetStainableSolution(Entity<PuddleComponent> entity, ref GetStainableSolutionEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        if (!_solutionContainerSystem.ResolveSolution(entity.Owner, entity.Comp.SolutionName, ref entity.Comp.Solution, out var solution))
+            return;
+
+        args.Solution = solution;
+        args.Handled = true;
     }
 
     private void HandlePuddleExamined(Entity<PuddleComponent> entity, ref ExaminedEvent args)

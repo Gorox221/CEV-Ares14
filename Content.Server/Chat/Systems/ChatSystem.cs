@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Content.Server._Goobstation.Wizard.Systems;
+using Content.Server._Xenon.Atmos;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.Effects;
@@ -85,6 +86,7 @@ public sealed partial class ChatSystem : SharedChatSystem
     [Dependency] private readonly ScryingOrbSystem _scrying = default!; // Goobstation Change
     [Dependency] private readonly CollectiveMindUpdateSystem _collectiveMind = default!; // Goobstation - Starlight collective mind port
     [Dependency] private readonly LanguageSystem _language = default!; // Einstein Engines - Language
+    [Dependency] private readonly VacuumPropagationSystem _vacuum = default!; // Xenon
 
     public const int VoiceRange = 10; // how far voice goes in world units
     public const int WhisperClearRange = 2; // how far whisper goes while still being understandable, in world units
@@ -717,6 +719,16 @@ public sealed partial class ChatSystem : SharedChatSystem
                 continue; // block blind people from seeing subtle sign language gestures
             // Goob edit end
 
+            // Xenon start - vacuum propagation (Whisper only)
+            if (!data.Observer)
+            {
+                var sourceInVac = _vacuum.IsInVacuum(source);
+                if (sourceInVac && listener != source
+                    || !sourceInVac && _vacuum.IsInVacuum(listener))
+                    continue;
+            }
+            // Xenon end
+
             // Einstein Engines - Language begin
             var canUnderstandLanguage = _language.CanUnderstand(listener, language.ID);
             // How the entity perceives the message depends on whether it can understand its language
@@ -986,6 +998,16 @@ public sealed partial class ChatSystem : SharedChatSystem
                 && ev.Cancelled)
                 continue;
             //Goob edit end
+
+            // Xenon start - vacuum propagation (Local only)
+            if (channel == ChatChannel.Local && !data.Observer)
+            {
+                var sourceInVac = _vacuum.IsInVacuum(source);
+                if (sourceInVac && listener != source
+                    || !sourceInVac && _vacuum.IsInVacuum(listener))
+                    continue;
+            }
+            // Xenon end
 
             // If the channel does not support languages, or the entity can understand the message, send the original message, otherwise send the obfuscated version
             if (channel == ChatChannel.LOOC || channel == ChatChannel.Emotes || _language.CanUnderstand(listener, language.ID))

@@ -1,4 +1,6 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 YaraaraY <158123176+YaraaraY@users.noreply.github.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later and MIT
 
 using Content.Shared.Administration.Logs;
 using Content.Shared.Damage.Systems;
@@ -119,18 +121,22 @@ public sealed class SlipperySystem : EntitySystem
                 && _status.CanAddStatusEffect(toSlip, SharedStunSystem.StunId); //Should be KnockedDown instead?
     }
 
-    public void TrySlip(EntityUid uid, SlipperyComponent component, EntityUid other, bool requiresContact = true, bool predicted = true)
+    public void TrySlip(EntityUid uid, SlipperyComponent component, EntityUid other, bool requiresContact = true, bool predicted = true, bool force = false)
     {
         var knockedDown = _knockedDownQuery.HasComp(other);
-        if (knockedDown && !component.SlipData.SuperSlippery)
+        if (knockedDown && !component.SlipData.SuperSlippery && !force)
             return;
-        var attemptEv = new SlipAttemptEvent(uid);
-        RaiseLocalEvent(other, attemptEv);
-        if (attemptEv.SlowOverSlippery)
-            _speedModifier.AddModifiedEntity(other);
 
-        if (attemptEv.NoSlip)
-            return;
+        if (!force)
+        {
+            var attemptEv = new SlipAttemptEvent(uid);
+            RaiseLocalEvent(other, attemptEv);
+            if (attemptEv.SlowOverSlippery)
+                _speedModifier.AddModifiedEntity(other);
+
+            if (attemptEv.NoSlip)
+                return;
+        }
 
         var attemptCausingEv = new SlipCausingAttemptEvent();
         RaiseLocalEvent(uid, ref attemptCausingEv);
@@ -209,3 +215,20 @@ public record struct SlipCausingAttemptEvent (bool Cancelled);
 /// <param name="Slipped">The entity being slipped</param>
 [ByRefEvent]
 public readonly record struct SlipEvent(EntityUid Slipped);
+
+/// Raised on the entity that got slipped
+/// <param name="Slipper">The entity being slipped</param>
+/// <param name="SuperSlippery">Was whatever slipped us super slippery</param>
+public sealed class SlippedEvent : EntityEventArgs, IInventoryRelayEvent
+{
+    public SlotFlags TargetSlots { get; } = SlotFlags.WITHOUT_POCKET;
+
+    public EntityUid Slipper;
+    public bool SuperSlippery;
+
+    public SlippedEvent(EntityUid slipper, bool superSlippery)
+    {
+        Slipper = slipper;
+        SuperSlippery = superSlippery;
+    }
+}

@@ -15,8 +15,6 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
-using Robust.Shared.Configuration;
-using Content.Shared.CCVar;
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -29,12 +27,10 @@ namespace Content.Server.Atmos.EntitySystems
         [Dependency] private readonly UserInterfaceSystem _ui = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly ThrowingSystem _throwing = default!;
-        [Dependency] private readonly IConfigurationManager _cfg = default!;
 
         private const float TimerDelay = 0.5f;
         private float _timer = 0f;
         private const float MinimumSoundValvePressure = 10.0f;
-        private float _maxExplosionRange;
 
         public override void Initialize()
         {
@@ -42,12 +38,6 @@ namespace Content.Server.Atmos.EntitySystems
             SubscribeLocalEvent<GasTankComponent, EntParentChangedMessage>(OnParentChange);
             SubscribeLocalEvent<GasTankComponent, GasAnalyzerScanEvent>(OnAnalyzed);
             SubscribeLocalEvent<GasTankComponent, PriceCalculationEvent>(OnGasTankPrice);
-            Subs.CVar(_cfg, CCVars.AtmosTankFragment, UpdateMaxRange, true);
-        }
-
-        private void UpdateMaxRange(float value)
-        {
-            _maxExplosionRange = value;
         }
 
         public override void UpdateUserInterface(Entity<GasTankComponent> ent)
@@ -62,9 +52,6 @@ namespace Content.Server.Atmos.EntitySystems
 
         private void OnParentChange(EntityUid uid, GasTankComponent component, ref EntParentChangedMessage args)
         {
-            // When an item is moved from hands -> pockets, the container removal briefly dumps the item on the floor.
-            // So this is a shitty fix, where the parent check is just delayed. But this really needs to get fixed
-            // properly at some point.
             component.CheckUser = true;
         }
 
@@ -166,20 +153,18 @@ namespace Content.Server.Atmos.EntitySystems
 
             var pressure = component.Air.Pressure;
 
-            if (pressure > component.TankFragmentPressure && _maxExplosionRange > 0)
+            if (pressure > component.TankFragmentPressure) // Xenon-edit
             {
-                // Give the gas a chance to build up more pressure.
+                // Xenon-edit: give the gas a chance to build up more pressure through reacting
                 for (var i = 0; i < 3; i++)
                 {
                     _atmosphereSystem.React(component.Air, component);
                 }
 
                 pressure = component.Air.Pressure;
-                var range = MathF.Sqrt((pressure - component.TankFragmentPressure) / component.TankFragmentScale);
 
-                // Let's cap the explosion, yeah?
-                // !1984
-                range = Math.Min(Math.Min(range, GasTankComponent.MaxExplosionRange), _maxExplosionRange);
+                // Xenon-edit: linear formula, no sqrt, no capping
+                var range = (pressure - component.TankFragmentPressure) / component.TankFragmentScale;
 
                 _explosions.TriggerExplosive(owner, radius: range);
 
@@ -227,9 +212,6 @@ namespace Content.Server.Atmos.EntitySystems
                 component.Integrity++;
         }
 
-        /// <summary>
-        /// Returns the gas mixture for the gas analyzer
-        /// </summary>
         private void OnAnalyzed(EntityUid uid, GasTankComponent component, GasAnalyzerScanEvent args)
         {
             args.GasMixtures ??= new List<(string, GasMixture?)>();

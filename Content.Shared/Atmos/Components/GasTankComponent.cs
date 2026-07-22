@@ -7,7 +7,7 @@ namespace Content.Shared.Atmos.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 public sealed partial class GasTankComponent : Component, IGasMixtureHolder
 {
-    public const float MaxExplosionRange = 26f;
+    public const float MaxExplosionRange = 1000f; // Xenon-edit
     private const float DefaultLowPressure = 0f;
     private const float DefaultOutputPressure = Atmospherics.OneAtmosphere;
 
@@ -91,7 +91,7 @@ public sealed partial class GasTankComponent : Component, IGasMixtureHolder
     ///     Increases explosion for each scale kPa above threshold.
     /// </summary>
     [DataField]
-    public float TankFragmentScale = 2.25f * Atmospherics.OneAtmosphere;
+    public float TankFragmentScale = 10f * Atmospherics.OneAtmosphere; // Xenon-edit
 
     [DataField]
     public EntProtoId ToggleAction = "ActionToggleInternals";

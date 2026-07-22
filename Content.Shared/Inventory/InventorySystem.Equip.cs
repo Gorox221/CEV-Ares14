@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared._Xenon.Atmos;
 using Content.Shared.Armor;
 using Content.Shared.Clothing.Components;
 using Content.Shared.DoAfter;
@@ -186,7 +187,10 @@ public abstract partial class InventorySystem
 
         if (!silent && clothing != null)
         {
-            _audio.PlayPredicted(clothing.EquipSound, target, actor);
+            var soundEv = new SoundVacuumAttemptEvent(target, actor);
+            RaiseLocalEvent(soundEv);
+            if (!soundEv.Cancelled)
+                _audio.PlayPredicted(clothing.EquipSound, target, actor);
         }
 
         // If new gloves are equipped, trigger OnContactInteraction for held items
@@ -477,7 +481,10 @@ public abstract partial class InventorySystem
 
         if (!silent && Resolve(removedItem.Value, ref clothing, false) && clothing.UnequipSound != null)
         {
-            _audio.PlayPredicted(clothing.UnequipSound, target, actor);
+            var soundEv = new SoundVacuumAttemptEvent(target, actor);
+            RaiseLocalEvent(soundEv);
+            if (!soundEv.Cancelled)
+                _audio.PlayPredicted(clothing.UnequipSound, target, actor);
         }
 
         // If gloves are unequipped, OnContactInteraction should trigger for held items

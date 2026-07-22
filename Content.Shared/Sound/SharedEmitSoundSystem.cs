@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Xenon.Atmos;
 using Content.Shared.Audio;
 using Content.Shared.Hands;
 using Content.Shared.Interaction;
@@ -147,6 +148,16 @@ public abstract class SharedEmitSoundSystem : EntitySystem
     {
         if (component.Sound == null)
             return;
+
+        // Xenon start - vacuum propagation
+        if (_netMan.IsServer)
+        {
+            var ev = new SoundVacuumAttemptEvent(uid, user);
+            RaiseLocalEvent(ev);
+            if (ev.Cancelled)
+                return;
+        }
+        // Xenon end - vacuum propagation
 
         if (component.Positional)
         {

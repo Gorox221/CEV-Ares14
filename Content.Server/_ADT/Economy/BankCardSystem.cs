@@ -1,0 +1,309 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Content.Server.Access.Systems;
+using Content.Server.Cargo.Components;
+using Content.Server.Cargo.Systems;
+using Content.Server.CartridgeLoader;
+using Content.Server.Chat.Systems;
+using Content.Server.GameTicking;
+using Content.Server.Roles.Jobs;
+using Content.Server.Station.Systems;
+using Content.Shared._ADT.CCVar;
+using Content.Shared._ADT.Economy;
+using Content.Shared.Cargo.Components;
+using Content.Shared.Cargo.Prototypes;
+using Content.Shared.GameTicking;
+using Content.Shared.Inventory;
+using Content.Shared.Mind;
+using Content.Shared.Mind.Components;
+using Content.Shared.Mobs.Systems;
+using Robust.Server.Player;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
+using Robust.Shared.Timing;
+using Robust.Shared.Configuration;
+
+namespace Content.Server._ADT.Economy;
+
+public sealed class BankCardSystem : EntitySystem
+{
+    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
+    [Dependency] private readonly IPrototypeManager _protoMan = default!;
+    [Dependency] private readonly IdCardSystem _idCardSystem = default!;
+    [Dependency] private readonly StationSystem _station = default!;
+    [Dependency] private readonly CargoSystem _cargo = default!;
+    [Dependency] private readonly ChatSystem _chatSystem = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly InventorySystem _inventorySystem = default!;
+    [Dependency] private readonly BankCartridgeSystem _bankCartridge = default!;
+    [Dependency] private readonly JobSystem _job = default!;
+    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly CartridgeLoaderSystem _cartridgeLoader = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IConfigurationManager _configManager = default!;
+
+    private const int SalaryDelay = 2700;
+
+    private SalaryPrototype _salaries = default!;
+    private readonly List<BankAccount> _accounts = new();
+    private float _salaryTimer;
+
+    public override void Initialize()
+    {
+        _salaries = _protoMan.Index<SalaryPrototype>("Salaries");
+
+        SubscribeLocalEvent<BankCardComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
+        SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawned);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        if (_gameTicker.RunLevel != GameRunLevel.InRound)
+        {
+            _salaryTimer = 0f;
+            return;
+        }
+
+        _salaryTimer += frameTime;
+
+        if (_salaryTimer <= SalaryDelay)
+            return;
+
+        _salaryTimer = 0f;
+        PaySalary();
+    }
+
+    private void PaySalary()
+    {
+        if (!_configManager.GetCVar(EconomyCCVars.PaySalary))
+            return;
+
+        foreach (var account in _accounts)
+        {
+            var mind = account.Mind;
+            if (mind is not { Comp.UserId: not null, Comp.CurrentEntity: not null })
+                continue;
+
+            if (!_playerManager.TryGetSessionById(mind.Value.Comp.UserId!.Value, out _))
+                continue;
+
+            if (_mobState.IsDead(mind.Value.Comp.CurrentEntity!.Value))
+                continue;
+
+            var salary = GetSalary(mind.Value.Owner);
+            if (salary > 0)
+                TryChangeBalance(account.AccountId, salary);
+        }
+
+        _chatSystem.DispatchGlobalAnnouncement(Loc.GetString("salary-pay-announcement"),
+            colorOverride: Color.FromHex("#18abf5"));
+    }
+
+    private int GetSalary(EntityUid? mindId)
+    {
+        if (!_job.MindTryGetJob(mindId, out var job) || !_salaries.Salaries.TryGetValue(job.ID, out var salary))
+            return 0;
+
+        return salary;
+    }
+
+    private void OnMapInit(EntityUid uid, BankCardComponent component, MapInitEvent args)
+    {
+        if (component.CommandBudgetCard)
+        {
+            if (component.CommandBudgetType != null)
+            {
+                var existingAccount = _accounts.FirstOrDefault(acc =>
+                    acc.CommandBudgetAccount &&
+                    acc.AccountPrototype == component.CommandBudgetType);
+
+                if (existingAccount != null)
+                {
+                    component.AccountId = existingAccount.AccountId;
+                    return;
+                }
+
+                var newAccount = CreateDepartmentAccount(component.CommandBudgetType.Value);
+                component.AccountId = newAccount.AccountId;
+                return;
+            }
+        }
+
+        if (component.AccountId.HasValue)
+        {
+            CreateAccount(component.AccountId.Value, component.StartingBalance);
+            return;
+        }
+
+        var playerAccount = CreateAccount(default, component.StartingBalance);
+        component.AccountId = playerAccount.AccountId;
+    }
+
+    private BankAccount CreateDepartmentAccount(ProtoId<CargoAccountPrototype> departmentType)
+    {
+        int accountNumber;
+        do
+        {
+            accountNumber = _random.Next(100000, 999999);
+        } while (AccountExist(accountNumber));
+
+        var account = new BankAccount(accountNumber, 0, _random);
+        account.AccountPrototype = departmentType;
+        account.CommandBudgetAccount = true;
+        account.Name = Loc.GetString($"command-budget-{departmentType}");
+
+        _accounts.Add(account);
+        return account;
+    }
+
+    private void OnRoundRestart(RoundRestartCleanupEvent ev)
+    {
+        _accounts.Clear();
+    }
+
+    private void OnPlayerSpawned(PlayerSpawnCompleteEvent ev)
+    {
+        if (_idCardSystem.TryFindIdCard(ev.Mob, out var id) && TryComp<MindContainerComponent>(ev.Mob, out var mind))
+        {
+            var cardEntity = id.Owner;
+            var bankCardComponent = EnsureComp<BankCardComponent>(cardEntity);
+
+            if (!bankCardComponent.AccountId.HasValue || !TryGetAccount(bankCardComponent.AccountId.Value, out var bankAccount))
+                return;
+
+            if (!TryComp(mind.Mind, out MindComponent? mindComponent))
+                return;
+
+            mindComponent.AddMemory(new Memory("PIN", bankAccount.AccountPin.ToString()));
+            mindComponent.AddMemory(new Memory("character-info-memories-account-number", bankAccount.AccountId.ToString()));
+            bankAccount.Balance = GetSalary(mind.Mind) + 100;
+            bankAccount.Mind = (mind.Mind.Value, mindComponent);
+            bankAccount.Name = Name(ev.Mob);
+
+            if (!_inventorySystem.TryGetSlotEntity(ev.Mob, "id", out var pdaUid))
+                return;
+
+            BankCartridgeComponent? comp = null;
+
+            var programs = _cartridgeLoader.GetInstalled(pdaUid.Value);
+
+            var program = programs.ToList().Find(program => TryComp(program, out comp));
+            if (comp == null)
+                return;
+
+            bankAccount.CartridgeUid = program;
+            comp.AccountId = bankAccount.AccountId;
+        }
+    }
+
+    public BankAccount CreateAccount(int accountId = default, int startingBalance = 0)
+    {
+        if (TryGetAccount(accountId, out var acc))
+            return acc;
+
+        BankAccount account;
+        if (accountId == default)
+        {
+            int accountNumber;
+
+            do
+            {
+                accountNumber = _random.Next(100000, 999999);
+            } while (AccountExist(accountNumber));
+
+            account = new BankAccount(accountNumber, startingBalance, _random);
+        }
+        else
+        {
+            account = new BankAccount(accountId, startingBalance, _random);
+        }
+
+        _accounts.Add(account);
+
+        return account;
+    }
+
+    public bool AccountExist(int accountId)
+    {
+        return _accounts.Any(x => x.AccountId == accountId);
+    }
+
+    public bool TryGetAccount(int accountId, [NotNullWhen(true)] out BankAccount? account)
+    {
+        account = _accounts.FirstOrDefault(x => x.AccountId == accountId);
+        return account != null;
+    }
+
+    public int GetBalance(int accountId)
+    {
+        if (!TryGetAccount(accountId, out var account))
+            return 0;
+
+        if (account.CommandBudgetAccount && account.AccountPrototype != null)
+        {
+            var query = EntityQueryEnumerator<StationBankAccountComponent>();
+            while (query.MoveNext(out var stationUid, out var stationBank))
+            {
+                StationBankAccountComponent? nullableBank = stationBank;
+                return _cargo.GetBalanceFromAccount((stationUid, nullableBank), account.AccountPrototype.Value);
+            }
+            return 0;
+        }
+
+        return account.Balance;
+    }
+
+    public bool TryChangeBalance(int accountId, int amount)
+    {
+        if (!TryGetAccount(accountId, out var account))
+            return false;
+
+        if (account.CommandBudgetAccount && account.AccountPrototype != null)
+        {
+            var query = EntityQueryEnumerator<StationBankAccountComponent>();
+            while (query.MoveNext(out var stationUid, out var stationBank))
+            {
+                StationBankAccountComponent? nullableBank = stationBank;
+                var currentBalance = _cargo.GetBalanceFromAccount((stationUid, nullableBank), account.AccountPrototype.Value);
+                if (currentBalance + amount < 0)
+                    return false;
+
+                _cargo.UpdateBankAccount((stationUid, nullableBank), amount, account.AccountPrototype.Value);
+                return true;
+            }
+            return false;
+        }
+
+        if (account.Balance + amount < 0)
+            return false;
+
+        account.Balance += amount;
+
+        if (account.History == null)
+            account.History = new List<TransactionsHistory>();
+
+        account.History.Add(new TransactionsHistory(
+            amount,
+            _timing.CurTime,
+            amount > 0 ? Loc.GetString("bank-deposit") : Loc.GetString("bank-withdrawal"),
+            Loc.GetString("bank-system"),
+            null
+        ));
+
+        if (account.CartridgeUid != null)
+            _bankCartridge.UpdateUiState(account.CartridgeUid.Value);
+
+        return true;
+    }
+
+    public BankAccount? FindDepartmentAccount(ProtoId<CargoAccountPrototype> departmentType)
+    {
+        return _accounts.FirstOrDefault(acc =>
+            acc.CommandBudgetAccount &&
+            acc.AccountPrototype == departmentType);
+    }
+}

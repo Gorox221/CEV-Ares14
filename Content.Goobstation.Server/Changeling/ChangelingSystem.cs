@@ -38,6 +38,7 @@ using Content.Server.Store.Systems;
 using Content.Server.Stunnable;
 using Content.Server.Zombies;
 using Content.Shared._Goobstation.Weapons.AmmoSelector;
+using Content.Shared._ADT.CharecterFlavor; // ADT-Flavor
 using Content.Shared.Actions;
 using Content.Shared.Alert;
 using Content.Shared.Camera;
@@ -555,6 +556,14 @@ public sealed partial class ChangelingSystem : SharedChangelingSystem
         if (fingerprint.Fingerprint != null)
             data.Fingerprint = fingerprint.Fingerprint;
 
+        // ADT-Flavor start
+        if (TryComp<CharacterFlavorComponent>(target, out var flavor))
+        {
+            data.FlavorText = flavor.FlavorText;
+            data.HeadshotUrl = flavor.HeadshotUrl;
+        }
+        // ADT-Flavor end
+
         if (countObjective
         && _mind.TryGetMind(uid, out var mindId, out var mind)
         && _mind.TryGetObjectiveComp<StealDNAConditionComponent>(mindId, out var objective, mind)
@@ -623,6 +632,18 @@ public sealed partial class ChangelingSystem : SharedChangelingSystem
             Comp<DnaComponent>(newEnt).DNA = data.DNA;
             _humanoid.CloneAppearance(data.Appearance.Owner, newEnt);
             _metaData.SetEntityName(newEnt, data.Name);
+
+            // ADT-Flavor start
+            if (data.FlavorText != null || data.HeadshotUrl != null)
+            {
+                var flavorComp = EnsureComp<CharacterFlavorComponent>(newEnt);
+                if (data.FlavorText != null)
+                    flavorComp.FlavorText = data.FlavorText;
+                if (data.HeadshotUrl != null)
+                    flavorComp.HeadshotUrl = data.HeadshotUrl;
+            }
+            // ADT-Flavor end
+
             var message = Loc.GetString("changeling-transform-finish", ("target", data.Name));
             _popup.PopupEntity(message, newEnt, newEnt);
         }

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Client._ADT.VendingMachines.UI;
 using Content.Client.UserInterface.Controls;
 using Content.Client.VendingMachines.UI;
 using Content.Shared.VendingMachines;
@@ -12,10 +13,12 @@ namespace Content.Client.VendingMachines
     public sealed class VendingMachineBoundUserInterface : BoundUserInterface
     {
         [ViewVariables]
-        private VendingMachineMenu? _menu;
+        private FancyVendingMachineMenu? _menu;
 
         [ViewVariables]
         private List<VendingMachineInventoryEntry> _cachedInventory = new();
+
+        private int _lastPlayerBalance;
 
         public VendingMachineBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
         {
@@ -25,10 +28,42 @@ namespace Content.Client.VendingMachines
         {
             base.Open();
 
-            _menu = this.CreateWindowCenteredLeft<VendingMachineMenu>();
+            _menu = new();
+            var component = EntMan.GetComponent<VendingMachineComponent>(Owner);
+            var system = EntMan.System<VendingMachineSystem>();
+            _cachedInventory = system.GetAllInventory(Owner, component);
             _menu.Title = EntMan.GetComponent<MetaDataComponent>(Owner).EntityName;
+
+            _menu.OnClose += Close;
             _menu.OnItemSelected += OnItemSelected;
-            Refresh();
+            _menu.OnWithdraw += () => SendMessage(new VendingMachineWithdrawMessage());
+            _menu.Populate(Owner, _cachedInventory, component.PriceMultiplier, component.Credits, 0);
+            SendMessage(new VendingMachineRequestUpdateMessage());
+
+            _menu.OpenCentered();
+        }
+
+        protected override void UpdateState(BoundUserInterfaceState state)
+        {
+            base.UpdateState(state);
+
+            if (state is not VendingMachineUpdateState newState || _menu == null)
+                return;
+
+            var system = EntMan.System<VendingMachineSystem>();
+            _cachedInventory = system.GetAllInventory(Owner);
+            _lastPlayerBalance = newState.PlayerBalance;
+            _menu.Populate(Owner, _cachedInventory, newState.PriceMultiplier, newState.Credits, newState.PlayerBalance);
+        }
+
+        private void OnItemSelected(VendingMachineInventoryEntry entry)
+        {
+            // Free items can be predicted (no server validation needed)
+            // Paid items are not predicted to avoid rollback on insufficient funds
+            if (entry.Price <= 0)
+                SendPredictedMessage(new VendingMachineEjectCountMessage(entry, 1));
+            else
+                SendMessage(new VendingMachineEjectCountMessage(entry, 1));
         }
 
         public void Refresh()
@@ -38,7 +73,7 @@ namespace Content.Client.VendingMachines
             var system = EntMan.System<VendingMachineSystem>();
             _cachedInventory = system.GetAllInventory(Owner);
 
-            _menu?.Populate(_cachedInventory, enabled);
+            _menu?.Populate(Owner, _cachedInventory, bendy?.PriceMultiplier ?? 1, bendy?.Credits ?? 0, _lastPlayerBalance);
         }
 
         public void UpdateAmounts()
@@ -47,26 +82,7 @@ namespace Content.Client.VendingMachines
 
             var system = EntMan.System<VendingMachineSystem>();
             _cachedInventory = system.GetAllInventory(Owner);
-            _menu?.UpdateAmounts(_cachedInventory, enabled);
-        }
-
-        private void OnItemSelected(GUIBoundKeyEventArgs args, ListData data)
-        {
-            if (args.Function != EngineKeyFunctions.UIClick)
-                return;
-
-            if (data is not VendorItemsListData { ItemIndex: var itemIndex })
-                return;
-
-            if (_cachedInventory.Count == 0)
-                return;
-
-            var selectedItem = _cachedInventory.ElementAtOrDefault(itemIndex);
-
-            if (selectedItem == null)
-                return;
-
-            SendPredictedMessage(new VendingMachineEjectMessage(selectedItem.Type, selectedItem.ID));
+            _menu?.Populate(Owner, _cachedInventory, bendy?.PriceMultiplier ?? 1, bendy?.Credits ?? 0, _lastPlayerBalance);
         }
 
         protected override void Dispose(bool disposing)

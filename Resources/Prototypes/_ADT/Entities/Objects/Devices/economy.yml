@@ -1,0 +1,167 @@
+- type: entity
+  parent: BaseItem
+  id: BaseDepartmentBudgetCard
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: BankCard
+      commandBudgetCard: true
+    - type: Sprite
+      sprite: _ADT/Objects/Misc/cards.rsi
+      scale: 0.8, 0.8
+      state: budgetcard
+    - type: Item
+      storedRotation: 90
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: CommandBudgetCard
+  name: budget card
+  suffix: Station
+  components:
+    - type: Sprite
+      state: budgetcard
+    - type: BankCard
+      commandBudgetType: Cargo
+
+- type: entity
+  parent: Paper
+  id: CommandBudgetPinPaper
+  name: budget pin
+  suffix: Station
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Cargo
+  - type: Paper
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: ServiceBudgetCard
+  name: budget card
+  suffix: Service
+  components:
+    - type: Sprite
+      state: srv_budget
+    - type: BankCard
+      commandBudgetType: Service
+
+- type: entity
+  parent: Paper
+  id: ServiceBudgetPinPaper
+  name: budget pin
+  suffix: Service
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Service
+  - type: Paper
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: EngineeringBudgetCard
+  name: budget card
+  suffix: Engineering
+  components:
+    - type: Sprite
+      state: eng_budget
+    - type: BankCard
+      commandBudgetType: Engineering
+
+- type: entity
+  parent: Paper
+  id: EngineeringBudgetPinPaper
+  name: budget pin
+  suffix: Engineering
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Engineering
+  - type: Paper
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: MedicalBudgetCard
+  name: budget card
+  suffix: Medical
+  components:
+    - type: Sprite
+      state: med_budget
+    - type: BankCard
+      commandBudgetType: Medical
+
+- type: entity
+  parent: Paper
+  id: MedicalBudgetPinPaper
+  name: budget pin
+  suffix: Medical
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Medical
+  - type: Paper
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: ScienceBudgetCard
+  name: budget card
+  suffix: Science
+  components:
+    - type: Sprite
+      state: sci_budget
+    - type: BankCard
+      commandBudgetType: Science
+
+- type: entity
+  parent: Paper
+  id: ScienceBudgetPinPaper
+  name: budget pin
+  suffix: Science
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Science
+  - type: Paper
+
+- type: entity
+  parent: BaseDepartmentBudgetCard
+  id: SecurityBudgetCard
+  name: budget card
+  suffix: Security
+  components:
+    - type: Sprite
+      state: sec_budget
+    - type: BankCard
+      commandBudgetType: Security
+
+- type: entity
+  parent: Paper
+  id: SecurityBudgetPinPaper
+  name: budget pin
+  suffix: Security
+  components:
+  - type: CommandBudgetPinPaper
+    commandBudgetType: Security
+  - type: Paper
+
+- type: entity
+  parent: BaseItem
+  id: Eftpos
+  name: EFTPOS
+  description: Swipe your ID card to make purchases electronically.
+  components:
+    - type: Sprite
+      sprite: _ADT/Objects/Devices/eftpos.rsi
+      state:
+      layers:
+        - state: eftpos
+        - state: eftpos-screen
+          shader: unshaded
+      netsync: false
+    - type: Eftpos
+    - type: ActivatableUI
+      key: enum.EftposKey.Key
+      singleUser: true
+    - type: UserInterface
+      interfaces:
+        enum.EftposKey.Key:
+          type: EftposBui
+    - type: Anchorable
+    - type: Clothing
+      quickEquip: false
+      slots:
+      - Belt

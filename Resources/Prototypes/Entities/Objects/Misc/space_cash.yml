@@ -94,8 +94,14 @@
   - type: Tag       # Goob Balloon Edit
     tags:           # Just so it can be picked up by ore bag
     - Ore
-    - Paper         # Moth food
+    - Paper    
+    - SpaceCash     # Moth food
   # </Goobstation>
+  # ADT-Economy start
+  - type: Currency
+    price:
+      SpaceCash: 1
+  # ADT-Economy end
 
 - type: material
   id: Credit

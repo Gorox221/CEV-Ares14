@@ -208,10 +208,4 @@
   metabolisms:
     Poison:
       metabolismRate: 2.5
-      effects:
-      - !type:Emote
-        emote: Fart
-        showInChat: true
-        showInGuidebook: true
-        force: true
-        probability: 1
+      effects: []

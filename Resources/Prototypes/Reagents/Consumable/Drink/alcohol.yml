@@ -9,6 +9,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: absinthe
   color: "#33EE00"
+  flammability: 2 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/absintheglass.rsi
     state: icon_empty
@@ -88,6 +89,7 @@
   physicalDesc: reagent-physical-desc-aromatic
   flavor: bluecuracao
   color: "#0099FF"
+  flammability: 1 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/curacaoglass.rsi
     state: icon_empty
@@ -111,6 +113,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: cognac
   color: "#AB3C05"
+  flammability: 1 # Funky change
   recognizable: true
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/cognacglass.rsi
@@ -135,6 +138,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: rum
   color: "#664300"
+  flammability: 1 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/rumglass.rsi
     state: icon_empty
@@ -158,6 +162,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: alcohol
   color: "#b05b3c"
+  flammability: 2 # Funky change
   boilingPoint: 78.2
   meltingPoint: -114.1
   metabolisms:
@@ -255,6 +260,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: gin
   color: "#664300"
+  flammability: 1 # Funky change
   recognizable: true
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/ginvodkaglass.rsi
@@ -324,6 +330,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: bitter
   color: "#990066"
+  flammability: 3 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/pwineglass.rsi
     state: icon_empty
@@ -358,6 +365,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: rum
   color: "#f09f42"
+  flammability: 1 # Funky change
   recognizable: true
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/rumglass.rsi
@@ -382,6 +390,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: sake
   color: "#DDDDDD"
+  flammability: 1 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/sakeglass.rsi
     state: icon_empty
@@ -405,6 +414,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: tequila
   color: "#d7d1d155"
+  flammability: 1 # Funky change
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/tequillaglass.rsi
     state: icon_empty
@@ -443,6 +453,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: vodka
   color: "#d1d1d155"
+  flammability: 2 # Funky change
   recognizable: true
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/ginvodkaglass.rsi
@@ -467,6 +478,7 @@
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: whiskey
   color: "#ee7732"
+  flammability: 2 # Funky change
   recognizable: true
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/whiskeyglass.rsi

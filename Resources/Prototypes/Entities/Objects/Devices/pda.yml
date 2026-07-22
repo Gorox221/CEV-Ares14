@@ -89,6 +89,7 @@
       - NanoTaskCartridge
       - NewsReaderCartridge
       - NanoChatCartridge # DeltaV
+      - WalletCartridge # ADT - economy
     cartridgeSlot:
       priority: -1
       name: device-pda-slot-component-slot-name-cartridge
@@ -171,6 +172,7 @@
     - NewsReaderCartridge
     - WantedListCartridge
     - NanoChatCartridge # DeltaV
+    - WalletCartridge # ADT - economy
 
 - type: entity
   parent: BasePDA
@@ -186,6 +188,7 @@
       - NewsReaderCartridge
       - MedTekCartridge
       - NanoChatCartridge # DeltaV
+      - WalletCartridge # ADT - economy
 
 - type: entity
   parent: BasePDA

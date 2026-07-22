@@ -1,0 +1,1 @@
+role-subtype-blood-worm = Кровавый червь

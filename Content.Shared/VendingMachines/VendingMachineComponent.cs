@@ -3,6 +3,7 @@
 using Content.Shared.Actions;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Robust.Shared.Maths;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
@@ -200,6 +201,31 @@ namespace Content.Shared.VendingMachines
         [DataField("loopDeny")]
         public bool LoopDenyAnimation = true;
         #endregion
+
+        //ADT-Economy-Start
+        [DataField]
+        public double PriceMultiplier = 1;
+
+        [ViewVariables]
+        public int Credits;
+
+        public int NextItemCount = 1;
+
+        [DataField]
+        public Color UiButtonBorderColor = Color.FromHex("#4972A1");
+
+        [DataField]
+        public Color UiButtonBaseColor = Color.FromHex("#141F2F");
+
+        [DataField]
+        public Color UiButtonHoveredColor = Color.FromHex("#4972A1");
+
+        [DataField]
+        public Color UiButtonDisabledColor = Color.FromHex("#3f3f3fff");
+
+        [DataField]
+        public bool AllForFree;
+        //ADT-Economy-End
     }
 
     [Serializable, NetSerializable, DataDefinition]
@@ -214,6 +240,9 @@ namespace Content.Shared.VendingMachines
         [DataField]
         public uint Amount;
 
+        [DataField]
+        public double Price;
+
         public VendingMachineInventoryEntry(InventoryType type, string id, uint amount)
         {
             Type = type;
@@ -226,6 +255,7 @@ namespace Content.Shared.VendingMachines
             Type = entry.Type;
             ID = entry.ID;
             Amount = entry.Amount;
+            Price = entry.Price;
         }
     }
 
@@ -305,5 +335,21 @@ namespace Content.Shared.VendingMachines
         public TimeSpan? DispenseOnHitEnd;
 
         public bool Broken;
+
+        //ADT-Economy-Start
+        public double PriceMultiplier;
+
+        public int Credits;
+
+        public bool AllForFree;
+
+        public Color UiButtonBorderColor = Color.FromHex("#4972A1");
+
+        public Color UiButtonBaseColor = Color.FromHex("#141F2F");
+
+        public Color UiButtonHoveredColor = Color.FromHex("#4972A1");
+
+        public Color UiButtonDisabledColor = Color.FromHex("#3f3f3fff");
+        //ADT-Economy-End
     }
 }

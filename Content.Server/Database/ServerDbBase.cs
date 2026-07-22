@@ -289,7 +289,11 @@ namespace Content.Server.Database
                 antags.ToHashSet(),
                 traits.ToHashSet(),
                 loadouts,
-                barkVoice // Goob Station - Barks
+                barkVoice, // Goob Station - Barks
+                // ADT start
+                profile.OOCNotes,
+                profile.HeadshotUrl
+                // ADT end
             );
         }
 
@@ -374,6 +378,11 @@ namespace Content.Server.Database
 
                 profile.Loadouts.Add(dz);
             }
+            
+            // ADT start
+            profile.OOCNotes = humanoid.OOCNotes;
+            profile.HeadshotUrl = humanoid.HeadshotUrl;
+            // ADT end
 
             return profile;
         }

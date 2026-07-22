@@ -151,4 +151,19 @@ public sealed partial class TransformData
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadOnly), NonSerialized]
     public HumanoidAppearanceComponent Appearance;
+
+    // ADT-Flavor start
+
+    /// <summary>
+    ///     Entity's flavor text.
+    /// </summary>
+    [DataField]
+    public string? FlavorText;
+
+    /// <summary>
+    ///     Entity's headshot URL.
+    /// </summary>
+    [DataField]
+    public string? HeadshotUrl;
+    // ADT-Flavor end
 }

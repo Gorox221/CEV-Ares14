@@ -3,6 +3,9 @@
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
+using Content.Client.Guidebook;
+using System.Reflection;
 using Content.Client.Humanoid;
 using Content.Client.Lobby.UI.Loadouts;
 using Content.Client.Lobby.UI.Roles;
@@ -31,6 +34,8 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Client.Utility;
 using Robust.Shared.Configuration;
+using Robust.Shared.Timing;
+using Timer = Robust.Shared.Timing.Timer;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Enums;
 using Robust.Shared.Physics;
@@ -40,6 +45,9 @@ using Robust.Shared.Utility;
 using Direction = Robust.Shared.Maths.Direction;
 using Content.Goobstation.Common.CCVar; // Goob Station - Barks
 using Content.Goobstation.Common.Barks; // Goob Station - Barks
+using Content.Client._ADT.CharecterFlavor;
+using Content.Shared._ADT.CharecterFlavor;
+
 namespace Content.Client.Lobby.UI
 {
     [GenerateTypedNameReferences]
@@ -513,6 +521,10 @@ namespace Content.Client.Lobby.UI
                 TabContainer.SetTabTitle(TabContainer.ChildCount - 1, Loc.GetString("humanoid-profile-editor-flavortext-tab"));
                 _flavorTextEdit = _flavorText.CFlavorTextInput;
 
+                // ADT-tweak-start
+                _flavorText.OnHeadshotUrlChanged += OnHeadshotUrlChange;
+                _flavorText.OnPreviewRequested += OnFlavorPreviewRequested;
+                // ADT-tweak-end
                 _flavorText.OnFlavorTextChanged += OnFlavorTextChange;
             }
             else
@@ -522,6 +534,10 @@ namespace Content.Client.Lobby.UI
 
                 TabContainer.RemoveChild(_flavorText);
                 _flavorText.OnFlavorTextChanged -= OnFlavorTextChange;
+                // ADT-tweak-start
+                _flavorText.OnHeadshotUrlChanged -= OnHeadshotUrlChange;
+                _flavorText.OnPreviewRequested -= OnFlavorPreviewRequested;
+                // ADT-tweak-end
                 _flavorText.Dispose();
                 _flavorTextEdit?.Dispose();
                 _flavorTextEdit = null;
@@ -1157,9 +1173,96 @@ namespace Content.Client.Lobby.UI
                 return;
 
             Profile = Profile.WithFlavorText(content);
+            //ADT-tweak-start
+            Profile = Profile.WithOOCNotes(content);
+            //ADT-tweak-end
             SetDirty();
         }
 
+        //ADT-tweak-start: Юрл для хэдшота
+        private CancellationTokenSource? _headshotRequestCts;
+        private string? _lastHeadshotUrl;
+
+        private async void OnHeadshotUrlChange(string content)
+        {
+            if (Profile is null)
+                return;
+
+            var url = content.Trim();
+
+            if (url == _lastHeadshotUrl)
+                return;
+
+            _lastHeadshotUrl = url;
+
+            Profile = Profile.WithHeadshotUrl(url);
+            SetDirty();
+
+            // Отменяем предыдущий запрос
+            _headshotRequestCts?.Cancel();
+            _headshotRequestCts?.Dispose();
+            _headshotRequestCts = null;
+
+            _headshotRequestCts = new CancellationTokenSource();
+
+            var cts = _headshotRequestCts.Token;
+
+            try
+            {
+                // Debounce: ждём 500мс перед запросом
+                await Timer.Delay(500, cts);
+                OnHeadshotPreviewRequestedDelayed(url);
+            }
+            catch (OperationCanceledException)
+            {
+                // Запрос отменён — это нормально
+            }
+        }
+
+        private void OnHeadshotPreviewRequestedDelayed(string url)
+        {
+            if (Profile is null)
+                return;
+
+            if (!_entManager.EntityExists(PreviewDummy))
+                return;
+
+            var flavor = _entManager.EnsureComponent<CharacterFlavorComponent>(PreviewDummy);
+            flavor.FlavorText = Profile.FlavorText ?? string.Empty;
+            flavor.HeadshotUrl = url;
+
+            var controller = UserInterfaceManager.GetUIController<CharacterFlavorUiController>();
+            controller.OpenPreviewMenu(PreviewDummy);
+
+            // Попросить сервер скачать и прислать картинку для предпросмотра хэдшота.
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                _entManager.System<CharecterFlavorSystem>().RequestHeadshotPreview(url);
+            }
+        }
+
+        private void OnFlavorPreviewRequested()
+        {
+            if (Profile is null)
+                return;
+
+            if (!_entManager.EntityExists(PreviewDummy))
+                return;
+
+            var flavor = _entManager.EnsureComponent<CharacterFlavorComponent>(PreviewDummy);
+            flavor.FlavorText = Profile.FlavorText ?? string.Empty;
+            flavor.HeadshotUrl = Profile.HeadshotUrl ?? string.Empty;
+
+            var controller = UserInterfaceManager.GetUIController<CharacterFlavorUiController>();
+            controller.OpenPreviewMenu(PreviewDummy);
+
+            // Попросить сервер скачать и прислать картинку для предпросмотра хэдшота.
+            if (!string.IsNullOrWhiteSpace(Profile.HeadshotUrl))
+            {
+                _entManager.System<CharecterFlavorSystem>().RequestHeadshotPreview(Profile.HeadshotUrl);
+            }
+        }
+        //ADT-tweak-end
         private void OnMarkingChange(MarkingSet markings)
         {
             if (Profile is null)
@@ -1221,6 +1324,9 @@ namespace Content.Client.Lobby.UI
 
             _loadoutWindow?.Dispose();
             _loadoutWindow = null;
+
+            _headshotRequestCts?.Cancel();
+            _headshotRequestCts = null;
         }
 
         protected override void EnteredTree()
@@ -1352,6 +1458,12 @@ namespace Content.Client.Lobby.UI
             if (_flavorTextEdit != null)
             {
                 _flavorTextEdit.TextRope = new Rope.Leaf(Profile?.FlavorText ?? "");
+                // ADT-Tweak-start
+                if (_flavorText == null)
+                    return;
+
+                _flavorText.CHeadshotUrlInput.Text = Profile?.HeadshotUrl ?? "";
+                // ADT-Tweak-end
             }
         }
 

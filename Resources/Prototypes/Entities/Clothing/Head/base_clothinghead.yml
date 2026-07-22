@@ -26,11 +26,31 @@
         reagents:
         - ReagentId: Fiber
           Quantity: 10
+      stain:
+        maxVol: 5
+  - type: ContainerContainer
+    containers:
+      hidden_slot: !type:ContainerSlot
+  - type: ItemSlots
+    slots:
+      hidden_slot:
+        name: table_slot_hidden
+        whitelist:
+          tags:
+          - ListeningBug
   - type: Tag
     tags:
     - ClothMade
     - WhitelistChameleon
-    - DroneUsable # Goobstation
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Gabystation/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Gabystation/Effects/blood.rsi
+      state: helmetbloodicon
 
 - type: entity
   abstract: true
@@ -152,6 +172,8 @@
     - Snout
     - HeadTop
     - HeadSide
+  - type: StainBlocker
+    slots: [MASK]
 
 - type: entity
   abstract: true
@@ -215,6 +237,17 @@
     - HeadTop
     - HeadSide
   - type: FaceHuggerBlocker # Goobstation
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Gabystation/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Gabystation/Effects/blood.rsi
+      state: helmetbloodicon
+  - type: StainBlocker
+    slots: [MASK]
 
 - type: entity
   abstract: true
@@ -301,3 +334,12 @@
     - Hair
     - HeadTop
     - HeadSide
+  - type: Appearance
+  - type: Stainable
+    clothingVisuals:
+      head:
+      - sprite: _Gabystation/Effects/blood.rsi
+        state: helmetblood
+    iconVisuals:
+    - sprite: _Gabystation/Effects/blood.rsi
+      state: helmetbloodicon

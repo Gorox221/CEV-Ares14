@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Goobstation.Common.Speech;
+using Content.Server._Xenon.Atmos;
 using Content.Server.Actions;
 using Content.Server.Chat.Systems;
+using Content.Shared._Xenon.Atmos;
 using Content.Shared.Chat;
 using Content.Shared.Chat.Prototypes;
 using Content.Shared.Humanoid;
@@ -21,6 +23,7 @@ public sealed class VocalSystem : EntitySystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly ActionsSystem _actions = default!;
+    [Dependency] private readonly VacuumPropagationSystem _vacuum = default!;
 
     public override void Initialize()
     {
@@ -108,6 +111,11 @@ public sealed class VocalSystem : EntitySystem
 
     private bool TryPlayScreamSound(EntityUid uid, VocalComponent component)
     {
+        // Xenon start - vacuum propagation
+        if (_vacuum.IsInVacuum(uid))
+            return false;
+        // Xenon end
+
         // Goobstation start
         var getSoundEv = new GetEmoteSoundsEvent();
         RaiseLocalEvent(uid, ref getSoundEv);

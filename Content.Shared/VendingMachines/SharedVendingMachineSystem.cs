@@ -57,6 +57,7 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
         Subs.BuiEvents<VendingMachineComponent>(VendingMachineUiKey.Key, subs =>
         {
             subs.Event<VendingMachineEjectMessage>(OnInventoryEjectMessage);
+            subs.Event<VendingMachineEjectCountMessage>(OnInventoryEjectCountMessage);
         });
     }
 
@@ -93,6 +94,13 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
             DenyEnd = component.DenyEnd,
             DispenseOnHitEnd = component.DispenseOnHitEnd,
             Broken = component.Broken,
+            PriceMultiplier = component.PriceMultiplier,
+            Credits = component.Credits,
+            AllForFree = component.AllForFree,
+            UiButtonBorderColor = component.UiButtonBorderColor,
+            UiButtonBaseColor = component.UiButtonBaseColor,
+            UiButtonHoveredColor = component.UiButtonHoveredColor,
+            UiButtonDisabledColor = component.UiButtonDisabledColor,
         };
     }
 
@@ -148,6 +156,33 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
             return;
 
         AuthorizedVend(entity.Owner, actor, args.Type, args.ID, entity.Comp);
+    }
+
+    private void OnInventoryEjectCountMessage(Entity<VendingMachineComponent> entity, ref VendingMachineEjectCountMessage args)
+    {
+        if (!_receiver.IsPowered(entity.Owner) || Deleted(entity))
+            return;
+
+        if (args.Actor is not { Valid: true } actor)
+            return;
+
+        if (entity.Comp.AllForFree)
+        {
+            AuthorizedVend(entity.Owner, actor, args.Entry.Type, args.Entry.ID, entity.Comp);
+            return;
+        }
+
+        // ADT-Economy: try to charge the player before vending
+        TryChargeAndVend(entity.Owner, actor, args.Entry, args.Count, entity.Comp);
+    }
+
+    protected virtual void TryChargeAndVend(EntityUid uid, EntityUid sender, VendingMachineInventoryEntry entry, int count, VendingMachineComponent component)
+    {
+        // Default implementation - just vend without charging
+        for (int i = 0; i < count; i++)
+        {
+            AuthorizedVend(uid, sender, entry.Type, entry.ID, component);
+        }
     }
 
     protected virtual void OnMapInit(EntityUid uid, VendingMachineComponent component, MapInitEvent args)
@@ -212,7 +247,7 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
     /// <param name="itemId">The prototype ID of the item</param>
     /// <param name="throwItem">Whether the item should be thrown in a random direction after ejection</param>
     /// <param name="vendComponent"></param>
-    public void TryEjectVendorItem(EntityUid uid, InventoryType type, string itemId, bool throwItem, EntityUid? user = null, VendingMachineComponent? vendComponent = null)
+    public void TryEjectVendorItem(EntityUid uid, InventoryType type, string itemId, bool throwItem, EntityUid? user = null, VendingMachineComponent? vendComponent = null, bool playSound = true)
     {
         if (!Resolve(uid, ref vendComponent))
             return;
@@ -250,7 +285,8 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
         Dirty(uid, vendComponent);
         UpdateUI((uid, vendComponent));
         TryUpdateVisualState((uid, vendComponent));
-        Audio.PlayPredicted(vendComponent.SoundVend, uid, user);
+        if (playSound)
+            Audio.PlayPredicted(vendComponent.SoundVend, uid, user);
     }
 
     public void Deny(Entity<VendingMachineComponent?> entity, EntityUid? user = null)
@@ -313,11 +349,11 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
     /// <param name="type">The type of inventory the item is from</param>
     /// <param name="itemId">The prototype ID of the item</param>
     /// <param name="component"></param>
-    public void AuthorizedVend(EntityUid uid, EntityUid sender, InventoryType type, string itemId, VendingMachineComponent component)
+    public void AuthorizedVend(EntityUid uid, EntityUid sender, InventoryType type, string itemId, VendingMachineComponent component, bool playSound = true)
     {
         if (IsAuthorized(uid, sender, component))
         {
-            TryEjectVendorItem(uid, type, itemId, component.CanShoot, sender, component);
+            TryEjectVendorItem(uid, type, itemId, component.CanShoot, sender, component, playSound);
         }
     }
 
@@ -347,7 +383,16 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
             return;
 
         // only emag if there are emag-only items
-        args.Handled = component.EmaggedInventory.Count > 0;
+        args.Handled = component.EmaggedInventory.Count > 0 || component.PriceMultiplier > 0; // ADT-Economy
+
+        // ADT-tweak start
+        if (args.Handled)
+        {
+            // Make all items free when emagged
+            component.AllForFree = true;
+            Dirty(uid, component);
+        }
+        // ADT-tweak end
     }
 
     /// <summary>

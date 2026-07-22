@@ -49,4 +49,13 @@ public sealed partial class VentCrittersRuleComponent : Component
     /// </summary>
     [DataField]
     public int PlayerRatio = 25;
+
+    // Ganimed-Bloodworm-Add-Start
+    /// <summary>
+    /// Cached spawn location for antag selection, so the ghost role spawner and the
+    /// actual antag mob spawn at the same vent.
+    /// </summary>
+    [DataField]
+    public MapCoordinates? SpawnLocation;
+    // Ganimed-Bloodworm-Add-End
 }

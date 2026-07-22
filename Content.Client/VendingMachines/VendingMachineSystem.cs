@@ -36,6 +36,13 @@ public sealed class VendingMachineSystem : SharedVendingMachineSystem
         component.DenyEnd = state.DenyEnd;
         component.DispenseOnHitEnd = state.DispenseOnHitEnd;
         component.Broken = state.Broken;
+        component.PriceMultiplier = state.PriceMultiplier;
+        component.Credits = state.Credits;
+        component.AllForFree = state.AllForFree;
+        component.UiButtonBorderColor = state.UiButtonBorderColor;
+        component.UiButtonBaseColor = state.UiButtonBaseColor;
+        component.UiButtonHoveredColor = state.UiButtonHoveredColor;
+        component.UiButtonDisabledColor = state.UiButtonDisabledColor;
 
         // If all we did was update amounts then we can leave BUI buttons in place.
         var fullUiUpdate = !component.Inventory.Keys.SequenceEqual(state.Inventory.Keys) ||

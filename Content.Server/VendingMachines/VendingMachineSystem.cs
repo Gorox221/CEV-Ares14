@@ -2,12 +2,17 @@
 
 using System.Linq;
 using System.Numerics;
+using Content.Server._ADT.Economy;
+using Content.Server.Access.Systems;
 using Content.Server.Cargo.Systems;
 using Content.Server.Power.Components;
+using Content.Shared._ADT.Economy;
+using Content.Shared.Access.Systems;
 using Content.Shared.Cargo;
 using Content.Server.Vocalization.Systems;
 using Content.Shared.Damage;
 using Content.Shared.Emp;
+using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Throwing;
 using Content.Shared.VendingMachines;
@@ -22,6 +27,9 @@ namespace Content.Server.VendingMachines
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly PricingSystem _pricing = default!;
         [Dependency] private readonly ThrowingSystem _throwingSystem = default!;
+        [Dependency] private readonly BankCardSystem _bankCard = default!;
+        [Dependency] private readonly SharedIdCardSystem _idCardSystem = default!;
+        [Dependency] private readonly SharedPopupSystem _popup = default!;
 
         private const float WallVendEjectDistanceFromWall = 1f;
 
@@ -37,6 +45,31 @@ namespace Content.Server.VendingMachines
             SubscribeLocalEvent<VendingMachineComponent, VendingMachineSelfDispenseEvent>(OnSelfDispense);
 
             SubscribeLocalEvent<VendingMachineRestockComponent, PriceCalculationEvent>(OnPriceCalculation);
+
+            Subs.BuiEvents<VendingMachineComponent>(VendingMachineUiKey.Key, subs =>
+            {
+                subs.Event<VendingMachineRequestUpdateMessage>(OnVendingRequestUpdateMessage);
+            });
+        }
+
+        private void OnVendingRequestUpdateMessage(Entity<VendingMachineComponent> entity, ref VendingMachineRequestUpdateMessage args)
+        {
+            if (args.Actor is not { Valid: true } actor)
+                return;
+
+            var inventory = GetAllInventory(entity.Owner, entity.Comp);
+            var playerBalance = GetPlayerBalance(actor);
+            var state = new VendingMachineUpdateState(inventory, entity.Comp.PriceMultiplier, entity.Comp.Credits, entity.Comp.AllForFree, playerBalance: playerBalance);
+            UISystem.SetUiState(entity.Owner, VendingMachineUiKey.Key, state);
+        }
+
+        private int GetPlayerBalance(EntityUid sender)
+        {
+            if (!_idCardSystem.TryFindIdCard(sender, out var idCard))
+                return 0;
+            if (!TryComp<BankCardComponent>(idCard.Owner, out var bankCard) || bankCard.AccountId == null)
+                return 0;
+            return _bankCard.GetBalance(bankCard.AccountId.Value);
         }
 
         private void OnVendingPrice(EntityUid uid, VendingMachineComponent component, ref PriceCalculationEvent args)
@@ -57,9 +90,40 @@ namespace Content.Server.VendingMachines
             args.Price += price;
         }
 
+        private void CalculatePrices(EntityUid uid, VendingMachineComponent component)
+        {
+            foreach (var entry in component.Inventory.Values)
+            {
+                if (PrototypeManager.TryIndex<EntityPrototype>(entry.ID, out var proto))
+                {
+                    entry.Price = (int)_pricing.GetEstimatedPrice(proto);
+                }
+            }
+
+            foreach (var entry in component.EmaggedInventory.Values)
+            {
+                if (PrototypeManager.TryIndex<EntityPrototype>(entry.ID, out var proto))
+                {
+                    entry.Price = (int)_pricing.GetEstimatedPrice(proto);
+                }
+            }
+
+            foreach (var entry in component.ContrabandInventory.Values)
+            {
+                if (PrototypeManager.TryIndex<EntityPrototype>(entry.ID, out var proto))
+                {
+                    entry.Price = (int)_pricing.GetEstimatedPrice(proto);
+                }
+            }
+
+            Dirty(uid, component);
+        }
+
         protected override void OnMapInit(EntityUid uid, VendingMachineComponent component, MapInitEvent args)
         {
             base.OnMapInit(uid, component, args);
+
+            CalculatePrices(uid, component);
 
             if (HasComp<ApcPowerReceiverComponent>(uid))
             {
@@ -244,6 +308,95 @@ namespace Content.Server.VendingMachines
         private void OnTryVocalize(Entity<VendingMachineComponent> ent, ref TryVocalizeEvent args)
         {
             args.Cancelled |= ent.Comp.Broken;
+        }
+
+        // ADT-Economy: Send UI state updates to the client
+        protected override void UpdateUI(Entity<VendingMachineComponent?> entity)
+        {
+            if (!Resolve(entity, ref entity.Comp))
+                return;
+
+            var inventory = GetAllInventory(entity.Owner, entity.Comp);
+            var state = new VendingMachineUpdateState(inventory, entity.Comp.PriceMultiplier, entity.Comp.Credits, entity.Comp.AllForFree);
+            UISystem.SetUiState(entity.Owner, VendingMachineUiKey.Key, state);
+        }
+
+        private void UpdateUIWithBalance(Entity<VendingMachineComponent?> entity, EntityUid user)
+        {
+            if (!Resolve(entity, ref entity.Comp))
+                return;
+
+            var inventory = GetAllInventory(entity.Owner, entity.Comp);
+            var playerBalance = GetPlayerBalance(user);
+            var state = new VendingMachineUpdateState(inventory, entity.Comp.PriceMultiplier, entity.Comp.Credits, entity.Comp.AllForFree, playerBalance: playerBalance);
+            UISystem.SetUiState(entity.Owner, VendingMachineUiKey.Key, state);
+        }
+
+        // ADT-Economy: Override to handle bank payment
+        protected override void TryChargeAndVend(EntityUid uid, EntityUid sender, VendingMachineInventoryEntry entry, int count, VendingMachineComponent component)
+        {
+            // Calculate total price
+            var totalPrice = (int)(entry.Price * component.PriceMultiplier * count);
+
+            if (totalPrice <= 0)
+            {
+                // Free item, just vend
+                for (int i = 0; i < count; i++)
+                {
+                    AuthorizedVend(uid, sender, entry.Type, entry.ID, component);
+                }
+                return;
+            }
+
+            // Play sound for paid items from server only (no client prediction)
+            var emitSound = component.SoundVend;
+
+            // Find the player's bank account via their ID card
+            if (!_idCardSystem.TryFindIdCard(sender, out var idCard))
+            {
+                _popup.PopupEntity(Loc.GetString("vending-machine-no-id-card"), uid, sender, PopupType.Medium);
+                Deny((uid, component));
+                return;
+            }
+
+            if (!TryComp<BankCardComponent>(idCard.Owner, out var bankCard))
+            {
+                _popup.PopupEntity(Loc.GetString("vending-machine-no-bank-card"), uid, sender, PopupType.Medium);
+                Deny((uid, component));
+                return;
+            }
+
+            if (bankCard.AccountId == null)
+            {
+                _popup.PopupEntity(Loc.GetString("vending-machine-no-bank-account"), uid, sender, PopupType.Medium);
+                Deny((uid, component));
+                return;
+            }
+
+            // Try to charge the player's bank account
+            if (!_bankCard.TryChangeBalance(bankCard.AccountId.Value, -totalPrice))
+            {
+                _popup.PopupEntity(Loc.GetString("vending-machine-insufficient-funds"), uid, sender, PopupType.Medium);
+                Deny((uid, component));
+                return;
+            }
+
+            // Payment successful, add credits to the machine
+            component.Credits += totalPrice;
+            Dirty(uid, component);
+
+            // Vend the item(s) - suppress predicted sound since there's no client prediction
+            for (int i = 0; i < count; i++)
+            {
+                AuthorizedVend(uid, sender, entry.Type, entry.ID, component, playSound: false);
+            }
+
+            // Play sound for all players (including the user who didn't predict)
+            if (emitSound != null)
+                Audio.PlayPvs(emitSound, uid);
+
+            // Update UI with the player's new balance
+            UpdateUIWithBalance((uid, component), sender);
         }
     }
 }

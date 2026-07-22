@@ -19,6 +19,8 @@
     - id: SalvageJobBoardComputerCircuitboard # Goobstation - This doesn't really have a use right now but it's there incase it ever gets use again
     - id: CargoMegaphone # goob - loudspeaker
     - id: SlotMachineHighRollerFlatPack # Goob - gambling
+    - id: CommandBudgetCard # ADT - economy
+    - id: CommandBudgetPinPaper # ADT - economy
 
 - type: entity
   id: LockerQuarterMasterFilled
@@ -56,6 +58,8 @@
       conditions:
       - !type:PlayerCountCondition
         max: 15
+    - id: CommandBudgetCard # ADT - economy
+    - id: CommandBudgetPinPaper # ADT - economy
 
 # No laser table + Laser table
 - type: entityTable
@@ -142,6 +146,8 @@
     - id: ClothingEyesHudCommand
     - id: ServiceTechFabCircuitboard # Goobstation - Service Techfab
     - id: CommandMegaphone # goob - loudspeakers
+    - id: ServiceBudgetCard # ADT - economy
+    - id: ServiceBudgetPinPaper # ADT - economy
 
 - type: entity
   id: LockerHeadOfPersonnelFilled
@@ -184,6 +190,8 @@
     - id: WeaponLauncherSingularityBuster
     - id: MachinePowerTransmissionLaserFlatpack
     - id: RCDRechargingCE
+    - id: EngineeringBudgetCard # ADT - economy
+    - id: EngineeringBudgetPinPaper # ADT - economy
 
 # Hardsuit table, used for suit storage as well
 - type: entityTable
@@ -256,6 +264,8 @@
     - id: DiseaseDiagnoserFlatPack
     - id: VaccinatorFlatPack
     # Goobstation End
+    - id: MedicalBudgetCard # ADT - economy
+    - id: MedicalBudgetPinPaper # ADT - economy
 
 # Hardsuit table, used for suit storage as well
 - type: entityTable
@@ -315,6 +325,8 @@
     - id: ClothingBeltGeminiHoloProjector # Goobstation - Who better to do science with than yourself?
     - id: XenobiologyBountyComputerCircuitboard # Goobstation
     - id: MMI # Goobstation
+    - id: ScienceBudgetCard # ADT - economy
+    - id: ScienceBudgetPinPaper # ADT - economy
 
 # Hardsuit table, used for suit storage as well
 - type: entityTable
@@ -378,6 +390,8 @@
     - id: WantedListCartridge
     - id: DrinkHosFlask
     - id: ClothingBeltSheathHeadOfSecurityFilled # Goobstation - security revamp
+    - id: SecurityBudgetCard # ADT - economy
+    - id: SecurityBudgetPinPaper # ADT - economy
 
 # Hardsuit table, used for suit storage as well
 - type: entityTable

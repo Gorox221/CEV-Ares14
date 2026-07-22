@@ -1,3 +1,4 @@
+using Content.Shared._ADT.CharecterFlavor; // ADT-Flavor
 using Content.Shared.DetailExaminable;
 using Content.Shared.Forensics.Systems;
 using Content.Shared.Humanoid;
@@ -39,6 +40,7 @@ public sealed class DnaScrambleOnTriggerSystem : XOnTriggerSystem<DnaScrambleOnT
         _forensics.RandomizeFingerprint(target);
 
         RemComp<DetailExaminableComponent>(target); // remove MRP+ custom description if one exists
+        RemComp<CharacterFlavorComponent>(target); // // ADT-Flavor - remove flavor text and headshot
         _identity.QueueIdentityUpdate(target); // manually queue identity update since we don't raise the event
 
         // Can't use PopupClient or PopupPredicted because the trigger might be unpredicted.

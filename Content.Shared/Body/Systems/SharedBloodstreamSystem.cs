@@ -17,6 +17,8 @@ using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage;
 using Content.Shared.EntityEffects.Effects;
+using Content.Shared.Fluids;
+using Content.Shared.Inventory;
 using Content.Goobstation.Maths.FixedPoint;
 using Content.Shared.Drunk;
 using Content.Shared.EntityEffects.Effects.Solution;
@@ -52,6 +54,7 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
     [Dependency] private readonly AlertsSystem _alertsSystem = default!;
     [Dependency] private readonly MobStateSystem _mobStateSystem = default!;
     [Dependency] private readonly DamageableSystem _damageableSystem = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     private float _bloodlossMultiplier = 4f; // Goobstation
 
@@ -482,6 +485,46 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
         {
             reference = 0f;
             amount *= -1;
+
+            if (Resolve(ent, ref ent.Comp, logMissing: false)
+                && SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.BloodSolutionName, ref ent.Comp.BloodSolution, out var bloodSolution))
+            {
+                var ratio = amount / ent.Comp.BloodReferenceSolution.Volume;
+                var tempSolution = new Solution();
+                foreach (var (referenceReagent, referenceQuantity) in ent.Comp.BloodReferenceSolution)
+                {
+                    var adjustedAmount = referenceQuantity * ratio;
+                    var available = bloodSolution.GetTotalPrototypeQuantity(referenceReagent.Prototype);
+                    var toTake = FixedPoint2.Min(adjustedAmount, available);
+                    if (toTake > 0)
+                        tempSolution.AddReagent(referenceReagent.Prototype, toTake);
+                }
+
+                if (tempSolution.Volume > 0)
+                {
+                    // stain clothes on bleed
+                    var stainEv = new SpilledOnEvent(ent.Owner, tempSolution);
+                    RaiseLocalEvent(ent.Owner, stainEv);
+
+                    // stain neighbors
+                    var xform = Transform(ent.Owner);
+                    var lookup = _lookup.GetEntitiesInRange(xform.Coordinates, 1.5f);
+                    foreach (var neighbor in lookup)
+                    {
+                        if (neighbor == ent.Owner)
+                            continue;
+
+                        if (!HasComp<InventoryComponent>(neighbor))
+                            continue;
+
+                        var neighborStainEv = new SpilledOnEvent(ent.Owner, tempSolution);
+                        RaiseLocalEvent(neighbor, neighborStainEv);
+
+                        if (tempSolution.Volume <= 0)
+                            break;
+                    }
+                }
+            }
         }
 
         return TryRegulateBloodLevel(ent, amount, reference);

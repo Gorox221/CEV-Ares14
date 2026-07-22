@@ -36,6 +36,12 @@ public sealed class VentCrittersRule : StationEventSystem<VentCrittersRuleCompon
 
     private List<EntityCoordinates> _locations = new();
 
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<VentCrittersRuleComponent, AntagSelectLocationEvent>(OnSelectLocation);
+    }
+
     protected override void Added(EntityUid uid, VentCrittersRuleComponent comp, GameRuleComponent gameRule, GameRuleAddedEvent args)
     {
         PickLocation(comp);
@@ -100,5 +106,13 @@ public sealed class VentCrittersRule : StationEventSystem<VentCrittersRuleCompon
 
         if (_locations.Count > 0)
             comp.Location = RobustRandom.Pick(_locations);
+    }
+
+    private void OnSelectLocation(Entity<VentCrittersRuleComponent> ent, ref AntagSelectLocationEvent args)
+    {
+        if (ent.Comp.Location is not {} coords)
+            return;
+
+        args.Coordinates.Add(_transform.ToMapCoordinates(coords));
     }
 }
