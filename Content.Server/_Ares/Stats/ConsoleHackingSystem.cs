@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Server.Construction.Components;
 using Content.Shared._Ares.Stats;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
@@ -25,16 +26,16 @@ public sealed partial class AresHackingSystem : EntitySystem
 
     public override void Initialize()
     {
-        SubscribeLocalEvent<AccessReaderComponent, GetVerbsEvent<AlternativeVerb>>(AddHackVerb);
+        SubscribeLocalEvent<ComputerComponent, GetVerbsEvent<AlternativeVerb>>(AddHackVerb);
         SubscribeLocalEvent<AccessReaderComponent, AresHackingDoAfterEvent>(OnHackDoAfter);
     }
 
-    private void AddHackVerb(Entity<AccessReaderComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
+    private void AddHackVerb(Entity<ComputerComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
     {
         if (!args.CanInteract || !args.CanAccess || args.Hands == null)
             return;
 
-        if (!ent.Comp.Enabled || ent.Comp.AccessLists.Count == 0)
+        if (!TryComp<AccessReaderComponent>(ent, out var access) || !access.Enabled || access.AccessLists.Count == 0)
             return;
 
         if (!_power.IsPowered(ent.Owner))
@@ -56,11 +57,12 @@ public sealed partial class AresHackingSystem : EntitySystem
 
         var time = Math.Max(1.0, 22.0 - cogLevel * 0.2);
 
+        var uid = ent.Owner;
         AlternativeVerb verb = new()
         {
             Act = () =>
             {
-                StartHack(ent, user, time);
+                StartHack(uid, user, time);
             },
             Text = Loc.GetString("ares-hacking-verb-hack"),
             Message = Loc.GetString("ares-hacking-verb-hack-tooltip", ("time", time.ToString("F1"))),
