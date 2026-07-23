@@ -22,6 +22,11 @@
     powerLoad: 200
   - type: ExtensionCableReceiver
   - type: ActivatableUIRequiresPower
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Cognition
+    baseFailChance: 25
+  # Ares-tweak end
   - type: Sprite
     sprite: Structures/Machines/computers.rsi
     layers:

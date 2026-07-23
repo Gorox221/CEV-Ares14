@@ -29,6 +29,11 @@
     - type: Icon
       sprite: Structures/Walls/grille.rsi
       state: grille
+    # Ares-tweak start
+    - type: ToolActionFail
+      stat: Mechanical
+      baseFailChance: 50
+    # Ares-tweak end
     - type: Construction
       graph: Grille
       node: grille

@@ -50,6 +50,11 @@
     - TauCetiBasic
     understands:
     - TauCetiBasic
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Cognition
+    baseFailChance: 60
+  # Ares-tweak end
 
 - type: entity
   abstract: true

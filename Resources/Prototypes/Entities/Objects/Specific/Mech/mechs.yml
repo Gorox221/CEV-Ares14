@@ -49,6 +49,11 @@
   - type: AtmosDevice
     requireAnchored: false
     joinSystem: true
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 60
+  # Ares-tweak end
   - type: DoAfter
   - type: Repairable
     fuelCost: 25

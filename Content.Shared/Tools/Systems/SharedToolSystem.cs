@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Goobstation.Common.Tools; // Goob (obviously)
+using Content.Shared._Ares.ToolQuality; // Ares-tweak
 using Robust.Shared.Audio; // goob
 using Content.Shared.Administration.Logs;
 using Content.Shared.Chemistry.EntitySystems;
@@ -60,6 +61,21 @@ public abstract partial class SharedToolSystem : EntitySystem
 
         var ev = args.WrappedEvent;
         ev.DoAfter = args.DoAfter;
+
+        // Ares-tweak start
+        if (!args.Cancelled && args.OriginalTarget != null)
+        {
+            var target = GetEntity(args.OriginalTarget.Value);
+            var failEvent = new ToolActionFailCheckEvent(args.User, uid, target);
+            RaiseLocalEvent(ref failEvent);
+            if (failEvent.Cancelled)
+            {
+                if (failEvent.CritFailed)
+                    RaiseLocalEvent(new ToolActionCritFailEvent(args.User, uid, target));
+                return;
+            }
+        }
+        // Ares-tweak end
 
         if (args.OriginalTarget != null)
             RaiseLocalEvent(GetEntity(args.OriginalTarget.Value), (object) ev);

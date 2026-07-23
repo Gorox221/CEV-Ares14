@@ -6,6 +6,11 @@
   name: blast door
   description: This one says 'BLAST DONGER'.
   components:
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 90
+  # Ares-tweak end
   - type: AccessReader
     containerAccessProvider: board
   - type: Sprite

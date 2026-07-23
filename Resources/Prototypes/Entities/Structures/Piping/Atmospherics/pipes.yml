@@ -19,6 +19,11 @@
     damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: SubFloorHide
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 30
+  # Ares-tweak end
   - type: CollideOnAnchor
   - type: Anchorable
   - type: Rotatable
