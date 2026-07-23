@@ -47,6 +47,10 @@
   - type: Prying
   - type: UseDelay # Goobstation - For insta prying
     delay: 1
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: Sprite
     sprite: Objects/Tools/crowbar.rsi
   - type: Clothing
