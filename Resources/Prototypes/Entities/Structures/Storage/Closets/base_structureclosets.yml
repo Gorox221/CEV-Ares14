@@ -221,6 +221,13 @@
       map: ["enum.WeldableLayers.BaseWelded"]
   - type: Paintable
     group: WallLocker
+  # Ares-tweak start: Added lock hacking support
+  - type: LockHack
+  - type: UserInterface
+    interfaces:
+      enum.LockHackUiKey.Key:
+        type: LockHackBoundUserInterface
+  # Ares-tweak end: Added lock hacking support
 
 #Base suit storage unit
 #I am terribly sorry for duplicating the closet almost-wholesale, but the game malds at me if I don't so here we are.
@@ -313,3 +320,10 @@
     stateDoorOpen: base
     stateDoorClosed: door
   - type: LockVisuals
+  # Ares-tweak start: Added lock hacking support
+  - type: LockHack
+  - type: UserInterface
+    interfaces:
+      enum.LockHackUiKey.Key:
+        type: LockHackBoundUserInterface
+  # Ares-tweak end: Added lock hacking support

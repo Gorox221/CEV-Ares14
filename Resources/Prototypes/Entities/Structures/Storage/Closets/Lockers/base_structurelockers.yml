@@ -62,6 +62,13 @@
   - type: RecyclableOnUnlock
   - type: Paintable
     group: Locker
+  # Ares-tweak start: Added lock hacking support
+  - type: LockHack
+  - type: UserInterface
+    interfaces:
+      enum.LockHackUiKey.Key:
+        type: LockHackBoundUserInterface
+  # Ares-tweak end: Added lock hacking support
 
 - type: entity
   id: LockerBaseSecure
