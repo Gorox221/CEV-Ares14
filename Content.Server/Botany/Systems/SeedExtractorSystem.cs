@@ -6,6 +6,8 @@ using Content.Server.Power.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Robust.Shared.Random;
+using Content.Shared._Ares.Stats; // Ares-tweak
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Botany.Systems;
 
@@ -14,6 +16,7 @@ public sealed class SeedExtractorSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly PopupSystem _popupSystem = default!;
     [Dependency] private readonly BotanySystem _botanySystem = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     public override void Initialize()
     {
@@ -42,7 +45,10 @@ public sealed class SeedExtractorSystem : EntitySystem
         QueueDel(args.Used);
         args.Handled = true;
 
-        var amount = _random.Next(seedExtractor.BaseMinSeeds, seedExtractor.BaseMaxSeeds + 1);
+        // Ares-tweak start
+        var biologyLevel = _stats.GetStatLevel(args.User, new ProtoId<StatPrototype>("Biology"));
+        var amount = Math.Max(1, _random.Next(seedExtractor.BaseMinSeeds, seedExtractor.BaseMaxSeeds + 1) + biologyLevel / 10);
+        // Ares-tweak end
         var coords = Transform(uid).Coordinates;
 
         var packetSeed = seed;
