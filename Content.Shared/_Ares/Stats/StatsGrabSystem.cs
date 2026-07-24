@@ -33,5 +33,9 @@ public sealed class AresGrabSystem : EntitySystem
         var victimRob = _stats.GetStatLevel(puller.Pulling.Value, robPrototype);
         var victimBonus = victimRob / 200f;
         args.Modifier += victimBonus;
+
+        var diff = victimRob - grabberRob;
+        var speedFactor = Math.Clamp(1f - diff / 200f, 0.1f, 2f);
+        args.SpeedMultiplier *= speedFactor;
     }
 }
