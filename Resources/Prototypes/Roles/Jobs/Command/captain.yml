@@ -55,6 +55,7 @@
     stats:
       Vigilance: 3
       Robustness: 4
+      Biology: 60
       Toughness: 2
       Cognition: 60
       Mechanical: 1
