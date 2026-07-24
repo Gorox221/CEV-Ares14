@@ -54,7 +54,7 @@
   - !type:SetStatsSpecial
     stats:
       Vigilance: 3
-      Robustness: 4
+      Robustness: 60
       Biology: 60
       Toughness: 2
       Cognition: 60
