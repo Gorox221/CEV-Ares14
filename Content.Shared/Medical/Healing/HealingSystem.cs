@@ -33,6 +33,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using System.Linq;
 using Robust.Shared.Network;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Shared.Medical.Healing;
 
@@ -58,6 +59,7 @@ public sealed class HealingSystem : EntitySystem
 
     // Goobstation edit
     [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     // Goobstation start
     private TargetBodyPart[] _partHealingOrder =
@@ -557,6 +559,11 @@ public sealed class HealingSystem : EntitySystem
         var delay = isNotSelf
             ? healing.Comp.Delay
             : healing.Comp.Delay * GetScaledHealingPenalty(target, healing.Comp.SelfHealPenaltyMultiplier);
+
+        // Ares-tweak start: biology stat reduces healing delay (0.033s per point)
+        var biologyLevel = _stats.GetStatLevel(user, new ProtoId<StatPrototype>("Biology"));
+        delay = TimeSpan.FromSeconds(Math.Max(0.5, delay.TotalSeconds - biologyLevel * 0.033));
+        // Ares-tweak end
 
         // Play sound when starting the healing action
         // Goobstation
