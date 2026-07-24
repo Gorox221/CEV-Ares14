@@ -12,6 +12,7 @@ using Content.Shared.Cuffs.Components;
 using Content.Shared.Database;
 using Content.Shared._EinsteinEngines.Flight;
 using Content.Shared._Goobstation.Wizard.Mutate; // Goobstation
+using Content.Shared._Ares.Stats; // Ares-Tweak
 using Content.Shared.DoAfter;
 using Content.Shared.Hands;
 using Content.Shared.Hands.Components;
@@ -39,6 +40,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes; // Ares-Tweak
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 using PullableComponent = Content.Shared.Movement.Pulling.Components.PullableComponent;
@@ -63,6 +65,7 @@ namespace Content.Shared.Cuffs
         [Dependency] private readonly UseDelaySystem _delay = default!;
         [Dependency] private readonly SharedHulkSystem _hulk = default!;
         [Dependency] private readonly SharedCombatModeSystem _combatMode = default!;
+        [Dependency] private readonly AresStatsSystem _aresStats = default!; // Ares-Tweak
 
         public override void Initialize()
         {
@@ -670,6 +673,14 @@ namespace Content.Shared.Cuffs
                     Uncuff(user, user, cuff);
                     return;
                 }
+
+                // Ares-Tweak start: instant uncuff at 120+ ROB
+                if (_aresStats.GetStatLevel(user, new ProtoId<StatPrototype>("Robustness")) >= 120)
+                {
+                    Uncuff(user, user, cuff);
+                    return;
+                }
+                // Ares-Tweak end
             }
 
             var doAfterEventArgs = new DoAfterArgs(EntityManager, user, uncuffTime, new UnCuffDoAfterEvent(), target, target, cuff)
