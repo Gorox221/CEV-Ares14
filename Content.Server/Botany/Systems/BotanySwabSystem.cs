@@ -6,6 +6,8 @@ using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Swab;
+using Content.Shared._Ares.Stats; // Ares-tweak
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Botany.Systems;
 
@@ -14,6 +16,7 @@ public sealed class BotanySwabSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfterSystem = default!;
     [Dependency] private readonly PopupSystem _popupSystem = default!;
     [Dependency] private readonly MutationSystem _mutationSystem = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     public override void Initialize()
     {
@@ -74,7 +77,10 @@ public sealed class BotanySwabSystem : EntitySystem
             var old = plant.Seed;
             if (old == null)
                 return;
-            plant.Seed = _mutationSystem.Cross(swab.SeedData, old); // Cross-pollenate
+            // Ares-tweak start: pass biology level for gene transfer chance
+            var bioLevel = _stats.GetStatLevel(args.Args.User, new ProtoId<StatPrototype>("Biology"));
+            plant.Seed = _mutationSystem.Cross(swab.SeedData, old, bioLevel);
+            // Ares-tweak end
             swab.SeedData = old; // Transfer old plant pollen to swab
             _popupSystem.PopupEntity(Loc.GetString("botany-swab-to"), args.Args.Target.Value, args.Args.User);
         }
