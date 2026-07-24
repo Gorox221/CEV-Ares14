@@ -21,6 +21,7 @@ using Content.Shared.Weapons.Melee.Events;
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Prototypes;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Shared.Chemistry.EntitySystems;
 
@@ -42,6 +43,7 @@ public sealed partial class InjectorSystem : EntitySystem
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
     [Dependency] private readonly StandingStateSystem _standingState = default!;
     [Dependency] private readonly UseDelaySystem _useDelay = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     public override void Initialize()
     {
@@ -305,6 +307,11 @@ public sealed partial class InjectorSystem : EntitySystem
         // Technically, both can be true, but that is probably a balance nightmare.
         else if (_standingState.IsDown(target))
             doAfterTime *= activeMode.DownedModifier;
+
+        // Ares-tweak start: biology stat reduces injection delay (0.375s per point)
+        var biologyLevel = _stats.GetStatLevel(user, new ProtoId<StatPrototype>("Biology"));
+        doAfterTime = TimeSpan.FromSeconds(Math.Max(0.5, doAfterTime.TotalSeconds - biologyLevel * 0.0375));
+        // Ares-tweak end:
 
         return true;
     }
