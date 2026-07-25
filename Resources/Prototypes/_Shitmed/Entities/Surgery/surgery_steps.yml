@@ -310,6 +310,7 @@
     tool:
     - type: BodyPart
     duration: 6
+    stat: Mechanical # Ares-tweak
   - type: Sprite
     sprite: _Shitmed/Objects/Specific/Medical/Surgery/manipulation.rsi
     state: insertion
@@ -329,6 +330,7 @@
     - type: IncisionOpen
     - type: InternalBleedersClamped
     duration: 2
+    stat: Mechanical # Ares-tweak
   - type: SurgeryAffixPartStep
   - type: Sprite
     sprite: _Shitmed/Objects/Specific/Medical/Surgery/cautery.rsi
@@ -523,6 +525,7 @@
   components:
   - type: SurgeryStep
     duration: 4
+    stat: Mechanical # Ares-tweak
   - type: Sprite
     sprite: _Shitmed/Objects/Specific/Medical/Surgery/manipulation.rsi
     state: insertion
@@ -541,6 +544,7 @@
   components:
   - type: SurgeryStep
     duration: 4
+    stat: Mechanical # Ares-tweak
   - type: Sprite
     sprite: _Shitmed/Objects/Specific/Medical/Surgery/manipulation.rsi
     state: insertion
@@ -770,16 +774,31 @@
   parent: SurgeryStepInsertOrgan
   id: SurgeryStepInsertAugmentPowerCellSlot
   name: Add power cell slot
+  # Ares-tweak start
+  components:
+  - type: SurgeryStep
+    stat: Mechanical
+  # Ares-tweak end
 
 - type: entity
   parent: SurgeryStepInsertOrgan
   id: SurgeryStepInsertAugmentPowerCellCharger
   name: Add power cell charger
+  components:
+  # Ares-tweak start
+  - type: SurgeryStep
+    stat: Mechanical
+  # Ares-tweak end
 
 - type: entity
   parent: SurgeryStepInsertOrgan
   id: SurgeryStepInsertAugmentArm
   name: Add arm augment
+  components:
+  # Ares-tweak start
+  - type: SurgeryStep
+    stat: Mechanical
+  # Ares-tweak end
 
 # Lobotomy
 - type: entity

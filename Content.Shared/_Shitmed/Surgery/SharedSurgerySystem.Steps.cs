@@ -900,7 +900,7 @@ public abstract partial class SharedSurgerySystem
         return true;
     }
 
-    // Ares-tweak start: added biology stat bonus
+    // Ares-tweak start: added stat bonus to surgery speed
     private float GetSurgeryDuration(EntityUid surgeryStep, EntityUid user, EntityUid target, float toolSpeed)
     {
         if (!_stepQuery.TryComp(surgeryStep, out var stepComp))
@@ -914,8 +914,8 @@ public abstract partial class SharedSurgerySystem
             speed *= surgerySpeedMod.SpeedModifier;
 
         var baseDuration = stepComp.Duration * 1.3f;
-        var biologyLevel = _stats.GetStatLevel(user, new ProtoId<StatPrototype>("Biology"));
-        baseDuration = MathF.Max(baseDuration - biologyLevel, stepComp.Duration * 0.1f);
+        var statLevel = _stats.GetStatLevel(user, stepComp.Stat);
+        baseDuration = MathF.Max(baseDuration - statLevel, stepComp.Duration * 0.1f);
 
         return baseDuration / speed;
     }
