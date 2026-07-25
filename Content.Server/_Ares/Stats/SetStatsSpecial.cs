@@ -14,14 +14,16 @@ public sealed partial class SetStatsSpecial : JobSpecial
     public override void AfterEquip(EntityUid mob)
     {
         var entMan = IoCManager.Resolve<IEntityManager>();
+        var statsSystem = entMan.System<AresStatsSystem>();
         var statsComp = entMan.EnsureComponent<StatsComponent>(mob);
 
+        var allStats = new Dictionary<ProtoId<StatPrototype>, int>();
         foreach (var (statId, level) in Stats)
         {
             var current = statsComp.Stats.GetValueOrDefault(statId, 0);
-            statsComp.Stats[statId] = current + level;
+            allStats[statId] = current + level;
         }
 
-        entMan.Dirty(mob, statsComp);
+        statsSystem.SetAllStatLevels(mob, allStats, statsComp);
     }
 }

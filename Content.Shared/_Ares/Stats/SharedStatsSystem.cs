@@ -43,8 +43,12 @@ public sealed partial class AresStatsSystem : EntitySystem
         if (!Resolve(uid, ref component))
             return;
 
-        component.Stats[statId] = Math.Max(0, level);
+        var old = component.Stats.GetValueOrDefault(statId, 0);
+        var newLevel = Math.Max(0, level);
+        component.Stats[statId] = newLevel;
         Dirty(uid, component);
+        var ev = new StatLevelChangedEvent(uid, statId, old, newLevel);
+        RaiseLocalEvent(uid, ref ev);
     }
 
     public void ModifyStatLevel(EntityUid uid, ProtoId<StatPrototype> statId, int delta, StatsComponent? component = null)
@@ -53,8 +57,11 @@ public sealed partial class AresStatsSystem : EntitySystem
             return;
 
         var current = component.Stats.GetValueOrDefault(statId, 0);
-        component.Stats[statId] = Math.Max(0, current + delta);
+        var newLevel = Math.Max(0, current + delta);
+        component.Stats[statId] = newLevel;
         Dirty(uid, component);
+        var ev2 = new StatLevelChangedEvent(uid, statId, current, newLevel);
+        RaiseLocalEvent(uid, ref ev2);
     }
 
     public void SetAllStatLevels(EntityUid uid, Dictionary<ProtoId<StatPrototype>, int> stats, StatsComponent? component = null)
@@ -64,7 +71,10 @@ public sealed partial class AresStatsSystem : EntitySystem
 
         foreach (var (statId, level) in stats)
         {
+            var old = component.Stats.GetValueOrDefault(statId, 0);
             component.Stats[statId] = Math.Max(0, level);
+            var ev = new StatLevelChangedEvent(uid, statId, old, Math.Max(0, level));
+            RaiseLocalEvent(uid, ref ev);
         }
 
         Dirty(uid, component);
