@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Ares.Stats;
 
-public sealed class AresCritSystem : EntitySystem
+public sealed class StatCritSystem : EntitySystem
 {
     [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly MobThresholdSystem _thresholds = default!;
