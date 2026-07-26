@@ -299,6 +299,8 @@ namespace Content.Server.Construction
                             var category = GetCategoryForGraph(construction.Graph);
                             if (IsCraftingCategory(category))
                                 doAfterTime = GetCognitionCraftTime(interactUsing.User, doAfterTime);
+                            else if (IsMechanicalCategory(category))
+                                doAfterTime = GetMechanicalCraftTime(interactUsing.User, doAfterTime);
                         }
 
                         var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, doAfterTime, doAfterEv, uid, uid, interactUsing.Used)

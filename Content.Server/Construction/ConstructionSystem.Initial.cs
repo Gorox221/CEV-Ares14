@@ -273,6 +273,8 @@ namespace Content.Server.Construction
                 var category = GetCategoryForGraph(graph.ID);
                 if (IsCraftingCategory(category))
                     doAfterTime = GetCognitionCraftTime(user, doAfterTime);
+                else if (IsMechanicalCategory(category))
+                    doAfterTime = GetMechanicalCraftTime(user, doAfterTime);
             }
             // Ares-tweak end
 

@@ -16,6 +16,14 @@ public sealed partial class ConstructionSystem
         "construction-category-misc"
     ];
 
+    private static readonly string[] MechanicalCategories =
+    [
+        "construction-category-furniture",
+        "construction-category-structures",
+        "construction-category-utilities",
+        "construction-category-storage"
+    ];
+
     private Dictionary<string, string> _graphCategoryCache = new();
 
     private string? GetCategoryForGraph(string graphId)
@@ -50,6 +58,20 @@ public sealed partial class ConstructionSystem
         return false;
     }
 
+    private bool IsMechanicalCategory(string? category)
+    {
+        if (category == null)
+            return false;
+
+        foreach (var target in MechanicalCategories)
+        {
+            if (category == target)
+                return true;
+        }
+
+        return false;
+    }
+
     private float GetCognitionCraftTime(EntityUid user, float baseTime)
     {
         if (baseTime <= 0 || !HasComp<StatsComponent>(user))
@@ -61,6 +83,21 @@ public sealed partial class ConstructionSystem
 
         var masteryFactor = Math.Min(cogLevel / 60f, 1f) * 0.66f;
         var timeReduction = Math.Max(0, 1f - masteryFactor);
+
+        return baseTime * timeReduction;
+    }
+
+    private float GetMechanicalCraftTime(EntityUid user, float baseTime)
+    {
+        if (baseTime <= 0 || !HasComp<StatsComponent>(user))
+            return baseTime;
+
+        var mechLevel = _statsManager.GetStatLevel(user, new ProtoId<StatPrototype>("Mechanical"));
+        if (mechLevel <= 0)
+            return baseTime;
+
+        var masteryFactor = Math.Min(mechLevel / 60f, 1f) * 0.4f;
+        var timeReduction = Math.Max(0.6f, 1f - masteryFactor);
 
         return baseTime * timeReduction;
     }
