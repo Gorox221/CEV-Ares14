@@ -15,6 +15,7 @@
 # SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
 # SPDX-FileCopyrightText: 2025 Aiden <aiden@djkraz.com>
 # SPDX-FileCopyrightText: 2025 SX-7 <92227810+SX-7@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2026 Gorox221 <goroshiksrim@gmail.com>
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -283,10 +284,16 @@ entity-effect-guidebook-adjust-reagent-group =
                 [1] add
                 *[-1] remove
             }
-    } {NATURALFIXED($amount, 2)}u of reagents in the group {$group} { $deltasign ->
-            [1] to
-            *[-1] from
-        } the solution
+    } {NATURALFIXED($amount, 2)}u of {$reagent} { $deltasign ->
+        [1] to
+        *[-1] from
+    } the solution
+
+ares-effect-guidebook-stat-modifier =
+    { $chance ->
+        [1] Temporarily modifies
+        *[other] temporarily modify
+    } [color={$statColor}]{$stat}[/color] by [color={$amountColor}]{$amount}[/color] for {NATURALFIXED($time, 3)} {MANY("second", $time)}
 
 entity-effect-guidebook-adjust-temperature =
     { $chance ->

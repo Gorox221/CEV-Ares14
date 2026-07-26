@@ -35,7 +35,19 @@ public sealed partial class AresStatsSystem : EntitySystem
         if (!Resolve(uid, ref component))
             return 0;
 
-        return component.Stats.GetValueOrDefault(statId, 0);
+        var baseLevel = component.Stats.GetValueOrDefault(statId, 0);
+        var tempDelta = 0;
+
+        if (TryComp<TempStatModifierComponent>(uid, out var tempComp) &&
+            tempComp.Modifiers.TryGetValue(statId, out var mods))
+        {
+            foreach (var mod in mods)
+            {
+                tempDelta += mod.Delta;
+            }
+        }
+
+        return Math.Max(0, baseLevel + tempDelta);
     }
 
     public void SetStatLevel(EntityUid uid, ProtoId<StatPrototype> statId, int level, StatsComponent? component = null)

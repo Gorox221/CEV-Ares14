@@ -15,6 +15,18 @@
     Poison:
       # Main effects
       effects:
+      # Ares-tweak start
+      - !type:StatModifier
+        stat: Toughness
+        amount: 13
+        time: 2
+        source: BattleStim
+      - !type:StatModifier
+        stat: Cognition
+        amount: -8
+        time: 2
+        source: BattleStim
+      # Ares-tweak end
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Goobstation - Yowie
