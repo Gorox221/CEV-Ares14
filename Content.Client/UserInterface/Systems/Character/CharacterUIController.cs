@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Linq;
+using System.Numerics; // Ares-tweak
 using Content.Client.CharacterInfo;
 using Content.Client.Gameplay;
 using Content.Client.Stylesheets;
@@ -12,6 +13,7 @@ using Content.Shared.Input;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
+using Content.Shared._Ares.Stats; // Ares-tweak
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
@@ -35,6 +37,7 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
 
     [UISystemDependency] private readonly CharacterInfoSystem _characterInfo = default!;
     [UISystemDependency] private readonly SpriteSystem _sprite = default!;
+    [UISystemDependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     public override void Initialize()
     {
@@ -52,6 +55,11 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
 
         _window = UIManager.CreateWindow<CharacterWindow>();
         LayoutContainer.SetAnchorPreset(_window, LayoutContainer.LayoutPreset.CenterTop);
+
+       // Ares-tweak start
+        _window.TabContainer.SetTabTitle(0, Loc.GetString("character-info-tab-info"));
+        _window.TabContainer.SetTabTitle(1, Loc.GetString("character-info-tab-stats"));
+        // Ares-tweak end
 
         _window.OnClose += DeactivateButton;
         _window.OnOpen += ActivateButton;
@@ -218,6 +226,52 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
         }
 
         _window.RolePlaceholder.Visible = briefing == null && !controls.Any() && !objectives.Any();
+
+    // Ares-tweak start
+        PopulateStats();
+    }
+
+    private void PopulateStats()
+    {
+        if (_window == null)
+            return;
+
+        var player = _player.LocalEntity;
+        if (player == null)
+            return;
+
+        _window.StatsContainer.RemoveAllChildren();
+
+        foreach (var stat in _prototypeManager.EnumeratePrototypes<StatPrototype>())
+        {
+            var level = _stats.GetStatLevel(player.Value, new ProtoId<StatPrototype>(stat.ID));
+
+            var row = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                Margin = new Thickness(0, 4),
+            };
+
+            var nameLabel = new Label
+            {
+                Text = Loc.GetString(stat.Name),
+                FontColorOverride = stat.Color,
+                MinSize = new Vector2(130, 0),
+                ToolTip = stat.Description != null ? Loc.GetString(stat.Description) : null,
+            };
+            row.AddChild(nameLabel);
+
+            var valueLabel = new Label
+            {
+                Text = level.ToString(),
+                Margin = new Thickness(4, 0, 0, 0),
+                FontColorOverride = stat.Color,
+            };
+            row.AddChild(valueLabel);
+
+            _window.StatsContainer.AddChild(row);
+        }
+        // Ares-tweak end
     }
 
     private void OnRoleTypeChanged(MindRoleTypeChangedEvent ev, EntitySessionEventArgs _)

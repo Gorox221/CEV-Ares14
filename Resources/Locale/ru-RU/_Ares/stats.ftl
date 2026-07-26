@@ -1,20 +1,20 @@
 stat-vigilance-name = Бдительность
-stat-vigilance-desc = TODO
+stat-vigilance-desc = Внимательность и восприятие окружающего мира.
 
 stat-cognition-name = Когнитивность
-stat-cognition-desc = TODO
+stat-cognition-desc = Знания и умение создавать новые изделия.
 
 stat-biology-name = Биология
-stat-biology-desc = TODO
+stat-biology-desc = Компетентность в области физиологии и химии.
 
 stat-robustness-name = Выносливость
-stat-robustness-desc = TODO
+stat-robustness-desc = Физическая сила и устойчивость к нагрузкам.
 
 stat-toughness-name = Стойкость
-stat-toughness-desc = TODO
+stat-toughness-desc = Устойчивость к повреждениям и негативным эффектам.
 
 stat-mechanical-name = Механика
-stat-mechanical-desc = TODO
+stat-mechanical-desc = Навыки работы с техникой и механизмами.
 
 ares-hacking-verb-hack = Взломать
 ares-hacking-verb-hack-tooltip = Сбрасывание требований к доступам: ({$time}с)

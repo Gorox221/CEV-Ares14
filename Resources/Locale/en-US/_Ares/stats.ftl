@@ -1,20 +1,20 @@
 stat-vigilance-name = Vigilance
-stat-vigilance-desc = TODO
+stat-vigilance-desc = Attentiveness and perception of the surrounding world.
 
 stat-cognition-name = Cognition
-stat-cognition-desc = TODO
+stat-cognition-desc = Knowledge and the ability to create new items.
 
 stat-biology-name = Biology
-stat-biology-desc = TODO
+stat-biology-desc = Competence in the fields of physiology and chemistry.
 
 stat-robustness-name = Robustness
-stat-robustness-desc = TODO
+stat-robustness-desc = Physical strength and resistance to strain.
 
 stat-toughness-name = Toughness
-stat-toughness-desc = TODO
+stat-toughness-desc = Resistance to damage and negative effects.
 
-stat-mechanical-name = Mechanical
-stat-mechanical-desc = TODO
+stat-mechanical-name = Mechanics
+stat-mechanical-desc = Skills in working with technology and machinery.
 
 ares-hacking-verb-hack = Hack
 ares-hacking-verb-hack-tooltip = Resetting access requirements: ({$time}s)

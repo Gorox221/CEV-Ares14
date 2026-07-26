@@ -17,6 +17,9 @@ public sealed partial class StatPrototype : IPrototype
     public LocId? Description { get; private set; }
 
     [DataField]
+    public Color Color { get; private set; } = Color.White;
+
+    [DataField]
     public int MinLevel { get; private set; } = 0;
 
     [DataField]
