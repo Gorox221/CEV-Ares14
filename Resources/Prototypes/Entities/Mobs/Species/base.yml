@@ -252,6 +252,7 @@
   - type: MindControllable # Goobstation
   - type: VisibleContraband # Goobstation
   - type: MomentumSteering # Goobstation - No steer
+  - type: Sanity # Ares-Tweak
 
 - type: entity
   save: false
