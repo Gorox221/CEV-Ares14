@@ -2,9 +2,11 @@
 
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
+using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Humanoid;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
@@ -36,6 +38,9 @@ public sealed partial class SanityDeathSystem : EntitySystem
             if (viewerUid == args.Target)
                 continue;
 
+            if (!CanPerceiveSanityEffects(viewerUid))
+                continue;
+
             var viewerPos = _transform.ToMapCoordinates(Transform(viewerUid).Coordinates);
             var deadPos = _transform.ToMapCoordinates(deadXform.Coordinates);
 
@@ -54,5 +59,17 @@ public sealed partial class SanityDeathSystem : EntitySystem
             var ev = new SanityChangedEvent(viewerUid, oldValue, newValue, oldValue - newValue);
             RaiseLocalEvent(viewerUid, ref ev);
         }
+    }
+
+    private bool CanPerceiveSanityEffects(EntityUid uid)
+    {
+        if (TryComp<MobStateComponent>(uid, out var mobState)
+            && mobState.CurrentState is MobState.Dead or MobState.Critical)
+            return false;
+
+        if (TryComp<BlindableComponent>(uid, out var blindable) && blindable.IsBlind)
+            return false;
+
+        return true;
     }
 }

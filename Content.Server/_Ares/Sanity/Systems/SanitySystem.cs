@@ -2,7 +2,10 @@
 
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
+using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Interaction;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
@@ -28,6 +31,9 @@ public sealed partial class SanitySystem : EntitySystem
 
     private void ProcessSanityCheck(EntityUid uid, SanityComponent sanity, TransformComponent xform)
     {
+        if (!CanPerceiveSanityEffects(uid))
+            return;
+
         var nearby = _lookup.GetEntitiesInRange<SanityAffectorComponent>(xform.Coordinates, sanity.Range);
         var totalChange = 0f;
 
@@ -64,5 +70,17 @@ public sealed partial class SanitySystem : EntitySystem
 
         var changedEv = new SanityChangedEvent(uid, oldValue, newValue, newValue - oldValue);
         RaiseLocalEvent(uid, ref changedEv);
+    }
+
+    private bool CanPerceiveSanityEffects(EntityUid uid)
+    {
+        if (TryComp<MobStateComponent>(uid, out var mobState)
+            && mobState.CurrentState is MobState.Dead or MobState.Critical)
+            return false;
+
+        if (TryComp<BlindableComponent>(uid, out var blindable) && blindable.IsBlind)
+            return false;
+
+        return true;
     }
 }
