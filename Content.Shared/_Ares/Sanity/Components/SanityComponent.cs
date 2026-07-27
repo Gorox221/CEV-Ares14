@@ -24,4 +24,7 @@ public sealed partial class SanityComponent : Component
 
     [DataField]
     public float Accumulator;
+
+    [DataField]
+    public TimeSpan NextMessageTime;
 }
