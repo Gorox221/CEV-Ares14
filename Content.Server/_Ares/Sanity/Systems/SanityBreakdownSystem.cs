@@ -90,7 +90,7 @@ public sealed partial class SanityBreakdownSystem : EntitySystem
         Dirty(ent, ent.Comp);
 
         var ev = new SanityChangedEvent(ent, 0f, ent.Comp.CurrentSanity, ent.Comp.CurrentSanity);
-        RaiseLocalEvent(ent, ref ev);
+        RaiseLocalEvent(ent, ref ev, true);
     }
 
     private SanityBreakdownPrototype? PickBreakdown()

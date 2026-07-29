@@ -9,7 +9,7 @@ void fragment()
 
     highp float x = (uv.x + 4.0) * (uv.y + 4.0) * (TIME * 10.0);
     highp float raw = mod((mod(x, 13.0) + 1.0) * (mod(x, 123.0) + 1.0), 0.01) - 0.005;
-    highp float grainAmount = raw * strength * 190.0;
+    highp float grainAmount = raw * strength * 100.0;
     highp vec4 grain = color * (1.0 + grainAmount);
 
     COLOR = grain;

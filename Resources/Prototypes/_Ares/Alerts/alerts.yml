@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: alert
+  id: Sanity
+  category: Sanity
+  icons:
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity0
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity1
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity2
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity3
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity4
+  - sprite: /Textures/_Ares/Interface/Alerts/sanity.rsi
+    state: sanity5
+  minSeverity: 0
+  maxSeverity: 5
+  name: alerts-sanity-name
+  description: alerts-sanity-desc

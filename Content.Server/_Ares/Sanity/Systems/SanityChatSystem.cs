@@ -46,6 +46,6 @@ public sealed partial class SanityChatSystem : EntitySystem
         Dirty(args.Source, sanity);
 
         var ev = new SanityChangedEvent(args.Source, oldValue, newValue, newValue - oldValue);
-        RaiseLocalEvent(args.Source, ref ev);
+        RaiseLocalEvent(args.Source, ref ev, true);
     }
 }

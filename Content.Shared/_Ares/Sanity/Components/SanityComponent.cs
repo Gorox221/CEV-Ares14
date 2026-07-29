@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared.Alert;
 using Content.Shared.Damage;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Ares.Sanity.Components;
 
@@ -46,4 +48,10 @@ public sealed partial class SanityComponent : Component
 
     [DataField]
     public float SelfHarmReturnSanity;
+
+    [DataField]
+    public ProtoId<AlertPrototype> SanityAlertType = "Sanity";
+
+    [DataField]
+    public ProtoId<AlertCategoryPrototype> SanityAlertCategory = "Sanity";
 }

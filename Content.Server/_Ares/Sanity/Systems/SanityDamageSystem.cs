@@ -39,7 +39,7 @@ public sealed partial class SanityDamageSystem : EntitySystem
         Dirty(ent, ent.Comp);
 
         var ev = new SanityChangedEvent(ent, oldValue, newValue, oldValue - newValue);
-        RaiseLocalEvent(ent, ref ev);
+        RaiseLocalEvent(ent, ref ev, true);
     }
 
     private float GetVigilanceMultiplier(EntityUid uid)

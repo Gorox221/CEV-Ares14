@@ -63,7 +63,7 @@ public sealed partial class SanityDeathSystem : EntitySystem
             Dirty(viewerUid, sanity);
 
             var ev = new SanityChangedEvent(viewerUid, oldValue, newValue, oldValue - newValue);
-            RaiseLocalEvent(viewerUid, ref ev);
+            RaiseLocalEvent(viewerUid, ref ev, true);
         }
     }
 

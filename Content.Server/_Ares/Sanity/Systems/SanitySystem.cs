@@ -76,7 +76,7 @@ public sealed partial class SanitySystem : EntitySystem
         Dirty(uid, sanity);
 
         var changedEv = new SanityChangedEvent(uid, oldValue, newValue, newValue - oldValue);
-        RaiseLocalEvent(uid, ref changedEv);
+        RaiseLocalEvent(uid, ref changedEv, true);
     }
 
     private float GetVigilanceMultiplier(EntityUid uid)
