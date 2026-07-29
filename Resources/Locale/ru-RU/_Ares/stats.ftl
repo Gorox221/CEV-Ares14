@@ -16,6 +16,8 @@ stat-toughness-desc = Устойчивость к повреждениям и н
 stat-mechanical-name = Механика
 stat-mechanical-desc = Навыки работы с техникой и механизмами.
 
+character-info-insight-label = Озарение
+
 ares-hacking-verb-hack = Взломать
 ares-hacking-verb-hack-tooltip = Сбрасывание требований к доступам: ({$time}с)
 ares-hacking-popup-start = {$user} начинает взламывать интерфейс консоли...

@@ -16,6 +16,8 @@ stat-toughness-desc = Resistance to damage and negative effects.
 stat-mechanical-name = Mechanics
 stat-mechanical-desc = Skills in working with technology and machinery.
 
+character-info-insight-label = Insight
+
 ares-hacking-verb-hack = Hack
 ares-hacking-verb-hack-tooltip = Resetting access requirements: ({$time}s)
 ares-hacking-popup-start = {$user} begins hacking the console interface...

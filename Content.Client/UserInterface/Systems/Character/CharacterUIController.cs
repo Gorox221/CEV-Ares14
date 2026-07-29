@@ -13,6 +13,7 @@ using Content.Shared.Input;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
+using Content.Shared._Ares.Sanity.Components; // Ares-tweak
 using Content.Shared._Ares.Stats; // Ares-tweak
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
@@ -270,6 +271,33 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             row.AddChild(valueLabel);
 
             _window.StatsContainer.AddChild(row);
+        }
+
+        if (_ent.TryGetComponent(player.Value, out InsightComponent? insight))
+        {
+            var separator = new Control
+            {
+                MinSize = new Vector2(0, 8),
+            };
+            _window.StatsContainer.AddChild(separator);
+
+            var insightLabel = new Label
+            {
+                Text = Loc.GetString("character-info-insight-label"),
+                FontColorOverride = new Color(0.6f, 0.8f, 1f),
+            };
+            _window.StatsContainer.AddChild(insightLabel);
+
+            var insightBar = new ProgressBar
+            {
+                MaxValue = insight.MaxInsight,
+                MinValue = 0,
+                Value = insight.CurrentInsight,
+                HorizontalExpand = true,
+                MinSize = new Vector2(0, 20),
+                Margin = new Thickness(0, 2, 0, 0),
+            };
+            _window.StatsContainer.AddChild(insightBar);
         }
         // Ares-tweak end
     }
