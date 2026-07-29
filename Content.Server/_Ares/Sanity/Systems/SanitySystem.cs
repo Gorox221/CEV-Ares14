@@ -2,16 +2,20 @@
 
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
+using Content.Shared._Ares.Stats;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
 public sealed partial class SanitySystem : EntitySystem
 {
+    [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
@@ -63,6 +67,9 @@ public sealed partial class SanitySystem : EntitySystem
         if (MathHelper.CloseTo(totalChange, 0f))
             return;
 
+        if (totalChange < 0f)
+            totalChange *= GetVigilanceMultiplier(uid);
+
         var oldValue = sanity.CurrentSanity;
         var newValue = Math.Clamp(oldValue + totalChange, sanity.MinSanity, sanity.MaxSanity);
         sanity.CurrentSanity = newValue;
@@ -70,6 +77,17 @@ public sealed partial class SanitySystem : EntitySystem
 
         var changedEv = new SanityChangedEvent(uid, oldValue, newValue, newValue - oldValue);
         RaiseLocalEvent(uid, ref changedEv);
+    }
+
+    private float GetVigilanceMultiplier(EntityUid uid)
+    {
+        var vigPrototype = new ProtoId<StatPrototype>("Vigilance");
+        if (!_prototypes.HasIndex(vigPrototype))
+            return 1f;
+
+        var vigLevel = _stats.GetStatLevel(uid, vigPrototype);
+        var clampedVig = Math.Clamp(vigLevel, 0, 60);
+        return (float)(1.2 - clampedVig / 60.0);
     }
 
     private bool CanPerceiveSanityEffects(EntityUid uid)

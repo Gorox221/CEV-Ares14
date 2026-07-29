@@ -2,17 +2,21 @@
 
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
+using Content.Shared._Ares.Stats;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Humanoid;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
 public sealed partial class SanityDeathSystem : EntitySystem
 {
+    [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
@@ -47,8 +51,10 @@ public sealed partial class SanityDeathSystem : EntitySystem
             if (!_interaction.InRangeUnobstructed(deadPos, viewerPos, range))
                 continue;
 
+            var vigMultiplier = GetVigilanceMultiplier(viewerUid);
+            var rawDelta = 10f * vigMultiplier;
             var oldValue = sanity.CurrentSanity;
-            var newValue = Math.Clamp(oldValue - 10f, sanity.MinSanity, sanity.MaxSanity);
+            var newValue = Math.Clamp(oldValue - rawDelta, sanity.MinSanity, sanity.MaxSanity);
 
             if (MathHelper.CloseTo(oldValue, newValue))
                 continue;
@@ -59,6 +65,17 @@ public sealed partial class SanityDeathSystem : EntitySystem
             var ev = new SanityChangedEvent(viewerUid, oldValue, newValue, oldValue - newValue);
             RaiseLocalEvent(viewerUid, ref ev);
         }
+    }
+
+    private float GetVigilanceMultiplier(EntityUid uid)
+    {
+        var vigPrototype = new ProtoId<StatPrototype>("Vigilance");
+        if (!_prototypes.HasIndex(vigPrototype))
+            return 1f;
+
+        var vigLevel = _stats.GetStatLevel(uid, vigPrototype);
+        var clampedVig = Math.Clamp(vigLevel, 0, 60);
+        return (float)(1.2 - clampedVig / 60.0);
     }
 
     private bool CanPerceiveSanityEffects(EntityUid uid)
