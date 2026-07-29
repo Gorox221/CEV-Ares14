@@ -52,6 +52,8 @@ public sealed partial class SanityBreakdownSystem : EntitySystem
             if (_timing.CurTime >= sanity.SelfHarmEndTime)
             {
                 sanity.SelfHarmEndTime = TimeSpan.Zero;
+                sanity.CurrentSanity = sanity.SelfHarmReturnSanity;
+                Dirty(uid, sanity);
                 _popup.PopupEntity(Loc.GetString("sanity-breakdown-selfharm-end-popup"), uid, uid);
                 continue;
             }

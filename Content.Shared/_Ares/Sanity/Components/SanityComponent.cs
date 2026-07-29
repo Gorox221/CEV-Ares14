@@ -43,4 +43,7 @@ public sealed partial class SanityComponent : Component
 
     [DataField]
     public DamageSpecifier? SelfHarmDamage;
+
+    [DataField]
+    public float SelfHarmReturnSanity;
 }

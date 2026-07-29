@@ -26,3 +26,8 @@
     colorJitter: 0.8
     alphaJitter: 1
     hue: 0.48
+
+- type: shader
+  id: SanityStatic # Ares-tweak
+  kind: source
+  path: "/Textures/_White/Shaders/grain.swsl"

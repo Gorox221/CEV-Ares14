@@ -55,7 +55,7 @@ public sealed partial class SanityPuddleSystem : EntitySystem
             var vomitFraction = solution.GetTotalPrototypeQuantity(new ProtoId<ReagentPrototype>("Vomit")).Float() / totalVol;
 
             if (bloodFraction >= 0.4f || vomitFraction >= 0.4f)
-                args.TotalChange -= 1f;
+                args.TotalChange -= 0.5f;
         }
     }
 }

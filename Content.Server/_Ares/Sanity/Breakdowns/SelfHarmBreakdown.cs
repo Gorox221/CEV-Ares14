@@ -18,7 +18,7 @@ public static class SelfHarmBreakdown
     public static void Execute(EntityUid uid, SanityComponent sanity, SanityBreakdownPrototype proto,
         IGameTiming timing)
     {
-        sanity.CurrentSanity = proto.SanityReturn;
+        sanity.SelfHarmReturnSanity = proto.SanityReturn;
         sanity.SelfHarmAccumulator = 0f;
         sanity.SelfHarmInterval = proto.SelfHarmInterval;
         sanity.SelfHarmDamage = proto.SelfHarmDamage;
