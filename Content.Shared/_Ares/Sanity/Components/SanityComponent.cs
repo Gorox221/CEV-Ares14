@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared.Damage;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared._Ares.Sanity.Components;
@@ -27,4 +28,19 @@ public sealed partial class SanityComponent : Component
 
     [DataField]
     public TimeSpan NextMessageTime;
+
+    [DataField]
+    public TimeSpan NextBreakdownTime;
+
+    [DataField]
+    public TimeSpan SelfHarmEndTime;
+
+    [DataField]
+    public float SelfHarmAccumulator;
+
+    [DataField]
+    public float SelfHarmInterval;
+
+    [DataField]
+    public DamageSpecifier? SelfHarmDamage;
 }

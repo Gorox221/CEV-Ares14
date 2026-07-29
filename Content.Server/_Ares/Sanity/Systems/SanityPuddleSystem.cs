@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Goobstation.Common.Footprints;
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
 using Content.Shared.Chemistry.Components;
@@ -18,6 +19,8 @@ public sealed partial class SanityPuddleSystem : EntitySystem
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
+    private const float PuddleRange = 7f;
+
     public override void Initialize()
     {
         SubscribeLocalEvent<SanityComponent, GetSanityAffectorsEvent>(OnGetSanityAffectors);
@@ -26,16 +29,18 @@ public sealed partial class SanityPuddleSystem : EntitySystem
     private void OnGetSanityAffectors(Entity<SanityComponent> ent, ref GetSanityAffectorsEvent args)
     {
         var xform = Transform(ent);
-        var range = ent.Comp.Range;
 
-        var puddles = _lookup.GetEntitiesInRange<PuddleComponent>(xform.Coordinates, range);
+        var puddles = _lookup.GetEntitiesInRange<PuddleComponent>(xform.Coordinates, PuddleRange);
         foreach (var (puddleUid, puddleComp) in puddles)
         {
+            if (HasComp<FootprintComponent>(puddleUid))
+                continue;
+
             var puddleXform = Transform(puddleUid);
             var originMap = _transform.ToMapCoordinates(xform.Coordinates);
             var otherMap = _transform.ToMapCoordinates(puddleXform.Coordinates);
 
-            if (!_interaction.InRangeUnobstructed(originMap, otherMap, range))
+            if (!_interaction.InRangeUnobstructed(originMap, otherMap, PuddleRange))
                 continue;
 
             Entity<SolutionComponent>? solutionEntity = null;

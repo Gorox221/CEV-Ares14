@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: sanityBreakdown
+  id: Stalwart
+  popup: sanity-breakdown-stalwart-popup
+  weight: 20
+  sanityReturn: 100
+  healing:
+    types:
+      Blunt: -25
+      Heat: -25
+      Asphyxiation: -45
+
+- type: sanityBreakdown
+  id: SelfHarm
+  popup: sanity-breakdown-selfharm-popup
+  weight: 80
+  sanityReturn: 25
+  duration: 60
+  selfHarmInterval: 2.5
+  selfHarmDamage:
+    types:
+      Blunt: 5
