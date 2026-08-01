@@ -1,92 +1,61 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
-using Content.Shared._Ares.Sanity.Events;
-using Content.Shared._Ares.Stats;
-using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Humanoid;
-using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Prototypes;
+using System.Linq;
 
 namespace Content.Server._Ares.Sanity.Systems;
-
-public sealed partial class SanityDeathSystem : EntitySystem
+/// <summary>
+/// Lowers sanity of nearby humanoids that perceive someone die.
+/// </summary>
+public sealed partial class SanityDeathSystem : SanityChangeSystem
 {
-    [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     public override void Initialize()
     {
+        base.Initialize();
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
     }
 
     private void OnMobStateChanged(MobStateChangedEvent args)
     {
-        if (args.NewMobState != MobState.Dead)
+        if (args.NewMobState != MobState.Dead || args.OldMobState == MobState.Dead)
             return;
 
-        if (!HasComp<HumanoidAppearanceComponent>(args.Target))
+        var deadUid = args.Target;
+        if (!HasComp<HumanoidAppearanceComponent>(deadUid))
             return;
 
-        var deadXform = Transform(args.Target);
-        var range = 8f;
+        var deadXform = Transform(deadUid);
+        var deadPos = _transform.GetWorldPosition(deadXform);
 
-        var viewers = _lookup.GetEntitiesInRange<SanityComponent>(deadXform.Coordinates, range);
-        foreach (var (viewerUid, sanity) in viewers)
+        var viewers = _lookup.GetEntitiesInRange<SanityComponent>(deadXform.Coordinates, 8f);
+        foreach (var (viewerUid, viewer) in viewers)
         {
-            if (viewerUid == args.Target)
+            if (viewerUid == deadUid)
+                continue;
+
+            var behavior = viewer.Changes.OfType<DeathSanityChangeBehavior>().FirstOrDefault();
+            if (behavior == null)
                 continue;
 
             if (!CanPerceiveSanityEffects(viewerUid))
                 continue;
 
-            var viewerPos = _transform.ToMapCoordinates(Transform(viewerUid).Coordinates);
-            var deadPos = _transform.ToMapCoordinates(deadXform.Coordinates);
-
-            if (!_interaction.InRangeUnobstructed(deadPos, viewerPos, range))
+            var viewerXform = Transform(viewerUid);
+            if ((_transform.GetWorldPosition(viewerXform) - deadPos).Length() > behavior.Range)
                 continue;
 
-            var vigMultiplier = GetVigilanceMultiplier(viewerUid);
-            var rawDelta = 10f * vigMultiplier;
-            var oldValue = sanity.CurrentSanity;
-            var newValue = Math.Clamp(oldValue - rawDelta, sanity.MinSanity, sanity.MaxSanity);
+            var delta = behavior.Change;
+            if (delta < 0f)
+                delta *= GetVigilanceMultiplier(viewerUid);
 
-            if (MathHelper.CloseTo(oldValue, newValue))
-                continue;
-
-            sanity.CurrentSanity = newValue;
-            Dirty(viewerUid, sanity);
-
-            var ev = new SanityChangedEvent(viewerUid, oldValue, newValue, oldValue - newValue);
-            RaiseLocalEvent(viewerUid, ref ev, true);
+            ApplyChange((viewerUid, viewer), delta);
         }
-    }
-
-    private float GetVigilanceMultiplier(EntityUid uid)
-    {
-        var vigPrototype = new ProtoId<StatPrototype>("Vigilance");
-        if (!_prototypes.HasIndex(vigPrototype))
-            return 1f;
-
-        var vigLevel = _stats.GetStatLevel(uid, vigPrototype);
-        var clampedVig = Math.Clamp(vigLevel, 0, 60);
-        return (float)(1.2 - clampedVig / 60.0);
-    }
-
-    private bool CanPerceiveSanityEffects(EntityUid uid)
-    {
-        if (TryComp<MobStateComponent>(uid, out var mobState)
-            && mobState.CurrentState is MobState.Dead or MobState.Critical)
-            return false;
-
-        if (TryComp<BlindableComponent>(uid, out var blindable) && blindable.IsBlind)
-            return false;
-
-        return true;
     }
 }

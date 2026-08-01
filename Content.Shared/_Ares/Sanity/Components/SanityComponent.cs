@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared.Alert;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -9,6 +10,12 @@ namespace Content.Shared._Ares.Sanity.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SanityComponent : Component
 {
+    /// <summary>
+    /// Sources that lower or raise sanity, each handled by its own system.
+    /// </summary>
+    [DataField]
+    public List<SanityChangeBehavior> Changes = new();
+
     [DataField, AutoNetworkedField]
     public float CurrentSanity = 100f;
 
@@ -18,6 +25,9 @@ public sealed partial class SanityComponent : Component
     [DataField]
     public float MinSanity = 0f;
 
+    /// <summary>
+    /// Perception radius used by the aura sanity change system.
+    /// </summary>
     [DataField]
     public float Range = 8f;
 
@@ -29,12 +39,6 @@ public sealed partial class SanityComponent : Component
 
     [DataField]
     public TimeSpan LastDamageTime;
-
-    [DataField]
-    public float RegenDelay = 30f;
-
-    [DataField]
-    public float RegenAmount = 0.2f;
 
     [DataField]
     public TimeSpan NextMessageTime;

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Goobstation.Common.Footprints;
+using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
 using Content.Shared.Chemistry.Components;
@@ -9,28 +10,40 @@ using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Fluids.Components;
 using Content.Shared.Interaction;
 using Robust.Shared.Prototypes;
+using System.Linq;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
-public sealed partial class SanityPuddleSystem : EntitySystem
+/// <summary>
+/// Lowers sanity every check tick while standing in a blood or vomit puddle.
+/// </summary>
+public sealed partial class PuddleSanityChangeSystem : SanityChangeSystem
 {
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
-    private const float PuddleRange = 7f;
-
     public override void Initialize()
     {
-        SubscribeLocalEvent<SanityComponent, GetSanityAffectorsEvent>(OnGetSanityAffectors);
+        base.Initialize();
+        SubscribeLocalEvent<SanityCheckEvent>(OnSanityCheck);
     }
 
-    private void OnGetSanityAffectors(Entity<SanityComponent> ent, ref GetSanityAffectorsEvent args)
+    private void OnSanityCheck(ref SanityCheckEvent args)
     {
-        var xform = Transform(ent);
+        if (!TryComp<SanityComponent>(args.Entity, out var sanity))
+            return;
 
-        var puddles = _lookup.GetEntitiesInRange<PuddleComponent>(xform.Coordinates, PuddleRange);
+        var behavior = sanity.Changes.OfType<PuddleSanityChangeBehavior>().FirstOrDefault();
+        if (behavior == null)
+            return;
+
+        var xform = Transform(args.Entity);
+
+        var puddles = _lookup.GetEntitiesInRange<PuddleComponent>(xform.Coordinates, behavior.Range);
+        var totalChange = 0f;
+
         foreach (var (puddleUid, puddleComp) in puddles)
         {
             if (HasComp<FootprintComponent>(puddleUid))
@@ -40,7 +53,7 @@ public sealed partial class SanityPuddleSystem : EntitySystem
             var originMap = _transform.ToMapCoordinates(xform.Coordinates);
             var otherMap = _transform.ToMapCoordinates(puddleXform.Coordinates);
 
-            if (!_interaction.InRangeUnobstructed(originMap, otherMap, PuddleRange))
+            if (!_interaction.InRangeUnobstructed(originMap, otherMap, behavior.Range))
                 continue;
 
             Entity<SolutionComponent>? solutionEntity = null;
@@ -54,8 +67,10 @@ public sealed partial class SanityPuddleSystem : EntitySystem
             var bloodFraction = solution.GetTotalPrototypeQuantity(new ProtoId<ReagentPrototype>("Blood")).Float() / totalVol;
             var vomitFraction = solution.GetTotalPrototypeQuantity(new ProtoId<ReagentPrototype>("Vomit")).Float() / totalVol;
 
-            if (bloodFraction >= 0.4f || vomitFraction >= 0.4f)
-                args.TotalChange -= 0.5f;
+            if (bloodFraction >= behavior.MinFraction || vomitFraction >= behavior.MinFraction)
+                totalChange += behavior.Change;
         }
+
+        ApplyChange((args.Entity, sanity), totalChange);
     }
 }

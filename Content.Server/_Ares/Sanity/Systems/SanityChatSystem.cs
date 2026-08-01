@@ -1,20 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
-using Content.Shared._Ares.Sanity.Events;
 using Content.Shared.Chat;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using System.Linq;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
-public sealed partial class SanityChatSystem : EntitySystem
+/// <summary>
+/// Raises sanity when the entity speaks in local or radio chat, on a cooldown.
+/// </summary>
+public sealed partial class SanityChatSystem : SanityChangeSystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
+        base.Initialize();
         SubscribeLocalEvent<EntitySpokeEvent>(OnEntitySpoke);
     }
 
@@ -26,6 +31,10 @@ public sealed partial class SanityChatSystem : EntitySystem
         if (!TryComp<SanityComponent>(args.Source, out var sanity))
             return;
 
+        var behavior = sanity.Changes.OfType<ChatSanityChangeBehavior>().FirstOrDefault();
+        if (behavior == null)
+            return;
+
         if (_timing.CurTime < sanity.NextMessageTime)
             return;
 
@@ -35,17 +44,7 @@ public sealed partial class SanityChatSystem : EntitySystem
         if (!isLocal && !isRadio)
             return;
 
-        var oldValue = sanity.CurrentSanity;
-        var newValue = Math.Clamp(oldValue + 1f, sanity.MinSanity, sanity.MaxSanity);
-
-        if (MathHelper.CloseTo(oldValue, newValue))
-            return;
-
-        sanity.CurrentSanity = newValue;
-        sanity.NextMessageTime = _timing.CurTime + TimeSpan.FromSeconds(_random.Next(30, 46));
-        Dirty(args.Source, sanity);
-
-        var ev = new SanityChangedEvent(args.Source, oldValue, newValue, newValue - oldValue);
-        RaiseLocalEvent(args.Source, ref ev, true);
+        ApplyChange((args.Source, sanity), behavior.Change);
+        sanity.NextMessageTime = _timing.CurTime + TimeSpan.FromSeconds(_random.NextFloat(behavior.MinCooldown, behavior.MaxCooldown));
     }
 }
