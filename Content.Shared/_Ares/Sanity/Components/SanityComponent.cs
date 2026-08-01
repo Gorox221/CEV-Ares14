@@ -29,6 +29,15 @@ public sealed partial class SanityComponent : Component
     public float Accumulator;
 
     [DataField]
+    public TimeSpan LastDamageTime;
+
+    [DataField]
+    public float RegenDelay = 30f;
+
+    [DataField]
+    public float RegenAmount = 0.2f;
+
+    [DataField]
     public TimeSpan NextMessageTime;
 
     [DataField]

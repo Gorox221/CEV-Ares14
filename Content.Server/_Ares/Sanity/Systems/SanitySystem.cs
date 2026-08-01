@@ -8,6 +8,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
@@ -15,9 +16,15 @@ public sealed partial class SanitySystem : EntitySystem
 {
     [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+
+    public override void Initialize()
+    {
+        SubscribeLocalEvent<SanityComponent, SanityChangedEvent>(OnSanityChanged);
+    }
 
     public override void Update(float frameTime)
     {
@@ -30,7 +37,32 @@ public sealed partial class SanitySystem : EntitySystem
 
             sanity.Accumulator = 0f;
             ProcessSanityCheck(uid, sanity, xform);
+            ProcessRegeneration(uid, sanity);
         }
+    }
+
+    private void OnSanityChanged(EntityUid uid, SanityComponent sanity, ref SanityChangedEvent args)
+    {
+        if (args.NewValue < args.OldValue)
+            sanity.LastDamageTime = _timing.CurTime;
+    }
+
+    private void ProcessRegeneration(EntityUid uid, SanityComponent sanity)
+    {
+        if (_timing.CurTime - sanity.LastDamageTime < TimeSpan.FromSeconds(sanity.RegenDelay))
+            return;
+
+        var oldValue = sanity.CurrentSanity;
+        var newValue = Math.Clamp(oldValue + sanity.RegenAmount, sanity.MinSanity, sanity.MaxSanity);
+
+        if (MathHelper.CloseTo(oldValue, newValue))
+            return;
+
+        sanity.CurrentSanity = newValue;
+        Dirty(uid, sanity);
+
+        var changedEv = new SanityChangedEvent(uid, oldValue, newValue, newValue - oldValue);
+        RaiseLocalEvent(uid, ref changedEv, true);
     }
 
     private void ProcessSanityCheck(EntityUid uid, SanityComponent sanity, TransformComponent xform)
