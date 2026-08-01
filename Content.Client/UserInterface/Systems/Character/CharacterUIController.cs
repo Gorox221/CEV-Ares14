@@ -14,6 +14,7 @@ using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
 using Content.Shared._Ares.Sanity.Components; // Ares-tweak
+using Content.Shared._Ares.Sanity.Events; // Ares-tweak
 using Content.Shared._Ares.Stats; // Ares-tweak
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
@@ -299,7 +300,63 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             };
             _window.StatsContainer.AddChild(insightBar);
         }
-        // Ares-tweak end
+
+        if (_ent.TryGetComponent(player.Value, out RestComponent? rest))
+        {
+            if (rest.LevelUpPending)
+            {
+                var levelUpSeparator = new Control
+                {
+                    MinSize = new Vector2(0, 8),
+                };
+                _window.StatsContainer.AddChild(levelUpSeparator);
+
+                var levelUpLabel = new Label
+                {
+                    Text = Loc.GetString("rest-levelup-ui"),
+                    FontColorOverride = Color.Gold,
+                };
+                _window.StatsContainer.AddChild(levelUpLabel);
+
+                var btnContainer = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new Thickness(0, 4, 0, 0),
+                };
+
+                var internalizeBtn = new Button
+                {
+                    Text = Loc.GetString("rest-button-internalize"),
+                    MinSize = new Vector2(120, 30),
+                    ToolTip = Loc.GetString("rest-button-internalize-desc"),
+                };
+                var uid = player.Value;
+                var netEnt = _ent.GetNetEntity(uid);
+                internalizeBtn.OnPressed += _ =>
+                {
+                    if (_ent.EntityNetManager != null)
+                        _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netEnt, "Internalize"));
+                };
+                btnContainer.AddChild(internalizeBtn);
+
+                var oddityBtn = new Button
+                {
+                    Text = Loc.GetString("rest-button-oddity"),
+                    MinSize = new Vector2(120, 30),
+                    Disabled = true,
+                    ToolTip = Loc.GetString("rest-button-oddity-desc"),
+                };
+                oddityBtn.OnPressed += _ =>
+                {
+                    if (_ent.EntityNetManager != null)
+                        _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netEnt, "Oddity"));
+                };
+                btnContainer.AddChild(oddityBtn);
+
+                _window.StatsContainer.AddChild(btnContainer);
+            }
+        }
+    // Ares-tweak end
     }
 
     private void OnRoleTypeChanged(MindRoleTypeChangedEvent ev, EntitySessionEventArgs _)
