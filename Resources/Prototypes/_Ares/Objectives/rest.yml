@@ -12,6 +12,24 @@
     issuer: objective-issuer-desires
   - type: DesireCondition
     desireType: Eat
+    behavior: !type:EatDesireBehavior
+      groups:
+      - id: DessertAndPastry
+        recipes: [Dessert, Cake, BarsAndCookies]
+      - id: Breakfast
+        recipes: [Breakfast]
+      - id: Pasta
+        recipes: [Pasta]
+      - id: PieAndTart
+        recipes: [Pie]
+      - id: Pizza
+        recipes: [Pizza]
+      - id: Salad
+        recipes: [Salad]
+      - id: SoupAndStew
+        recipes: [Soup]
+      - id: Bread
+        recipes: [Breads]
 
 - type: entity
   parent: BaseObjective
@@ -25,6 +43,7 @@
     issuer: objective-issuer-desires
   - type: DesireCondition
     desireType: Drink
+    behavior: !type:DrinkDesireBehavior
 
 - type: entity
   parent: BaseObjective
@@ -38,3 +57,5 @@
     issuer: objective-issuer-desires
   - type: DesireCondition
     desireType: Smoke
+    behavior: !type:SmokeDesireBehavior
+      reagents: [Nicotine]

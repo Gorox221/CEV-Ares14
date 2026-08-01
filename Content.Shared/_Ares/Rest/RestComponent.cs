@@ -8,14 +8,5 @@ namespace Content.Shared._Ares.Sanity.Components;
 public sealed partial class RestComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public string? CurrentDesire;
-
-    [DataField, AutoNetworkedField]
-    public string? RecipeGroup;
-
-    [DataField, AutoNetworkedField]
     public bool LevelUpPending;
-
-    [DataField]
-    public TimeSpan RestStartTime;
 }
