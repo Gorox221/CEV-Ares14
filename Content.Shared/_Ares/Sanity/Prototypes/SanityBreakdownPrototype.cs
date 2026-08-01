@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Shared.Damage;
+using Content.Shared._Ares.Sanity.Breakdowns;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Ares.Sanity.Prototypes;
@@ -17,18 +17,9 @@ public sealed partial class SanityBreakdownPrototype : IPrototype
     [DataField]
     public float Weight { get; private set; } = 100f;
 
-    [DataField]
-    public float SanityReturn { get; private set; } = 25f;
-
-    [DataField]
-    public float Duration { get; private set; }
-
-    [DataField]
-    public DamageSpecifier? Healing { get; private set; }
-
-    [DataField]
-    public float SelfHarmInterval { get; private set; }
-
-    [DataField]
-    public DamageSpecifier? SelfHarmDamage { get; private set; }
+    /// <summary>
+    /// Behavior of the breakdown, dispatched to its own system when triggered.
+    /// </summary>
+    [DataField(required: true)]
+    public SanityBreakdownBehavior Behavior { get; private set; } = default!;
 }
