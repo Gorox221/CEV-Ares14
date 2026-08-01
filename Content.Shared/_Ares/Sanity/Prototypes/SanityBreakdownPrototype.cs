@@ -11,6 +11,12 @@ public sealed partial class SanityBreakdownPrototype : IPrototype
     [IdDataField]
     public string ID { get; private set; } = default!;
 
+    /// <summary>
+    /// Localized display name of the breakdown, shown to admins in the overlay.
+    /// </summary>
+    [DataField]
+    public LocId Name { get; private set; } = string.Empty;
+
     [DataField(required: true)]
     public LocId Popup { get; private set; } = string.Empty;
 

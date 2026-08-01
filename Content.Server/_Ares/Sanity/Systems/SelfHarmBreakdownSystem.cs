@@ -75,6 +75,7 @@ public sealed partial class SelfHarmBreakdownSystem : SanityBreakdownEffectSyste
 
         RemComp<SelfHarmBreakdownComponent>(uid);
         sanity.CurrentSanity = newValue;
+        sanity.CurrentBreakdown = null;
         Dirty(uid, sanity);
 
         _popup.PopupEntity(Loc.GetString("sanity-breakdown-selfharm-end-popup"), uid, uid);
@@ -86,7 +87,14 @@ public sealed partial class SelfHarmBreakdownSystem : SanityBreakdownEffectSyste
     private void OnMobStateChanged(Entity<SelfHarmBreakdownComponent> ent, ref MobStateChangedEvent args)
     {
         if (args.NewMobState is MobState.Dead or MobState.Critical)
+        {
             RemComp<SelfHarmBreakdownComponent>(ent);
+            if (TryComp<SanityComponent>(ent, out var sanity))
+            {
+                sanity.CurrentBreakdown = null;
+                Dirty(ent, sanity);
+            }
+        }
     }
 
     private void PerformAttack(EntityUid uid, SelfHarmBreakdownComponent selfHarm)

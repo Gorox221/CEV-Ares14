@@ -6,6 +6,9 @@ using System.Numerics;
 using Content.Client.Administration.Systems;
 using Content.Client.Stylesheets;
 using Content.Goobstation.Common.CCVar;
+using Content.Shared._Ares.CCVar; // Ares-tweak
+using Content.Shared._Ares.Sanity.Components; // Ares-tweak
+using Content.Shared._Ares.Sanity.Prototypes; // Ares-tweak
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Content.Shared.Ghost;
@@ -44,6 +47,7 @@ internal sealed class AdminNameOverlay : Overlay
     private bool _showCharacterName;
     private bool _showUserName;
     // Goobstation - End
+    private bool _showSanity;
 
     //TODO make this adjustable via GUI?
     private static readonly FrozenSet<ProtoId<RoleTypePrototype>> Filter =
@@ -87,6 +91,7 @@ internal sealed class AdminNameOverlay : Overlay
         // Goobstation - Start
         config.OnValueChanged(GoobCVars.AdminOverlayShowCharacterName, (show) => { _showCharacterName = show; }, true);
         config.OnValueChanged(GoobCVars.AdminOverlayShowUserName, (show) => { _showUserName = show; }, true);
+        config.OnValueChanged(AresCCVars.AdminOverlayShowSanity, (show) => { _showSanity = show; }, true); // Ares-tweak
         // Goobstation - End
     }
 
@@ -290,6 +295,31 @@ internal sealed class AdminNameOverlay : Overlay
                 : text;
             args.ScreenHandle.DrawString(_fontBold, screenCoordinates + currentOffset, label, uiScale, color);
             currentOffset += lineoffset;
+
+            // Ares-tweak - Start
+            // Sanity level and current breakdown
+            if (_showSanity && _entityManager.TryGetComponent<SanityComponent>(entity, out var sanity))
+            {
+                color = Color.MediumTurquoise;
+                color.A = alpha;
+                var sanityText = Loc.GetString("admin-overlay-sanity", ("sanity", (int)Math.Round(sanity.CurrentSanity)));
+                args.ScreenHandle.DrawString(_font, screenCoordinates + currentOffset, sanityText, uiScale, playerInfo.Connected ? color : colorDisconnected);
+                currentOffset += lineoffset;
+
+                if (sanity.CurrentBreakdown is { } breakdownId &&
+                    _prototypeManager.TryIndex(breakdownId, out var breakdown))
+                {
+                    color = Color.OrangeRed;
+                    color.A = alpha;
+                    var breakdownName = string.IsNullOrEmpty(breakdown.Name)
+                        ? breakdown.ID
+                        : Loc.GetString(breakdown.Name);
+                    var breakdownText = Loc.GetString("admin-overlay-sanity-breakdown", ("name", breakdownName));
+                    args.ScreenHandle.DrawString(_fontBold, screenCoordinates + currentOffset, breakdownText, uiScale, playerInfo.Connected ? color : colorDisconnected);
+                    currentOffset += lineoffset;
+                }
+            }
+            // Ares-tweak - End
 
             //Save the coordinates and size of the text block, for stack merge check
             drawnOverlays.Add((screenCoordinatesCenter, currentOffset));

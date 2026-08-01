@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared._Ares.Sanity.Behaviors;
+using Content.Shared._Ares.Sanity.Prototypes;
 using Content.Shared.Alert;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -18,6 +19,13 @@ public sealed partial class SanityComponent : Component
 
     [DataField, AutoNetworkedField]
     public float CurrentSanity = 100f;
+
+    /// <summary>
+    /// ID of the breakdown currently in progress, networked so clients
+    /// (e.g. the admin overlay) can show it.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public ProtoId<SanityBreakdownPrototype>? CurrentBreakdown;
 
     [DataField]
     public float MaxSanity = 100f;

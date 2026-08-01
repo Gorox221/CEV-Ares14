@@ -22,6 +22,7 @@ public sealed partial class StalwartBreakdownSystem : SanityBreakdownEffectSyste
         var oldValue = ent.Comp.CurrentSanity;
         var newValue = Math.Clamp(args.Behavior.SanityReturn, ent.Comp.MinSanity, ent.Comp.MaxSanity);
         ent.Comp.CurrentSanity = newValue;
+        ent.Comp.CurrentBreakdown = null;
         Dirty(ent, ent.Comp);
 
         var ev = new SanityChangedEvent(ent, oldValue, newValue, newValue - oldValue);

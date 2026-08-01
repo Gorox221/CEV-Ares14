@@ -42,6 +42,7 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
             return;
 
         sanity.NextBreakdownTime = _timing.CurTime + TimeSpan.FromMinutes(7);
+        sanity.CurrentBreakdown = breakdown.ID;
         Dirty(uid, sanity);
 
         _popup.PopupEntity(Loc.GetString(breakdown.Popup), uid, uid);

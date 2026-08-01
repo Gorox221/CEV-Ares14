@@ -1,6 +1,11 @@
 sanity-breakdown-stalwart-popup = You feel an unshakable resolve wash over you!
 sanity-breakdown-selfharm-popup = You lose control and start harming yourself!
 sanity-breakdown-selfharm-end-popup = You regain control over your body.
+sanity-breakdown-stalwart-name = Stalwart
+sanity-breakdown-selfharm-name = Self-Harm
+
+admin-overlay-sanity = Sanity: {$sanity}
+admin-overlay-sanity-breakdown = Breakdown: {$name}
 
 alerts-sanity-name = Sanity
 alerts-sanity-desc = Your mental state. Keep it above zero to avoid breakdowns.

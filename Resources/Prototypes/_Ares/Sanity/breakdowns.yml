@@ -2,6 +2,7 @@
 
 - type: sanityBreakdown
   id: Stalwart
+  name: sanity-breakdown-stalwart-name
   popup: sanity-breakdown-stalwart-popup
   weight: 20
   behavior: !type:StalwartBreakdownBehavior
@@ -14,6 +15,7 @@
 
 - type: sanityBreakdown
   id: SelfHarm
+  name: sanity-breakdown-selfharm-name
   popup: sanity-breakdown-selfharm-popup
   weight: 80
   behavior: !type:SelfHarmBreakdownBehavior
