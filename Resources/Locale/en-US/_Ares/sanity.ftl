@@ -7,6 +7,9 @@ sanity-breakdown-selfharm-name = Self-Harm
 admin-overlay-sanity = Sanity: {$sanity}
 admin-overlay-sanity-breakdown = Breakdown: {$name}
 
+sanity-examine-strange = [color=#004D77][italic]Looking at {OBJECT($ent)} fills you with a sense of unease...[/italic][/color]
+sanity-examine-insane = [color=#004D77][italic]{CAPITALIZE(SUBJECT($ent))} {POSS-ADJ($ent)} face looks insane...[/italic][/color]
+
 alerts-sanity-name = Sanity
 alerts-sanity-desc = Your mental state. Keep it above zero to avoid breakdowns.
 

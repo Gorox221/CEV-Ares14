@@ -7,6 +7,15 @@ sanity-breakdown-selfharm-name = Самоповреждение
 admin-overlay-sanity = Рассудок: {$sanity}
 admin-overlay-sanity-breakdown = Нервный срыв: {$name}
 
+sanity-examine-strange =
+    { "" }[color=#004D77][italic]При взгляде на { GENDER($ent) ->
+        [male] него
+        [female] неё
+        [epicene] них
+       *[neuter] него
+    } у вас появляется чувство тревоги...[/italic][/color]
+sanity-examine-insane = [color=#004D77][italic]{ CAPITALIZE(SUBJECT($ent)) } { POSS-ADJ($ent) } лицо выглядит безумно...[/italic][/color]
+
 alerts-sanity-name = Рассудок
 alerts-sanity-desc = Ваше психическое состояние. Не допускайте его уровень до нуля, чтобы избежать нервных срывов.
 
