@@ -255,7 +255,7 @@
   - type: Sanity # Ares-Tweak
     changes:
     - !type:RegenSanityChangeBehavior
-      delay: 30
+      delay: 600
       amount: 0.2
     - !type:PuddleSanityChangeBehavior
       change: -0.5
