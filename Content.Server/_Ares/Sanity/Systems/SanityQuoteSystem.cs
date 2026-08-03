@@ -13,8 +13,8 @@ namespace Content.Server._Ares.Sanity.Systems;
 
 /// <summary>
 /// Sends hallucinatory chat messages to players with low sanity.
-/// Messages are styled like the heretic's reality fracture messages
-/// (Eldritch shader), but with a normal font size.
+/// Messages are styled with the TV-static (camera_static) shader
+/// but with a normal font size.
 /// </summary>
 public sealed partial class SanityQuoteSystem : EntitySystem
 {
@@ -271,7 +271,7 @@ public sealed partial class SanityQuoteSystem : EntitySystem
     }
 
     /// <summary>
-    /// The chat renders the Eldritch-styled text as a single non-wrapping label,
+    /// The chat renders the TV-static-styled text as a single non-wrapping label,
     /// so long messages have to be wrapped into lines manually.
     /// </summary>
     private static string WrapMessage(string text, int maxLineLength = 50)

@@ -1,4 +1,4 @@
-sanity-chat-base = [textshader="{$text}" font="DefaultBold" size={$size} shader="Eldritch"]
+sanity-chat-base = [textshader="{$text}" font="DefaultBold" size={$size} shader="camera_static_text"]
 
 sanity-chat-mild-1 = You hear something clawing its way through the vents.
 sanity-chat-mild-2 = Someone is watching you.
