@@ -54,6 +54,12 @@ public sealed partial class SanityComponent : Component
     [DataField]
     public TimeSpan NextBreakdownTime;
 
+    /// <summary>
+    /// Server-side cooldown for hallucinatory chat messages.
+    /// </summary>
+    [DataField]
+    public TimeSpan NextHallucinationTime;
+
     [DataField]
     public ProtoId<AlertPrototype> SanityAlertType = "Sanity";
 

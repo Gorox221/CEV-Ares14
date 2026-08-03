@@ -196,6 +196,12 @@ public struct CustomRichTextEntry
 
             if (ProcessMetric(ref this, controlMetrics, out breakLine))
                 return this;
+
+            // Ares-tweak start
+            var lineHeight = GetLineHeight(font, uiScale, lineHeightScale);
+            if (desiredSize.Y > lineHeight)
+                Height += (int) desiredSize.Y - lineHeight;
+            // Ares-tweak end
         }
 
         Width = wordWrap.FinalizeText(out breakLine);
