@@ -251,6 +251,14 @@
           inverted: true
       - !type:Drunk
         boozePower: 2
+      # Ares-tweak start
+      - !type:AdjustSanity
+        amount: 0.3
+        conditions:
+        - !type:ReagentCondition
+          reagent: Ethanol
+          max: 5
+      # Ares-tweak end
 
 - type: reagent
   id: Gin
