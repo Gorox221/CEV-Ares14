@@ -380,6 +380,10 @@
   metabolisms:
     Narcotic:
       effects:
+      # Ares-tweak start
+      - !type:AdjustSanity
+        amount: 0.5
+      # Ares-tweak end
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Goobstation - Yowie
