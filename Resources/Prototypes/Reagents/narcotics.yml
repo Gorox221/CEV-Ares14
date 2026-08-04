@@ -62,8 +62,10 @@
     Narcotic:
       effects:
       # Main effects
-      - !type:AdjustSanity # Ares-tweak
+      # Ares-tweak start
+      - !type:AdjustSanity
         amount: -1
+      # Ares-tweak end
       - !type:MovementSpeedModifier
         walkSpeedModifier: 1.20
         sprintSpeedModifier: 1.20
