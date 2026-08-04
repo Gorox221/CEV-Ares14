@@ -157,7 +157,7 @@ public sealed partial class GuideReagentEmbed : BoxContainer, IDocumentTag, ISea
                     if (i < descriptionsCount)
                         descMsg.PushNewline();
                 }
-                descriptionLabel.SetMessage(descMsg);
+                descriptionLabel.SetMessage(descMsg, null); // Ares-tweak
 
                 EffectsDescriptionContainer.AddChild(groupLabel);
                 EffectsDescriptionContainer.AddChild(descriptionLabel);
@@ -191,7 +191,7 @@ public sealed partial class GuideReagentEmbed : BoxContainer, IDocumentTag, ISea
                 if (i < descriptionsCount)
                     descMsg.PushNewline();
             }
-            descriptionLabel.SetMessage(descMsg);
+            descriptionLabel.SetMessage(descMsg, null); // Ares-tweak
 
             PlantMetabolismsDescriptionContainer.AddChild(metabolismLabel);
             PlantMetabolismsDescriptionContainer.AddChild(descriptionLabel);

@@ -6,12 +6,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
-/// <summary>
-/// Coordinates the sanity check tick: every check interval it raises
-/// <see cref="SanityCheckEvent"/> for each entity with <see cref="SanityComponent"/>,
-/// which the tick-based sanity change systems react to. Also tracks the last
-/// sanity damage time for regeneration.
-/// </summary>
 public sealed partial class SanitySystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;

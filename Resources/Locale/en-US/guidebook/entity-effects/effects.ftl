@@ -577,3 +577,11 @@ reagent-effect-guidebook-add-to-chemicals =
         [1] to
         *[-1] from
     } the solution
+
+ares-sanity-guidebook-word = [textshader="sanity" shader="camera_static_text"]
+
+ares-effect-guidebook-adjust-sanity =
+    { $chance ->
+        [1] Changes
+       *[other] change
+    } {$sanityWord} by [color={$amountColor}]{$amount}[/color]

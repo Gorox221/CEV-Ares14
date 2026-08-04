@@ -401,3 +401,11 @@ ares-effect-guidebook-stat-modifier =
         [1] Временно изменяет
        *[other] временно изменяют
     } [color={$statColor}]{$stat}[/color] на [color={$amountColor}]{$amount}[/color] на {NATURALFIXED($time, 3)} {MANY("секунду", $time)}
+
+ares-sanity-guidebook-word = рассудок
+
+ares-effect-guidebook-adjust-sanity =
+    { $chance ->
+        [1] Изменяет
+       *[other] изменяют
+    } {$sanityWord} на [color={$amountColor}]{$amount}[/color] 
