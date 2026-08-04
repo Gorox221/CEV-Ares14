@@ -22,4 +22,10 @@ public sealed partial class AuraSanityChangeBehavior : SanityChangeBehavior<Aura
 
     [DataField]
     public bool RequiresLineOfSight = true;
+
+    /// <summary>
+    /// Only apply while the affector entity is alive.
+    /// </summary>
+    [DataField]
+    public bool RequiresAlive = true;
 }

@@ -4,6 +4,7 @@ using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
 using Content.Shared.Interaction;
+using Content.Shared.Mobs.Systems;
 using Robust.Shared.Map;
 
 namespace Content.Server._Ares.Sanity.Systems;
@@ -17,6 +18,7 @@ public sealed partial class AuraSanityChangeSystem : SanityChangeSystem
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
 
     public override void Initialize()
     {
@@ -45,6 +47,9 @@ public sealed partial class AuraSanityChangeSystem : SanityChangeSystem
 
             var behavior = affector.Behavior;
             if (behavior == null)
+                continue;
+
+            if (behavior.RequiresAlive && !_mobState.IsAlive(affectorUid))
                 continue;
 
             if (!TryComp(affectorUid, out TransformComponent? affectorXform))
