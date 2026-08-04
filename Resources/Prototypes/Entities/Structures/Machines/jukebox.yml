@@ -18,6 +18,15 @@
     onState: on
     offState: off
     selectState: select
+  # Ares-tweak start
+  - type: SanityAffector
+    behavior: !type:AuraSanityChangeBehavior
+      change: 0.4
+      range: 10
+      requiresAlive: false
+      requiresLineOfSight: false
+      requiresJukeboxPlaying: true
+  # Ares-tweak end
   - type: Machine
     board: JukeboxCircuitBoard
   - type: Appearance

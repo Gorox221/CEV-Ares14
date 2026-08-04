@@ -3,8 +3,10 @@
 using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
+using Content.Shared.Audio.Jukebox;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs.Systems;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 
 namespace Content.Server._Ares.Sanity.Systems;
@@ -19,6 +21,7 @@ public sealed partial class AuraSanityChangeSystem : SanityChangeSystem
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
 
     public override void Initialize()
     {
@@ -50,6 +53,10 @@ public sealed partial class AuraSanityChangeSystem : SanityChangeSystem
                 continue;
 
             if (behavior.RequiresAlive && !_mobState.IsAlive(affectorUid))
+                continue;
+
+            if (behavior.RequiresJukeboxPlaying
+                && (!TryComp(affectorUid, out JukeboxComponent? jukebox) || !_audio.IsPlaying(jukebox.AudioStream)))
                 continue;
 
             if (!TryComp(affectorUid, out TransformComponent? affectorXform))

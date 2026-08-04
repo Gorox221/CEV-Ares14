@@ -28,4 +28,10 @@ public sealed partial class AuraSanityChangeBehavior : SanityChangeBehavior<Aura
     /// </summary>
     [DataField]
     public bool RequiresAlive = true;
+
+    /// <summary>
+    /// If the affector is a jukebox, only apply while it is actually playing music.
+    /// </summary>
+    [DataField]
+    public bool RequiresJukeboxPlaying = false;
 }
