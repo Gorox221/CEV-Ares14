@@ -33,3 +33,11 @@
   weight: 20
   behavior: !type:LessonLearntBreakdownBehavior
     sanityReturn: 100
+
+- type: sanityBreakdown
+  id: AbsoluteConcentration
+  name: sanity-breakdown-absoluteconcentration-name
+  popup: sanity-breakdown-absoluteconcentration-popup
+  weight: 20
+  behavior: !type:AbsoluteConcentrationBreakdownBehavior
+    duration: 1200

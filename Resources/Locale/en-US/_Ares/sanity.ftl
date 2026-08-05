@@ -5,6 +5,9 @@ sanity-breakdown-stalwart-name = Stalwart
 sanity-breakdown-selfharm-name = Self-Harm
 sanity-breakdown-lessonlearnt-name = A Lesson Learnt
 sanity-breakdown-lessonlearnt-popup = The truth that broke you is now a lesson you have learned. You grow stronger.
+sanity-breakdown-absoluteconcentration-name = Absolute Concentration
+sanity-breakdown-absoluteconcentration-popup = You enter a state of absolute concentration!
+sanity-breakdown-absoluteconcentration-end-popup = Your absolute concentration fades...
 
 admin-overlay-sanity = Sanity: {$sanity}
 admin-overlay-sanity-breakdown = Breakdown: {$name}

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Server._Ares.Sanity.Components;
+using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
 using Content.Shared._Ares.Sanity.Events;
 using Content.Shared._Ares.Stats;
@@ -20,6 +22,9 @@ public abstract partial class SanityChangeSystem : EntitySystem
     protected void ApplyChange(Entity<SanityComponent> ent, float delta)
     {
         if (_mobState.IsIncapacitated(ent))
+            return;
+
+        if (delta < 0f && HasComp<AbsoluteConcentrationComponent>(ent))
             return;
 
         if (MathHelper.CloseTo(delta, 0f))

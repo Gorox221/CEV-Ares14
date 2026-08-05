@@ -5,6 +5,9 @@ sanity-breakdown-stalwart-name = Стойкость
 sanity-breakdown-selfharm-name = Самоповреждение
 sanity-breakdown-lessonlearnt-name = Усвоенный урок
 sanity-breakdown-lessonlearnt-popup = Истина, что сломила вас, стала уроком. Вы становится сильнее.
+sanity-breakdown-absoluteconcentration-name = Абсолютная концентрация
+sanity-breakdown-absoluteconcentration-popup = Вы входите в состояние абсолютной концентрации!
+sanity-breakdown-absoluteconcentration-end-popup = Ваша абсолютная концентрация угасает...
 
 admin-overlay-sanity = Рассудок: {$sanity}
 admin-overlay-sanity-breakdown = Нервный срыв: {$name}
