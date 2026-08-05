@@ -17,6 +17,15 @@ public sealed partial class SanityAlertSystem : EntitySystem
         SubscribeLocalEvent<SanityComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<SanityComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<SanityChangedEvent>(OnSanityChanged);
+        SubscribeLocalEvent<SanityCheckEvent>(OnSanityCheck);
+    }
+
+    private void OnSanityCheck(ref SanityCheckEvent args)
+    {
+        if (!TryComp<SanityComponent>(args.Entity, out var sanity))
+            return;
+
+        UpdateAlert(args.Entity, sanity);
     }
 
     private void OnMapInit(Entity<SanityComponent> ent, ref MapInitEvent args)

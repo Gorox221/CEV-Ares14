@@ -26,6 +26,15 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
     public override void Initialize()
     {
         SubscribeLocalEvent<SanityChangedEvent>(OnSanityChanged);
+        SubscribeLocalEvent<SanityCheckEvent>(OnSanityCheck);
+    }
+
+    private void OnSanityCheck(ref SanityCheckEvent args)
+    {
+        if (!TryComp<SanityComponent>(args.Entity, out var sanity))
+            return;
+
+        TryTriggerBreakdown(args.Entity, sanity);
     }
 
     private void OnSanityChanged(ref SanityChangedEvent args)
@@ -34,7 +43,12 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
         if (!TryComp<SanityComponent>(uid, out var sanity))
             return;
 
-        if (args.NewValue > 0 || _timing.CurTime < sanity.NextBreakdownTime)
+        TryTriggerBreakdown(uid, sanity);
+    }
+
+    private void TryTriggerBreakdown(EntityUid uid, SanityComponent sanity)
+    {
+        if (sanity.CurrentSanity > 0 || sanity.CurrentBreakdown != null || _timing.CurTime < sanity.NextBreakdownTime)
             return;
 
         var breakdown = PickBreakdown();
