@@ -47,3 +47,20 @@
   weight: 20
   behavior: !type:AbsoluteConcentrationBreakdownBehavior
     duration: 1200
+
+- type: sanityBreakdown
+  id: Hysteric
+  name: sanity-breakdown-hysteric-name
+  popup: sanity-breakdown-hysteric-popup
+  weight: 80
+  behavior: !type:HystericBreakdownBehavior
+    sanityReturn: 50
+    duration: 90
+    knockdownTicks: 4
+    staminaInterval: 2
+    staminaDamage: 25
+    emotes:
+      - Scream
+      - Crying
+    emoteInterval: 2
+    emoteChance: 0.5

@@ -8,6 +8,9 @@ sanity-breakdown-lessonlearnt-popup = Истина, что сломила вас
 sanity-breakdown-absoluteconcentration-name = Абсолютная концентрация
 sanity-breakdown-absoluteconcentration-popup = Вы входите в состояние абсолютной концентрации!
 sanity-breakdown-absoluteconcentration-end-popup = Ваша абсолютная концентрация угасает...
+sanity-breakdown-hysteric-name = Истерика
+sanity-breakdown-hysteric-popup = Вы срываетесь в приступ истерики с криками!
+sanity-breakdown-hysteric-end-popup = Истерика утихает, и вы переводите дыхание.
 
 sanity-selfharm-emote-skin = пытается содрать с себя кожу
 sanity-selfharm-emote-limb = пытается отгрызть себе конечность

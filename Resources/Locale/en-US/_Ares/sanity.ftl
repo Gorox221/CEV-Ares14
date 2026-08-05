@@ -8,6 +8,9 @@ sanity-breakdown-lessonlearnt-popup = The truth that broke you is now a lesson y
 sanity-breakdown-absoluteconcentration-name = Absolute Concentration
 sanity-breakdown-absoluteconcentration-popup = You enter a state of absolute concentration!
 sanity-breakdown-absoluteconcentration-end-popup = Your absolute concentration fades...
+sanity-breakdown-hysteric-name = Hysteric
+sanity-breakdown-hysteric-popup = You lose yourself in a screaming fit of hysterics!
+sanity-breakdown-hysteric-end-popup = Your hysterics subside and you catch your breath.
 
 sanity-selfharm-emote-skin = tries to peel off their own skin
 sanity-selfharm-emote-limb = tries to bite off their own limb
