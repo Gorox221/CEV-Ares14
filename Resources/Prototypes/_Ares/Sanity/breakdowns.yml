@@ -4,7 +4,7 @@
   id: Stalwart
   name: sanity-breakdown-stalwart-name
   popup: sanity-breakdown-stalwart-popup
-  weight: 20
+  weight: 10
   behavior: !type:StalwartBreakdownBehavior
     sanityReturn: 100
     healing:
@@ -17,7 +17,7 @@
   id: SelfHarm
   name: sanity-breakdown-selfharm-name
   popup: sanity-breakdown-selfharm-popup
-  weight: 80
+  weight: 90
   behavior: !type:SelfHarmBreakdownBehavior
     sanityReturn: 25
     duration: 60
@@ -36,7 +36,7 @@
   id: LessonLearnt
   name: sanity-breakdown-lessonlearnt-name
   popup: sanity-breakdown-lessonlearnt-popup
-  weight: 20
+  weight: 10
   behavior: !type:LessonLearntBreakdownBehavior
     sanityReturn: 100
 
@@ -44,7 +44,7 @@
   id: AbsoluteConcentration
   name: sanity-breakdown-absoluteconcentration-name
   popup: sanity-breakdown-absoluteconcentration-popup
-  weight: 20
+  weight: 10
   behavior: !type:AbsoluteConcentrationBreakdownBehavior
     duration: 1200
 
@@ -52,10 +52,10 @@
   id: Hysteric
   name: sanity-breakdown-hysteric-name
   popup: sanity-breakdown-hysteric-popup
-  weight: 80
+  weight: 90
   behavior: !type:HystericBreakdownBehavior
     sanityReturn: 50
-    duration: 90
+    duration: 180
     knockdownTicks: 4
     staminaInterval: 2
     staminaDamage: 25
@@ -64,3 +64,16 @@
       - Crying
     emoteInterval: 2
     emoteChance: 0.5
+
+- type: sanityBreakdown
+  id: TheFabric
+  name: sanity-breakdown-fabric-name
+  popup: sanity-breakdown-fabric-popup
+  weight: 90
+  behavior: !type:TheFabricBreakdownBehavior
+    duration: 180
+    range: 12
+    updateInterval: 1
+    textures:
+      - TheFabricGhost
+      - TheFabricCurse

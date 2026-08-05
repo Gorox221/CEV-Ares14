@@ -11,6 +11,11 @@ sanity-breakdown-absoluteconcentration-end-popup = Ваша абсолютная
 sanity-breakdown-hysteric-name = Истерика
 sanity-breakdown-hysteric-popup = Вы срываетесь в приступ истерики с криками!
 sanity-breakdown-hysteric-end-popup = Истерика утихает, и вы переводите дыхание.
+sanity-breakdown-fabric-name = Ткань мироздания
+sanity-breakdown-fabric-popup = Ткань мироздания рвётся на ваших глазах! Люди вокруг превращаются в нечто чужое, а их речь становится бессвязной.
+sanity-breakdown-fabric-end-popup = Ткань мироздания снова сходится воедино, и мир обретает привычный вид.
+sanity-fabric-unknown-name = ???
+sanity-fabric-hidden-flavor = [italic]Вы не можете разобрать, что это такое...[/italic]
 
 sanity-selfharm-emote-skin = пытается содрать с себя кожу
 sanity-selfharm-emote-limb = пытается отгрызть себе конечность

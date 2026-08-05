@@ -11,6 +11,11 @@ sanity-breakdown-absoluteconcentration-end-popup = Your absolute concentration f
 sanity-breakdown-hysteric-name = Hysteric
 sanity-breakdown-hysteric-popup = You lose yourself in a screaming fit of hysterics!
 sanity-breakdown-hysteric-end-popup = Your hysterics subside and you catch your breath.
+sanity-breakdown-fabric-name = The Fabric
+sanity-breakdown-fabric-popup = The fabric of reality tears before your eyes! The people around you twist into something alien, and their speech becomes incoherent.
+sanity-breakdown-fabric-end-popup = The fabric of reality stitches itself back together, and the world returns to normal.
+sanity-fabric-unknown-name = ???
+sanity-fabric-hidden-flavor = [italic]You can't quite make out what this is...[/italic]
 
 sanity-selfharm-emote-skin = tries to peel off their own skin
 sanity-selfharm-emote-limb = tries to bite off their own limb
