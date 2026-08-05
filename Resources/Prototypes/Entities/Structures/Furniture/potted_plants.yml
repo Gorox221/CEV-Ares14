@@ -40,7 +40,7 @@
   # Ares-tweak start
   - type: SanityAffector
     behavior: !type:AuraSanityChangeBehavior
-      change: 0.2
+      change: 0.1
       range: 8
       requiresAlive: false
   # Ares-tweak end

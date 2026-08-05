@@ -6,26 +6,22 @@ using Content.Shared._Ares.Stats;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
-/// <summary>
-/// Base for sanity change systems. Each sanity source (aura, regen, puddles,
-/// chat, damage, deaths) is a data-driven <c>SanityChangeBehavior</c> handled
-/// by its own derived system, mirroring the breakdown refactor.
-/// </summary>
 public abstract partial class SanityChangeSystem : EntitySystem
 {
     [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
 
-    /// <summary>
-    /// Applies a sanity delta: clamps it, dirties the component and raises
-    /// <see cref="SanityChangedEvent"/>.
-    /// </summary>
     protected void ApplyChange(Entity<SanityComponent> ent, float delta)
     {
+        if (_mobState.IsIncapacitated(ent))
+            return;
+
         if (MathHelper.CloseTo(delta, 0f))
             return;
 
