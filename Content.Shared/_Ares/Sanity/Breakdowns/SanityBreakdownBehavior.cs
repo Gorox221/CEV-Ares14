@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Shared._Ares.Sanity.Components;
+using Content.Shared.Chat.Prototypes;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
@@ -18,6 +19,25 @@ public abstract partial class SanityBreakdownBehavior
     /// </summary>
     [DataField]
     public float SanityReturn = 25f;
+
+    /// <summary>
+    /// IDs of <see cref="EmotePrototype"/> emotes the target may randomly send
+    /// while this breakdown is active. Empty means no emotes are sent.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<EmotePrototype>> Emotes = new();
+
+    /// <summary>
+    /// Seconds between emote roll attempts.
+    /// </summary>
+    [DataField]
+    public float EmoteInterval = 2f;
+
+    /// <summary>
+    /// Chance (0..1) to send an emote on each interval tick.
+    /// </summary>
+    [DataField]
+    public float EmoteChance = 0.5f;
 
     public abstract void Trigger(Entity<SanityComponent> ent, ISanityBreakdownTrigger trigger);
 }

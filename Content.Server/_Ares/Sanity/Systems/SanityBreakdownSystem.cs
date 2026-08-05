@@ -21,6 +21,7 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SanityEmoteSystem _sanityEmote = default!;
 
     public override void Initialize()
     {
@@ -36,6 +37,7 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
 
         ent.Comp.CurrentBreakdown = null;
         Dirty(ent, ent.Comp);
+        _sanityEmote.StopEmoting(ent);
     }
 
     private void OnSanityCheck(ref SanityCheckEvent args)
@@ -73,6 +75,9 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
 
         _popup.PopupEntity(Loc.GetString(breakdown.Popup), uid, uid);
         breakdown.Behavior.Trigger((uid, sanity), this);
+
+        if (breakdown.Behavior.Emotes.Count > 0)
+            _sanityEmote.StartEmoting(uid, breakdown.Behavior.Emotes, breakdown.Behavior.EmoteInterval, breakdown.Behavior.EmoteChance);
     }
 
     public void RaiseBreakdown<T>(Entity<SanityComponent> ent, T behavior) where T : SanityBreakdownBehavior<T>

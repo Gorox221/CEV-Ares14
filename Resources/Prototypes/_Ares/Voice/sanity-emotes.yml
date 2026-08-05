@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: emote
+  id: SelfPeelSkin
+  name: sanity-selfharm-emote-name-skin
+  chatMessages: [sanity-selfharm-emote-skin]
+
+- type: emote
+  id: SelfBiteLimb
+  name: sanity-selfharm-emote-name-limb
+  chatMessages: [sanity-selfharm-emote-limb]
+
+- type: emote
+  id: SelfBiteTongue
+  name: sanity-selfharm-emote-name-tongue
+  chatMessages: [sanity-selfharm-emote-tongue]

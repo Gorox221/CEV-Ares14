@@ -19,6 +19,7 @@ public sealed partial class AbsoluteConcentrationBreakdownSystem : SanityBreakdo
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SanityEmoteSystem _sanityEmote = default!;
 
     public override void Initialize()
     {
@@ -58,6 +59,7 @@ public sealed partial class AbsoluteConcentrationBreakdownSystem : SanityBreakdo
     private void EndBreakdown(EntityUid uid, SanityComponent sanity)
     {
         RemComp<AbsoluteConcentrationComponent>(uid);
+        _sanityEmote.StopEmoting(uid);
         sanity.CurrentBreakdown = null;
         Dirty(uid, sanity);
 

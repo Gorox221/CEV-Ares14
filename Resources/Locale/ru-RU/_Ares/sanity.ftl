@@ -9,6 +9,13 @@ sanity-breakdown-absoluteconcentration-name = Абсолютная концен�
 sanity-breakdown-absoluteconcentration-popup = Вы входите в состояние абсолютной концентрации!
 sanity-breakdown-absoluteconcentration-end-popup = Ваша абсолютная концентрация угасает...
 
+sanity-selfharm-emote-skin = пытается содрать с себя кожу
+sanity-selfharm-emote-limb = пытается отгрызть себе конечность
+sanity-selfharm-emote-tongue = кусает свой язык
+sanity-selfharm-emote-name-skin = Содрать кожу
+sanity-selfharm-emote-name-limb = Отгрызть конечность
+sanity-selfharm-emote-name-tongue = Кусать язык
+
 admin-overlay-sanity = Рассудок: {$sanity}
 admin-overlay-sanity-breakdown = Нервный срыв: {$name}
 

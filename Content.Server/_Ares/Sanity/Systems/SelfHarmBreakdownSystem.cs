@@ -28,6 +28,7 @@ public sealed partial class SelfHarmBreakdownSystem : SanityBreakdownEffectSyste
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private readonly SanityEmoteSystem _sanityEmote = default!;
 
     public override void Initialize()
     {
@@ -74,6 +75,7 @@ public sealed partial class SelfHarmBreakdownSystem : SanityBreakdownEffectSyste
         var newValue = Math.Clamp(selfHarm.ReturnSanity, sanity.MinSanity, sanity.MaxSanity);
 
         RemComp<SelfHarmBreakdownComponent>(uid);
+        _sanityEmote.StopEmoting(uid);
         sanity.CurrentSanity = newValue;
         sanity.CurrentBreakdown = null;
         Dirty(uid, sanity);
@@ -89,6 +91,7 @@ public sealed partial class SelfHarmBreakdownSystem : SanityBreakdownEffectSyste
         if (args.NewMobState is MobState.Dead or MobState.Critical)
         {
             RemComp<SelfHarmBreakdownComponent>(ent);
+            _sanityEmote.StopEmoting(ent);
             if (TryComp<SanityComponent>(ent, out var sanity))
             {
                 sanity.CurrentBreakdown = null;

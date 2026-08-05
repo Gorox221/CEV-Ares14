@@ -9,6 +9,13 @@ sanity-breakdown-absoluteconcentration-name = Absolute Concentration
 sanity-breakdown-absoluteconcentration-popup = You enter a state of absolute concentration!
 sanity-breakdown-absoluteconcentration-end-popup = Your absolute concentration fades...
 
+sanity-selfharm-emote-skin = tries to peel off their own skin
+sanity-selfharm-emote-limb = tries to bite off their own limb
+sanity-selfharm-emote-tongue = bites their own tongue
+sanity-selfharm-emote-name-skin = Peel Off Skin
+sanity-selfharm-emote-name-limb = Bite Off Limb
+sanity-selfharm-emote-name-tongue = Bite Tongue
+
 admin-overlay-sanity = Sanity: {$sanity}
 admin-overlay-sanity-breakdown = Breakdown: {$name}
 
