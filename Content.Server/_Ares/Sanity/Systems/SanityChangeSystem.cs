@@ -24,6 +24,10 @@ public abstract partial class SanityChangeSystem : EntitySystem
         if (_mobState.IsIncapacitated(ent))
             return;
 
+        // During a breakdown sanity can never be restored, only reduced.
+        if (delta > 0f && ent.Comp.CurrentBreakdown != null)
+            return;
+
         if (delta < 0f && HasComp<AbsoluteConcentrationComponent>(ent))
             return;
 

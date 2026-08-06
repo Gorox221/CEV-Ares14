@@ -32,6 +32,10 @@ public sealed partial class AdjustSanityEntityEffectSystem : EntityEffectSystem<
         if (MathHelper.CloseTo(args.Effect.Amount, 0f))
             return;
 
+        // During a breakdown sanity can never be restored, only reduced.
+        if (args.Effect.Amount > 0f && ent.Comp.CurrentBreakdown != null)
+            return;
+
         var oldValue = ent.Comp.CurrentSanity;
         var newValue = Math.Clamp(oldValue + args.Effect.Amount * args.Scale, ent.Comp.MinSanity, ent.Comp.MaxSanity);
 
