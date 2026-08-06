@@ -1,0 +1,1 @@
+objective-issuer-desires = [color=#e8a87c]Desires[/color]
