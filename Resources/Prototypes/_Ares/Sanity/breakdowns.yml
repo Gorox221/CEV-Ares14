@@ -77,3 +77,12 @@
     textures:
       - TheFabricGhost
       - TheFabricCurse
+
+- type: sanityBreakdown
+  id: DownwardSpiral
+  name: sanity-breakdown-downwardspiral-name
+  popup: sanity-breakdown-downwardspiral-popup
+  weight: 90
+  behavior: !type:DownwardSpiralBreakdownBehavior
+    sanityReturn: 50
+    maxSanityPenalty: 20

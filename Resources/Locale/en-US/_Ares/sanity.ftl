@@ -14,6 +14,8 @@ sanity-breakdown-hysteric-end-popup = Your hysterics subside and you catch your 
 sanity-breakdown-fabric-name = The Fabric
 sanity-breakdown-fabric-popup = The fabric of reality tears before your eyes! The people around you twist into something alien, and their speech becomes incoherent.
 sanity-breakdown-fabric-end-popup = The fabric of reality stitches itself back together, and the world returns to normal.
+sanity-breakdown-downwardspiral-name = Downward Spiral
+sanity-breakdown-downwardspiral-popup = Your mind begins a downward spiral, and part of your sanity is lost forever!
 sanity-fabric-unknown-name = ???
 sanity-fabric-hidden-flavor = [italic]You can't quite make out what this is...[/italic]
 

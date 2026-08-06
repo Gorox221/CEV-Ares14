@@ -14,6 +14,8 @@ sanity-breakdown-hysteric-end-popup = Истерика утихает, и вы �
 sanity-breakdown-fabric-name = Ткань мироздания
 sanity-breakdown-fabric-popup = Ткань мироздания рвётся на ваших глазах! Люди вокруг превращаются в нечто чужое, а их речь становится бессвязной.
 sanity-breakdown-fabric-end-popup = Ткань мироздания снова сходится воедино, и мир обретает привычный вид.
+sanity-breakdown-downwardspiral-name = Нисходящая спираль
+sanity-breakdown-downwardspiral-popup = Ваш разум начинает трескается под воздействием увиденного!
 sanity-fabric-unknown-name = ???
 sanity-fabric-hidden-flavor = [italic]Вы не можете разобрать, что это такое...[/italic]
 
