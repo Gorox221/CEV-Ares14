@@ -16,6 +16,9 @@ sanity-breakdown-fabric-popup = Ткань мироздания рвётся н�
 sanity-breakdown-fabric-end-popup = Ткань мироздания снова сходится воедино, и мир обретает привычный вид.
 sanity-breakdown-downwardspiral-name = Нисходящая спираль
 sanity-breakdown-downwardspiral-popup = Ваш разум начинает трескается под воздействием увиденного!
+sanity-breakdown-herald-name = Вестник
+sanity-breakdown-herald-popup = Голос извне шепчет сквозь вас! Вы становитесь его вестником.
+sanity-breakdown-herald-end-popup = Голос затихает, и ваш разум обретает прежнюю ясность.
 sanity-fabric-unknown-name = ???
 sanity-fabric-hidden-flavor = [italic]Вы не можете разобрать, что это такое...[/italic]
 

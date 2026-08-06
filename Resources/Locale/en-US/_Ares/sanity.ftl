@@ -16,6 +16,9 @@ sanity-breakdown-fabric-popup = The fabric of reality tears before your eyes! Th
 sanity-breakdown-fabric-end-popup = The fabric of reality stitches itself back together, and the world returns to normal.
 sanity-breakdown-downwardspiral-name = Downward Spiral
 sanity-breakdown-downwardspiral-popup = Your mind begins a downward spiral, and part of your sanity is lost forever!
+sanity-breakdown-herald-name = Herald
+sanity-breakdown-herald-popup = A voice from beyond whispers through you! You become its herald.
+sanity-breakdown-herald-end-popup = The voice fades, and your mind regains some clarity.
 sanity-fabric-unknown-name = ???
 sanity-fabric-hidden-flavor = [italic]You can't quite make out what this is...[/italic]
 

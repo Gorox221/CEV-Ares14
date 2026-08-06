@@ -86,3 +86,13 @@
   behavior: !type:DownwardSpiralBreakdownBehavior
     sanityReturn: 50
     maxSanityPenalty: 20
+
+- type: sanityBreakdown
+  id: Herald
+  name: sanity-breakdown-herald-name
+  popup: sanity-breakdown-herald-popup
+  weight: 60
+  behavior: !type:HeraldBreakdownBehavior
+    sanityReturn: 45
+    duration: 300
+    quoteInterval: 10

@@ -11,11 +11,6 @@ using System.Text;
 
 namespace Content.Server._Ares.Sanity.Systems;
 
-/// <summary>
-/// Sends hallucinatory chat messages to players with low sanity.
-/// Messages are styled with the TV-static (camera_static) shader
-/// but with a normal font size.
-/// </summary>
 public sealed partial class SanityQuoteSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -270,10 +265,11 @@ public sealed partial class SanityQuoteSystem : EntitySystem
             canCoalesce: false);
     }
 
-    /// <summary>
-    /// The chat renders the TV-static-styled text as a single non-wrapping label,
-    /// so long messages have to be wrapped into lines manually.
-    /// </summary>
+    public string PickInsaneQuote()
+    {
+        return Loc.GetString(_random.Pick(SevereMessages));
+    }
+
     private static string WrapMessage(string text, int maxLineLength = 50)
     {
         if (text.Length <= maxLineLength)
