@@ -292,8 +292,9 @@ namespace Content.Server.Database
                 barkVoice, // Goob Station - Barks
                 // ADT start
                 profile.OOCNotes,
-                profile.HeadshotUrl
+                profile.HeadshotUrl,
                 // ADT end
+                profile.Origin // Ares-tweak
             );
         }
 
@@ -383,6 +384,8 @@ namespace Content.Server.Database
             profile.OOCNotes = humanoid.OOCNotes;
             profile.HeadshotUrl = humanoid.HeadshotUrl;
             // ADT end
+
+            profile.Origin = humanoid.Origin; // Ares-tweak
 
             return profile;
         }

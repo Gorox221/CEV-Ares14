@@ -14,6 +14,8 @@ using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Client.Sprite;
 using Content.Client.UserInterface.Systems.Guidebook;
+using Content.Shared._Ares.Origins;
+using Content.Shared._Ares.Stats;
 using Content.Shared.CCVar;
 using Content.Shared.Clothing;
 using Content.Shared.GameTicking;
@@ -105,6 +107,8 @@ namespace Content.Client.Lobby.UI
         public HumanoidCharacterProfile? Profile;
 
         private List<SpeciesPrototype> _species = new();
+
+        private readonly List<OriginPrototype> _origins = new();
 
         private List<(string, RequirementsSelector)> _jobPriorities = new();
 
@@ -435,9 +439,26 @@ namespace Content.Client.Lobby.UI
 
             #endregion Appearance
 
+            #region Origin
+
+            TabContainer.SetTabTitle(1, Loc.GetString("humanoid-profile-editor-origin-tab"));
+
+            OriginButton.OnItemSelected += args =>
+            {
+                OriginButton.SelectId(args.Id);
+                SetOrigin(args.Id == 0 ? string.Empty : _origins[args.Id - 1].ID);
+            };
+
+            RefreshOrigins();
+            UpdateOriginDetails();
+
+            OriginScroll.OnResized += UpdateOriginDescriptionWidth;
+
+            #endregion Origin
+
             #region Jobs
 
-            TabContainer.SetTabTitle(1, Loc.GetString("humanoid-profile-editor-jobs-tab"));
+            TabContainer.SetTabTitle(2, Loc.GetString("humanoid-profile-editor-jobs-tab"));
 
             PreferenceUnavailableButton.AddItem(
                 Loc.GetString("humanoid-profile-editor-preference-unavailable-stay-in-lobby-button"),
@@ -461,13 +482,13 @@ namespace Content.Client.Lobby.UI
 
             #endregion Jobs
 
-            TabContainer.SetTabTitle(2, Loc.GetString("humanoid-profile-editor-antags-tab"));
+            TabContainer.SetTabTitle(3, Loc.GetString("humanoid-profile-editor-antags-tab"));
 
             RefreshTraits();
 
             #region Markings
 
-            TabContainer.SetTabTitle(4, Loc.GetString("humanoid-profile-editor-markings-tab"));
+            TabContainer.SetTabTitle(5, Loc.GetString("humanoid-profile-editor-markings-tab"));
 
             Markings.OnMarkingAdded += OnMarkingChange;
             Markings.OnMarkingRemoved += OnMarkingChange;
@@ -553,7 +574,7 @@ namespace Content.Client.Lobby.UI
             TraitsList.RemoveAllChildren();
 
             var traits = _prototypeManager.EnumeratePrototypes<TraitPrototype>().OrderBy(t => Loc.GetString(t.Name)).ToList();
-            TabContainer.SetTabTitle(3, Loc.GetString("humanoid-profile-editor-traits-tab"));
+            TabContainer.SetTabTitle(4, Loc.GetString("humanoid-profile-editor-traits-tab"));
 
             if (traits.Count < 1)
             {
@@ -697,6 +718,111 @@ namespace Content.Client.Lobby.UI
                     SetSpecies(SharedHumanoidAppearanceSystem.DefaultSpecies);
                 }
             }
+        }
+
+        /// <summary>
+        /// Обновляет список происхождений в выпадающем меню.
+        /// </summary>
+        public void RefreshOrigins()
+        {
+            OriginButton.Clear();
+            _origins.Clear();
+
+            OriginButton.AddItem(Loc.GetString("humanoid-profile-editor-origin-none"));
+
+            foreach (var origin in _prototypeManager.EnumeratePrototypes<OriginPrototype>()
+                         .OrderBy(o => Loc.GetString(o.Name)))
+            {
+                _origins.Add(origin);
+                OriginButton.AddItem(Loc.GetString(origin.Name));
+            }
+
+            UpdateOriginControls();
+        }
+
+        public void UpdateOriginControls()
+        {
+            var origin = Profile?.Origin ?? string.Empty;
+            OriginButton.SelectId(0);
+
+            for (var i = 0; i < _origins.Count; i++)
+            {
+                if (_origins[i].ID == origin)
+                {
+                    OriginButton.SelectId(i + 1);
+                    break;
+                }
+            }
+
+            UpdateOriginDetails();
+        }
+
+        private void SetOrigin(ProtoId<OriginPrototype> origin)
+        {
+            if (Profile == null)
+                return;
+
+            Profile = Profile.WithOrigin(origin);
+            SetDirty();
+            UpdateOriginDetails();
+        }
+
+        private void UpdateOriginDetails()
+        {
+            OriginStats.RemoveAllChildren();
+
+            var originId = Profile?.Origin ?? string.Empty;
+            if (string.IsNullOrEmpty(originId) ||
+                !_prototypeManager.TryIndex(originId, out OriginPrototype? origin))
+            {
+                OriginDescription.SetMessage(string.Empty);
+                return;
+            }
+
+            foreach (var (statId, delta) in origin.Stats)
+            {
+                if (!_prototypeManager.TryIndex(statId, out StatPrototype? stat))
+                    continue;
+
+                var row = new BoxContainer
+                {
+                    Orientation = LayoutOrientation.Horizontal,
+                    SeparationOverride = 8,
+                    Margin = new Thickness(0, 2, 0, 2),
+                };
+
+                row.AddChild(new Label
+                {
+                    Text = Loc.GetString(stat.Name),
+                    FontColorOverride = stat.Color,
+                });
+
+                row.AddChild(new Label
+                {
+                    Text = delta >= 0 ? $"+{delta}" : delta.ToString(),
+                    FontColorOverride = delta >= 0 ? Color.FromHex("#7ee787") : Color.FromHex("#ff7b72"),
+                });
+
+                OriginStats.AddChild(row);
+            }
+
+            if (origin.Description != null)
+                OriginDescription.SetMessage(Loc.GetString(origin.Description.Value));
+            else
+                OriginDescription.SetMessage(string.Empty);
+
+            UpdateOriginDescriptionWidth();
+        }
+
+        /// <summary>
+        /// Ограничивает ширину описания шириной вкладки, чтобы длинный текст переносился на новые строки.
+        /// </summary>
+        private void UpdateOriginDescriptionWidth()
+        {
+            if (OriginDescription == null)
+                return;
+
+            OriginDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
         }
 
         public void RefreshAntags()
@@ -875,6 +1001,7 @@ namespace Content.Client.Lobby.UI
             RefreshJobs();
             RefreshLoadouts();
             RefreshSpecies();
+            RefreshOrigins();
             RefreshTraits();
             RefreshFlavorText();
             ReloadPreview();

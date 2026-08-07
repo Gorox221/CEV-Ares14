@@ -1,0 +1,157 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: origin
+  id: Oberth
+  name: origin-oberth-name
+  description: origin-oberth-desc
+  stats:
+    Robustness: 6
+    Toughness: -5
+    Biology: 0
+    Mechanical: 6
+    Vigilance: 6
+    Cognition: -8
+
+- type: origin
+  id: Predstraza
+  name: origin-predstraza-name
+  description: origin-predstraza-desc
+  stats:
+    Robustness: 10
+    Toughness: 10
+    Biology: 0
+    Mechanical: -10
+    Vigilance: 5
+    Cognition: -10
+
+- type: origin
+  id: SichPrime
+  name: origin-sich-prime-name
+  description: origin-sich-prime-desc
+  stats:
+    Robustness: 5
+    Toughness: -5
+    Biology: 10
+    Mechanical: 5
+    Vigilance: -5
+    Cognition: -5
+
+- type: origin
+  id: NewRome
+  name: origin-new-rome-name
+  description: origin-new-rome-desc
+  stats:
+    Robustness: 5
+    Toughness: -5
+    Biology: 5
+    Mechanical: -10
+    Vigilance: -10
+    Cognition: 5
+
+- type: origin
+  id: Shimatengoku
+  name: origin-shimatengoku-name
+  description: origin-shimatengoku-desc
+  stats:
+    Robustness: -6
+    Toughness: -7
+    Biology: -7
+    Mechanical: 10
+    Vigilance: 10
+    Cognition: 5
+
+- type: origin
+  id: HMSSDestined
+  name: origin-hmss-destined-name
+  description: origin-hmss-destined-desc
+  stats:
+    Robustness: 5
+    Toughness: 5
+    Biology: -10
+    Mechanical: 5
+    Vigilance: 10
+    Cognition: -10
+
+- type: origin
+  id: Crozet
+  name: origin-crozet-name
+  description: origin-crozet-desc
+  stats:
+    Robustness: 5
+    Toughness: 10
+    Biology: -7
+    Mechanical: -7
+    Vigilance: 10
+    Cognition: -6
+
+- type: origin
+  id: FirstExpeditionaryFleet
+  name: origin-first-expeditionary-fleet-name
+  description: origin-first-expeditionary-fleet-desc
+  stats:
+    Robustness: 10
+    Toughness: 5
+    Biology: -15
+    Mechanical: 0
+    Vigilance: 15
+    Cognition: -10
+
+- type: origin
+  id: EndPoint
+  name: origin-end-point-name
+  description: origin-end-point-desc
+  stats:
+    Robustness: -9
+    Toughness: -8
+    Biology: 10
+    Mechanical: 10
+    Vigilance: -8
+    Cognition: 10
+
+- type: origin
+  id: NSSForecaster
+  name: origin-nss-forecaster-name
+  description: origin-nss-forecaster-desc
+  stats:
+    Robustness: 2
+    Toughness: 2
+    Biology: -10
+    Mechanical: 2
+    Vigilance: 10
+    Cognition: 2
+
+- type: origin
+  id: Eureka
+  name: origin-eureka-name
+  description: origin-eureka-desc
+  stats:
+    Robustness: -5
+    Toughness: 5
+    Biology: 10
+    Mechanical: -10
+    Vigilance: 10
+    Cognition: -5
+
+- type: origin
+  id: TripwireBelt
+  name: origin-tripwire-belt-name
+  description: origin-tripwire-belt-desc
+  stats:
+    Robustness: -5
+    Toughness: 10
+    Biology: -5
+    Mechanical: 5
+    Vigilance: 10
+    Cognition: -10
+
+- type: origin
+  id: KestrelHive
+  name: origin-kestrel-hive-name
+  description: origin-kestrel-hive-desc
+  stats:
+    Robustness: 6
+    Toughness: 5
+    Biology: -3
+    Mechanical: 9
+    Vigilance: -6
+    Cognition: -6
