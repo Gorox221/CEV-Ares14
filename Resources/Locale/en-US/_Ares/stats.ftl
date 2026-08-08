@@ -18,6 +18,10 @@ stat-mechanical-desc = Skills in working with technology and machinery.
 
 character-info-insight-label = Insight
 
+character-info-stats-header = Attributes
+
+character-info-perks-label = Perks
+
 ares-hacking-verb-hack = Hack
 ares-hacking-verb-hack-tooltip = Resetting access requirements: ({$time}s)
 ares-hacking-popup-start = {$user} begins hacking the console interface...

@@ -18,6 +18,10 @@ stat-mechanical-desc = Навыки работы с техникой и меха
 
 character-info-insight-label = Озарение
 
+character-info-stats-header = Характеристики
+
+character-info-perks-label = Перки
+
 ares-hacking-verb-hack = Взломать
 ares-hacking-verb-hack-tooltip = Сбрасывание требований к доступам: ({$time}с)
 ares-hacking-popup-start = {$user} начинает взламывать интерфейс консоли...

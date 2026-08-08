@@ -13,11 +13,13 @@ using Content.Shared.Input;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
+using Content.Shared._Ares.Perks; // Ares-tweak
 using Content.Shared._Ares.Sanity.Components; // Ares-tweak
 using Content.Shared._Ares.Sanity.Events; // Ares-tweak
 using Content.Shared._Ares.Stats; // Ares-tweak
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
+using Robust.Client.Graphics;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
@@ -244,6 +246,34 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
 
         _window.StatsContainer.RemoveAllChildren();
 
+        // Ares-tweak start
+        var statsPanel = new PanelContainer
+        {
+            PanelOverride = new StyleBoxFlat
+            {
+                BackgroundColor = new Color(0.11f, 0.13f, 0.17f, 0.95f),
+                BorderColor = new Color(0.45f, 0.6f, 0.95f, 0.4f),
+                BorderThickness = new Thickness(1),
+                ContentMarginLeftOverride = 10,
+                ContentMarginRightOverride = 10,
+                ContentMarginTopOverride = 6,
+                ContentMarginBottomOverride = 8,
+            },
+        };
+        var statsBox = new BoxContainer
+        {
+            Orientation = BoxContainer.LayoutOrientation.Vertical,
+            HorizontalExpand = true,
+        };
+
+        var statsHeader = new Label
+        {
+            Text = Loc.GetString("character-info-stats-header"),
+            StyleClasses = { StyleNano.StyleClassLabelHeadingBigger },
+            FontColorOverride = new Color(0.55f, 0.7f, 1f),
+        };
+        statsBox.AddChild(statsHeader);
+
         foreach (var stat in _prototypeManager.EnumeratePrototypes<StatPrototype>())
         {
             var level = _stats.GetStatLevel(player.Value, new ProtoId<StatPrototype>(stat.ID));
@@ -271,23 +301,108 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             };
             row.AddChild(valueLabel);
 
-            _window.StatsContainer.AddChild(row);
+            statsBox.AddChild(row);
         }
 
+        statsPanel.AddChild(statsBox);
+        _window.StatsContainer.AddChild(statsPanel);
+        // Ares-tweak end
+
+        // Ares-tweak start
+        if (_ent.TryGetComponent(player.Value, out PerksComponent? perksComp) && perksComp.Perks.Count > 0)
+        {
+            var perksPanel = new PanelContainer
+            {
+                Margin = new Thickness(0, 8, 0, 0),
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = new Color(0.12f, 0.12f, 0.15f, 0.95f),
+                    BorderColor = new Color(0.85f, 0.7f, 0.2f, 0.45f),
+                    BorderThickness = new Thickness(1),
+                    ContentMarginLeftOverride = 10,
+                    ContentMarginRightOverride = 10,
+                    ContentMarginTopOverride = 6,
+                    ContentMarginBottomOverride = 8,
+                },
+            };
+            var perksBox = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                HorizontalExpand = true,
+            };
+
+            var perksHeader = new Label
+            {
+                Text = Loc.GetString("character-info-perks-label"),
+                StyleClasses = { StyleNano.StyleClassLabelHeadingBigger },
+            };
+            perksBox.AddChild(perksHeader);
+
+            var perksScroll = new ScrollContainer
+            {
+                MinSize = new Vector2(0, 150),
+                HorizontalExpand = true,
+                Margin = new Thickness(0, 4, 0, 0),
+            };
+            var perksList = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                HorizontalExpand = true,
+            };
+
+            foreach (var perkId in perksComp.Perks)
+            {
+                if (!_prototypeManager.TryIndex(perkId, out PerkPrototype? perk))
+                    continue;
+
+                var perkLabel = new Label
+                {
+                    Text = $"- {Loc.GetString(perk.Name)}",
+                    FontColorOverride = new Color(0.85f, 0.8f, 0.65f),
+                    Margin = new Thickness(0, 2, 0, 0),
+                    MouseFilter = Control.MouseFilterMode.Stop,
+                    ToolTip = perk.Description != null ? Loc.GetString(perk.Description) : null,
+                };
+                perksList.AddChild(perkLabel);
+            }
+
+            perksScroll.AddChild(perksList);
+            perksBox.AddChild(perksScroll);
+            perksPanel.AddChild(perksBox);
+            _window.StatsContainer.AddChild(perksPanel);
+        }
+        // Ares-tweak end
+
+        // Ares-tweak start
         if (_ent.TryGetComponent(player.Value, out InsightComponent? insight))
         {
-            var separator = new Control
+            var insightPanel = new PanelContainer
             {
-                MinSize = new Vector2(0, 8),
+                Margin = new Thickness(0, 8, 0, 0),
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = new Color(0.1f, 0.14f, 0.18f, 0.95f),
+                    BorderColor = new Color(0.4f, 0.7f, 1f, 0.45f),
+                    BorderThickness = new Thickness(1),
+                    ContentMarginLeftOverride = 10,
+                    ContentMarginRightOverride = 10,
+                    ContentMarginTopOverride = 6,
+                    ContentMarginBottomOverride = 8,
+                },
             };
-            _window.StatsContainer.AddChild(separator);
+            var insightBox = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                HorizontalExpand = true,
+            };
 
-            var insightLabel = new Label
+            var insightHeader = new Label
             {
                 Text = Loc.GetString("character-info-insight-label"),
-                FontColorOverride = new Color(0.6f, 0.8f, 1f),
+                StyleClasses = { StyleNano.StyleClassLabelHeadingBigger },
+                FontColorOverride = new Color(0.6f, 0.85f, 1f),
             };
-            _window.StatsContainer.AddChild(insightLabel);
+            insightBox.AddChild(insightHeader);
 
             var insightBar = new ProgressBar
             {
@@ -296,38 +411,32 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
                 Value = insight.CurrentInsight,
                 HorizontalExpand = true,
                 MinSize = new Vector2(0, 20),
-                Margin = new Thickness(0, 2, 0, 0),
+                Margin = new Thickness(0, 4, 0, 0),
             };
-            _window.StatsContainer.AddChild(insightBar);
-        }
+            insightBox.AddChild(insightBar);
 
-        if (_ent.TryGetComponent(player.Value, out RestComponent? rest))
-        {
-            if (rest.LevelUpPending)
+            if (_ent.TryGetComponent(player.Value, out RestComponent? rest) && rest.LevelUpPending)
             {
-                var levelUpSeparator = new Control
-                {
-                    MinSize = new Vector2(0, 8),
-                };
-                _window.StatsContainer.AddChild(levelUpSeparator);
-
                 var levelUpLabel = new Label
                 {
                     Text = Loc.GetString("rest-levelup-ui"),
                     FontColorOverride = Color.Gold,
+                    Margin = new Thickness(0, 4, 0, 0),
                 };
-                _window.StatsContainer.AddChild(levelUpLabel);
+                insightBox.AddChild(levelUpLabel);
 
                 var btnContainer = new BoxContainer
                 {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Orientation = BoxContainer.LayoutOrientation.Vertical,
                     Margin = new Thickness(0, 4, 0, 0),
                 };
 
                 var internalizeBtn = new Button
                 {
                     Text = Loc.GetString("rest-button-internalize"),
-                    MinSize = new Vector2(120, 30),
+                    MinSize = new Vector2(0, 30),
+                    HorizontalExpand = true,
+                    Margin = new Thickness(0, 2, 0, 0),
                     ToolTip = Loc.GetString("rest-button-internalize-desc"),
                 };
                 var uid = player.Value;
@@ -342,7 +451,9 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
                 var oddityBtn = new Button
                 {
                     Text = Loc.GetString("rest-button-oddity"),
-                    MinSize = new Vector2(120, 30),
+                    MinSize = new Vector2(0, 30),
+                    HorizontalExpand = true,
+                    Margin = new Thickness(0, 2, 0, 0),
                     Disabled = true,
                     ToolTip = Loc.GetString("rest-button-oddity-desc"),
                 };
@@ -353,10 +464,70 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
                 };
                 btnContainer.AddChild(oddityBtn);
 
-                _window.StatsContainer.AddChild(btnContainer);
+                insightBox.AddChild(btnContainer);
             }
+
+            insightPanel.AddChild(insightBox);
+            _window.StatsContainer.AddChild(insightPanel);
         }
-    // Ares-tweak end
+        // Ares-tweak end
+
+        // Ares-tweak start
+        if (!_ent.HasComponent<InsightComponent>(player.Value)
+            && _ent.TryGetComponent(player.Value, out RestComponent? restComp)
+            && restComp.LevelUpPending)
+        {
+            var levelUpSeparator = new Control
+            {
+                MinSize = new Vector2(0, 8),
+            };
+            _window.StatsContainer.AddChild(levelUpSeparator);
+
+            var levelUpLabel = new Label
+            {
+                Text = Loc.GetString("rest-levelup-ui"),
+                FontColorOverride = Color.Gold,
+            };
+            _window.StatsContainer.AddChild(levelUpLabel);
+
+            var btnContainer = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                Margin = new Thickness(0, 4, 0, 0),
+            };
+
+            var internalizeBtn = new Button
+            {
+                Text = Loc.GetString("rest-button-internalize"),
+                MinSize = new Vector2(120, 30),
+                ToolTip = Loc.GetString("rest-button-internalize-desc"),
+            };
+            var uid = player.Value;
+            var netId = _ent.GetNetEntity(uid);
+            internalizeBtn.OnPressed += _ =>
+            {
+                if (_ent.EntityNetManager != null)
+                    _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netId, "Internalize"));
+            };
+            btnContainer.AddChild(internalizeBtn);
+
+            var oddityBtn = new Button
+            {
+                Text = Loc.GetString("rest-button-oddity"),
+                MinSize = new Vector2(120, 30),
+                Disabled = true,
+                ToolTip = Loc.GetString("rest-button-oddity-desc"),
+            };
+            oddityBtn.OnPressed += _ =>
+            {
+                if (_ent.EntityNetManager != null)
+                    _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netId, "Oddity"));
+            };
+            btnContainer.AddChild(oddityBtn);
+
+            _window.StatsContainer.AddChild(btnContainer);
+        }
+        // Ares-tweak end
     }
 
     private void OnRoleTypeChanged(MindRoleTypeChangedEvent ev, EntitySessionEventArgs _)
