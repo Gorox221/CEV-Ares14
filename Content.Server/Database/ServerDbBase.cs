@@ -294,7 +294,8 @@ namespace Content.Server.Database
                 profile.OOCNotes,
                 profile.HeadshotUrl,
                 // ADT end
-                profile.Origin // Ares-tweak
+                profile.Origin, // Ares-tweak
+                profile.Perk // Ares-tweak
             );
         }
 
@@ -386,6 +387,7 @@ namespace Content.Server.Database
             // ADT end
 
             profile.Origin = humanoid.Origin; // Ares-tweak
+            profile.Perk = humanoid.Perk; // Ares-tweak
 
             return profile;
         }

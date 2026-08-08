@@ -24,6 +24,13 @@ public sealed partial class SanityBreakdownPrototype : IPrototype
     public float Weight { get; private set; } = 100f;
 
     /// <summary>
+    /// Whether this breakdown counts as positive (beneficial). Perk effects
+    /// adjust the weight of positive breakdowns only.
+    /// </summary>
+    [DataField]
+    public bool Positive { get; private set; }
+
+    /// <summary>
     /// Behavior of the breakdown, dispatched to its own system when triggered.
     /// </summary>
     [DataField(required: true)]

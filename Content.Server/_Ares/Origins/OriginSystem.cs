@@ -2,7 +2,6 @@
 
 using Content.Shared._Ares.Origins;
 using Content.Shared._Ares.Stats;
-using Content.Shared.GameTicking;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Ares.Origins;
@@ -12,16 +11,8 @@ public sealed class OriginSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly AresStatsSystem _statsSystem = default!;
 
-    public override void Initialize()
+    public void ApplyOrigin(EntityUid mob, ProtoId<OriginPrototype> originId)
     {
-        base.Initialize();
-
-        SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawnComplete);
-    }
-
-    private void OnPlayerSpawnComplete(PlayerSpawnCompleteEvent ev)
-    {
-        var originId = ev.Profile.Origin;
         if (string.IsNullOrEmpty(originId))
             return;
 
@@ -33,7 +24,7 @@ public sealed class OriginSystem : EntitySystem
 
         foreach (var (stat, delta) in origin.Stats)
         {
-            _statsSystem.ModifyStatLevel(ev.Mob, stat, delta);
+            _statsSystem.ModifyStatLevel(mob, stat, delta);
         }
     }
 }

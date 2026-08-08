@@ -5,6 +5,7 @@
   name: sanity-breakdown-stalwart-name
   popup: sanity-breakdown-stalwart-popup
   weight: 10
+  positive: true
   behavior: !type:StalwartBreakdownBehavior
     sanityReturn: 100
     healing:
@@ -37,6 +38,7 @@
   name: sanity-breakdown-lessonlearnt-name
   popup: sanity-breakdown-lessonlearnt-popup
   weight: 10
+  positive: true
   behavior: !type:LessonLearntBreakdownBehavior
     sanityReturn: 100
 
@@ -45,6 +47,7 @@
   name: sanity-breakdown-absoluteconcentration-name
   popup: sanity-breakdown-absoluteconcentration-popup
   weight: 10
+  positive: true
   behavior: !type:AbsoluteConcentrationBreakdownBehavior
     duration: 1200
 

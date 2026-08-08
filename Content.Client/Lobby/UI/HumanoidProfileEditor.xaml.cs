@@ -14,8 +14,9 @@ using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Client.Sprite;
 using Content.Client.UserInterface.Systems.Guidebook;
-using Content.Shared._Ares.Origins;
-using Content.Shared._Ares.Stats;
+using Content.Shared._Ares.Origins; // Ares-tweak
+using Content.Shared._Ares.Perks; // Ares-tweak
+using Content.Shared._Ares.Stats; // Ares-tweak
 using Content.Shared.CCVar;
 using Content.Shared.Clothing;
 using Content.Shared.GameTicking;
@@ -108,7 +109,9 @@ namespace Content.Client.Lobby.UI
 
         private List<SpeciesPrototype> _species = new();
 
-        private readonly List<OriginPrototype> _origins = new();
+        private readonly List<OriginPrototype> _origins = new(); // Ares-tweak
+
+        private readonly List<PerkPrototype> _perks = new(); // Ares-tweak
 
         private List<(string, RequirementsSelector)> _jobPriorities = new();
 
@@ -441,6 +444,7 @@ namespace Content.Client.Lobby.UI
 
             #region Origin
 
+            // Ares-tweak start
             TabContainer.SetTabTitle(1, Loc.GetString("humanoid-profile-editor-origin-tab"));
 
             OriginButton.OnItemSelected += args =>
@@ -452,7 +456,18 @@ namespace Content.Client.Lobby.UI
             RefreshOrigins();
             UpdateOriginDetails();
 
+            PerkButton.OnItemSelected += args =>
+            {
+                PerkButton.SelectId(args.Id);
+                SetPerk(args.Id == 0 ? string.Empty : _perks[args.Id - 1].ID);
+            };
+
+            RefreshPerks();
+            UpdatePerkDetails();
+
             OriginScroll.OnResized += UpdateOriginDescriptionWidth;
+            OriginScroll.OnResized += UpdatePerkDescriptionWidth;
+            // Ares-tweak end
 
             #endregion Origin
 
@@ -720,9 +735,7 @@ namespace Content.Client.Lobby.UI
             }
         }
 
-        /// <summary>
-        /// Обновляет список происхождений в выпадающем меню.
-        /// </summary>
+        // Ares-tweak start
         public void RefreshOrigins()
         {
             OriginButton.Clear();
@@ -814,9 +827,6 @@ namespace Content.Client.Lobby.UI
             UpdateOriginDescriptionWidth();
         }
 
-        /// <summary>
-        /// Ограничивает ширину описания шириной вкладки, чтобы длинный текст переносился на новые строки.
-        /// </summary>
         private void UpdateOriginDescriptionWidth()
         {
             if (OriginDescription == null)
@@ -824,6 +834,77 @@ namespace Content.Client.Lobby.UI
 
             OriginDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
         }
+
+        public void RefreshPerks()
+        {
+            PerkButton.Clear();
+            _perks.Clear();
+
+            PerkButton.AddItem(Loc.GetString("humanoid-profile-editor-perk-none"));
+
+            foreach (var perk in _prototypeManager.EnumeratePrototypes<PerkPrototype>()
+                         .OrderBy(p => Loc.GetString(p.Name)))
+            {
+                _perks.Add(perk);
+                PerkButton.AddItem(Loc.GetString(perk.Name));
+            }
+
+            UpdatePerkControls();
+        }
+
+        public void UpdatePerkControls()
+        {
+            var perk = Profile?.Perk ?? string.Empty;
+            PerkButton.SelectId(0);
+
+            for (var i = 0; i < _perks.Count; i++)
+            {
+                if (_perks[i].ID == perk)
+                {
+                    PerkButton.SelectId(i + 1);
+                    break;
+                }
+            }
+
+            UpdatePerkDetails();
+        }
+
+        private void SetPerk(ProtoId<PerkPrototype> perk)
+        {
+            if (Profile == null)
+                return;
+
+            Profile = Profile.WithPerk(perk);
+            SetDirty();
+            UpdatePerkDetails();
+        }
+
+        private void UpdatePerkDetails()
+        {
+            var perkId = Profile?.Perk ?? string.Empty;
+            if (string.IsNullOrEmpty(perkId) ||
+                !_prototypeManager.TryIndex(perkId, out PerkPrototype? perk))
+            {
+                PerkDescription.SetMessage(string.Empty);
+                return;
+            }
+
+            if (perk.Description != null)
+                PerkDescription.SetMessage(Loc.GetString(perk.Description.Value));
+            else
+                PerkDescription.SetMessage(string.Empty);
+
+            UpdatePerkDescriptionWidth();
+        }
+
+        private void UpdatePerkDescriptionWidth()
+        {
+            if (PerkDescription == null)
+                return;
+
+            PerkDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
+        }
+        // Ares-tweak end
 
         public void RefreshAntags()
         {
@@ -1001,7 +1082,8 @@ namespace Content.Client.Lobby.UI
             RefreshJobs();
             RefreshLoadouts();
             RefreshSpecies();
-            RefreshOrigins();
+            RefreshOrigins(); // Ares-tweak
+            RefreshPerks(); // Ares-tweak
             RefreshTraits();
             RefreshFlavorText();
             ReloadPreview();

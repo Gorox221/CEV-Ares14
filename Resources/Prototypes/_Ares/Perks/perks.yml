@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# Перки — расширяемый список. В редакторе персонажа выбирается один перк,
+# но по ходу раунда у персонажа может быть несколько перков.
+
+- type: perk
+  id: PaperWorm
+  name: perk-paper-worm-name
+  description: perk-paper-worm-desc
+  effects:
+    - !type:StatDeltaPerkEffect
+      allDelta: -10
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 1.2
+
+- type: perk
+  id: RejectedGenius
+  name: perk-rejected-genius-name
+  description: perk-rejected-genius-desc
+  effects:
+    - !type:MaxSanityPerkEffect
+      delta: -20
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 0
+    - !type:InsightGainPerkEffect
+      multiplier: 1.5
+
+- type: perk
+  id: Freelancer
+  name: perk-freelancer-name
+  description: perk-freelancer-desc
+  effects:
+    - !type:StatRedistributionPerkEffect
+      highestDelta: -10
+      otherDelta: 4

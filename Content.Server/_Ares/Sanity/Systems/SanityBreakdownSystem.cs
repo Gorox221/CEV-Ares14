@@ -65,7 +65,7 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
             || _timing.CurTime < sanity.NextBreakdownTime)
             return;
 
-        var breakdown = PickBreakdown();
+        var breakdown = PickBreakdown(uid);
         if (breakdown == null)
             return;
 
@@ -86,18 +86,34 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
         RaiseLocalEvent(ent, ref ev, true);
     }
 
-    private SanityBreakdownPrototype? PickBreakdown()
+    /// <summary>
+    /// Picks a breakdown for the entity. Positive breakdowns have their weight
+    /// scaled by perk modifiers, e.g. to boost or fully remove their chance.
+    /// </summary>
+    private SanityBreakdownPrototype? PickBreakdown(EntityUid uid)
     {
         var all = _prototypes.EnumeratePrototypes<SanityBreakdownPrototype>().ToList();
         if (all.Count == 0)
             return null;
 
-        var totalWeight = all.Sum(p => p.Weight);
+        var positive = new PositiveBreakdownChanceModifierEvent();
+        RaiseLocalEvent(uid, ref positive, true);
+
+        float WeightOf(SanityBreakdownPrototype proto)
+        {
+            var weight = proto.Weight;
+            if (proto.Positive)
+                weight *= positive.PositiveMultiplier;
+
+            return weight;
+        }
+
+        var totalWeight = all.Sum(WeightOf);
         var roll = (float)_random.NextDouble() * totalWeight;
 
         foreach (var proto in all)
         {
-            roll -= proto.Weight;
+            roll -= WeightOf(proto);
             if (roll <= 0)
                 return proto;
         }
