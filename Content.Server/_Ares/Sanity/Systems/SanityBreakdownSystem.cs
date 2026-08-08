@@ -99,11 +99,16 @@ public sealed partial class SanityBreakdownSystem : EntitySystem, ISanityBreakdo
         var positive = new PositiveBreakdownChanceModifierEvent();
         RaiseLocalEvent(uid, ref positive, true);
 
+        var negative = new NegativeBreakdownChanceModifierEvent();
+        RaiseLocalEvent(uid, ref negative, true);
+
         float WeightOf(SanityBreakdownPrototype proto)
         {
             var weight = proto.Weight;
             if (proto.Positive)
                 weight *= positive.PositiveMultiplier;
+            else
+                weight *= negative.Multiplier;
 
             return weight;
         }

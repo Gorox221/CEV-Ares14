@@ -6,10 +6,6 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._Ares.Perks.Effects;
 
-/// <summary>
-/// Base system for a perk effect that modifies an ongoing value (queried by
-/// events raised on the entity while the perk holder is processed).
-/// </summary>
 public abstract partial class PerkQueryEffectSystem<TEffect> : EntitySystem
     where TEffect : PerkEffect<TEffect>
 {
@@ -32,5 +28,22 @@ public abstract partial class PerkQueryEffectSystem<TEffect> : EntitySystem
         }
 
         return multiplier;
+    }
+
+    protected TEffect? GetEffect(Entity<PerksComponent> ent)
+    {
+        foreach (var perkId in ent.Comp.Perks)
+        {
+            if (!_prototypes.TryIndex(perkId, out PerkPrototype? perk))
+                continue;
+
+            foreach (var effect in perk.Effects)
+            {
+                if (effect is TEffect typed)
+                    return typed;
+            }
+        }
+
+        return null;
     }
 }

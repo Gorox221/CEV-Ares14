@@ -33,6 +33,9 @@ public sealed partial class RegenSanityChangeSystem : SanityChangeSystem
         if (_timing.CurTime - sanity.LastDamageTime < TimeSpan.FromSeconds(behavior.Delay))
             return;
 
-        ApplyChange((args.Entity, sanity), behavior.Amount);
+        var regen = new SanityRegenModifierEvent() { Entity = args.Entity };
+        RaiseLocalEvent(args.Entity, ref regen, true);
+
+        ApplyChange((args.Entity, sanity), behavior.Amount * regen.Multiplier);
     }
 }

@@ -9,6 +9,8 @@ namespace Content.Shared._Ares.Sanity.Events;
 [ByRefEvent]
 public record struct InsightGainModifierEvent
 {
+    public EntityUid Entity;
+
     public float Multiplier = 1f;
 
     public InsightGainModifierEvent()

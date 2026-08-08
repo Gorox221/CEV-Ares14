@@ -2,7 +2,9 @@
 
 using Content.Shared._Ares.Sanity.Behaviors;
 using Content.Shared._Ares.Sanity.Components;
+using Content.Shared._Ares.Sanity.Events;
 using Content.Shared.Humanoid;
+using Content.Shared.Interaction;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using System.Linq;
@@ -15,6 +17,7 @@ public sealed partial class SanityDeathSystem : SanityChangeSystem
 {
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private readonly SharedInteractionSystem _interaction = default!;
 
     public override void Initialize()
     {
@@ -51,11 +54,18 @@ public sealed partial class SanityDeathSystem : SanityChangeSystem
             if ((_transform.GetWorldPosition(viewerXform) - deadPos).Length() > behavior.Range)
                 continue;
 
+            if (behavior.RequiresLineOfSight
+                && !_interaction.InRangeUnobstructed(viewerUid, deadUid, behavior.Range))
+                continue;
+
             var delta = behavior.Change;
             if (delta < 0f)
                 delta *= GetVigilanceMultiplier(viewerUid);
 
-            ApplyChange((viewerUid, viewer), delta);
+            var witnessed = new DeathWitnessedEvent(deadUid) { Delta = delta };
+            RaiseLocalEvent(viewerUid, ref witnessed, true);
+
+            ApplyChange((viewerUid, viewer), witnessed.Delta);
         }
     }
 }

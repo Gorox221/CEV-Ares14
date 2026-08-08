@@ -27,7 +27,7 @@ public sealed partial class InsightSystem : EntitySystem
         insight.LevelChange += absDelta;
         var gain = 0.05f + insight.LevelChange / 15f;
 
-        var gainEvent = new InsightGainModifierEvent();
+        var gainEvent = new InsightGainModifierEvent() { Entity = uid };
         RaiseLocalEvent(uid, ref gainEvent, true);
         gain *= gainEvent.Multiplier;
 

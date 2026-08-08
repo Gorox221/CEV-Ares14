@@ -6,3 +6,14 @@ perk-rejected-genius-desc = -20 max sanity, 0% chance of positive breakdowns, in
 
 perk-freelancer-name = Freelancer
 perk-freelancer-desc = Highest stat -10, all others +4
+
+perk-nihilist-name = Nihilist
+perk-nihilist-desc = +10% to the chance of positive breakdowns, +20% to the chance of negative ones. Witnessing a death triggers a random effect: zero sanity loss, +/-5 Cognition or converting the sanity loss into recovery
+
+perk-nihilist-witness-zero = The death before your eyes left you indifferent.
+perk-nihilist-witness-cognition-up = The death before your eyes sharpened your mind.
+perk-nihilist-witness-cognition-down = The death before your eyes unsettled your mind.
+perk-nihilist-witness-recover = The death before your eyes strangely calmed you.
+
+perk-moralist-name = Moralist
+perk-moralist-desc = Near sane people (sanity above 60): insight and sanity regeneration +2% per healthy person nearby. Near sick people (sanity below 30 or health below 50%): sanity damage of 0.1 x 1.2 x (1.2 - Vigilance/60) per sick person

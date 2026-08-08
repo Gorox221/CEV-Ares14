@@ -33,3 +33,28 @@
     - !type:StatRedistributionPerkEffect
       highestDelta: -10
       otherDelta: 4
+
+- type: perk
+  id: Nihilist
+  name: perk-nihilist-name
+  description: perk-nihilist-desc
+  effects:
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 1.1
+    - !type:NegativeBreakdownChancePerkEffect
+      multiplier: 1.2
+    - !type:DeathWitnessPerkEffect
+      cognitionDelta: 5
+
+- type: perk
+  id: Moralist
+  name: perk-moralist-name
+  description: perk-moralist-desc
+  effects:
+    - !type:MoralistPerkEffect
+      saneSanityThreshold: 60
+      multiplierPerSane: 0.02
+      sickSanityThreshold: 30
+      sickHealthPercent: 50
+      damagePerSick: 0.1
+      damageMultiplier: 1.2

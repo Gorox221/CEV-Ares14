@@ -18,4 +18,11 @@ public sealed partial class DeathSanityChangeBehavior : SanityChangeBehavior<Dea
     /// </summary>
     [DataField]
     public float Range = 8f;
+
+    /// <summary>
+    /// Whether a wall or other obstruction between the viewer and the corpse
+    /// prevents the sanity loss.
+    /// </summary>
+    [DataField]
+    public bool RequiresLineOfSight = true;
 }
