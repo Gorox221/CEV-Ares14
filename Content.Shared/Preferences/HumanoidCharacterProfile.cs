@@ -763,7 +763,7 @@ namespace Content.Shared.Preferences
                 origin = string.Empty;
 
             var perk = Perk;
-            if (!prototypeManager.HasIndex<PerkPrototype>(perk))
+            if (!prototypeManager.TryIndex<PerkPrototype>(perk, out var perkProto) || !perkProto.RoundStartSelectable)
                 perk = string.Empty;
             // Ares-tweak end
 

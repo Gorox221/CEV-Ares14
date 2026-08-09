@@ -24,6 +24,13 @@ public sealed partial class PerkPrototype : IPrototype
     public LocId? Description { get; private set; }
 
     /// <summary>
+    /// Whether the perk can be picked in the character editor at round start.
+    /// Perks with this set to false are only obtainable by other means.
+    /// </summary>
+    [DataField]
+    public bool RoundStartSelectable { get; private set; } = false;
+
+    /// <summary>
     /// Effects applied or queried while the perk is active on an entity.
     /// </summary>
     [DataField]

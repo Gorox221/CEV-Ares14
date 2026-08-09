@@ -843,6 +843,7 @@ namespace Content.Client.Lobby.UI
             PerkButton.AddItem(Loc.GetString("humanoid-profile-editor-perk-none"));
 
             foreach (var perk in _prototypeManager.EnumeratePrototypes<PerkPrototype>()
+                         .Where(p => p.RoundStartSelectable)
                          .OrderBy(p => Loc.GetString(p.Name)))
             {
                 _perks.Add(perk);

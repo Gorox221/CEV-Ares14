@@ -1,10 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# Перки — расширяемый список. В редакторе персонажа выбирается один перк,
-# но по ходу раунда у персонажа может быть несколько перков.
-
 - type: perk
   id: PaperWorm
+  roundStartSelectable: true
   name: perk-paper-worm-name
   description: perk-paper-worm-desc
   effects:
@@ -15,6 +13,7 @@
 
 - type: perk
   id: RejectedGenius
+  roundStartSelectable: true
   name: perk-rejected-genius-name
   description: perk-rejected-genius-desc
   effects:
@@ -27,6 +26,7 @@
 
 - type: perk
   id: Freelancer
+  roundStartSelectable: true
   name: perk-freelancer-name
   description: perk-freelancer-desc
   effects:
@@ -36,6 +36,7 @@
 
 - type: perk
   id: Nihilist
+  roundStartSelectable: true
   name: perk-nihilist-name
   description: perk-nihilist-desc
   effects:
@@ -48,6 +49,7 @@
 
 - type: perk
   id: Moralist
+  roundStartSelectable: true
   name: perk-moralist-name
   description: perk-moralist-desc
   effects:
