@@ -4,6 +4,7 @@ using Content.Server._Ares.Origins;
 using Content.Shared._Ares.Perks;
 using Content.Shared._Ares.Perks.Effects;
 using Content.Shared._Ares.Perks.Events;
+using Content.Shared._Ares.Stats;
 using Content.Shared.GameTicking;
 using Content.Shared.Roles;
 using Content.Shared.Roles.Components;
@@ -15,6 +16,7 @@ public sealed partial class PerkSystem : EntitySystem, IPerkEffectApplier
 {
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly OriginSystem _origins = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!;
 
     public override void Initialize()
     {
@@ -33,6 +35,9 @@ public sealed partial class PerkSystem : EntitySystem, IPerkEffectApplier
         {
             foreach (var perk in job.Perks)
                 ApplyPerk(ev.Mob, perk);
+
+            foreach (var (stat, delta) in job.Stats)
+                _stats.ModifyStatLevel(ev.Mob, stat, delta);
         }
     }
 

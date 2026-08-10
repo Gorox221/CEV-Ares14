@@ -905,6 +905,75 @@ namespace Content.Client.Lobby.UI
 
             PerkDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
         }
+
+        private FormattedMessage? BuildRoleTooltip(
+            string? description,
+            Dictionary<ProtoId<StatPrototype>, int>? stats = null,
+            IReadOnlyCollection<ProtoId<PerkPrototype>>? perks = null)
+        {
+            var hasDescription = !string.IsNullOrEmpty(description);
+            var hasStats = stats is { Count: > 0 };
+            var hasPerks = perks is { Count: > 0 };
+
+            if (!hasDescription && !hasStats && !hasPerks)
+                return null;
+
+            var msg = new FormattedMessage();
+
+            if (hasDescription)
+                msg.AddText(description!);
+
+            if (hasStats)
+            {
+                if (hasDescription)
+                {
+                    msg.PushNewline();
+                    msg.PushNewline();
+                }
+
+                msg.PushColor(new Color(0.55f, 0.7f, 1f));
+                msg.AddText(Loc.GetString("character-info-stats-header"));
+                msg.Pop();
+
+                foreach (var (statId, delta) in stats!)
+                {
+                    if (!_prototypeManager.TryIndex(statId, out StatPrototype? stat))
+                        continue;
+
+                    msg.PushNewline();
+                    msg.PushColor(stat.Color);
+                    msg.AddText(Loc.GetString(stat.Name));
+                    msg.Pop();
+                    msg.AddText(" ");
+                    msg.PushColor(delta >= 0 ? Color.FromHex("#7ee787") : Color.FromHex("#ff7b72"));
+                    msg.AddText(delta >= 0 ? $"+{delta}" : delta.ToString());
+                    msg.Pop();
+                }
+            }
+
+            if (hasPerks)
+            {
+                msg.PushNewline();
+                msg.PushNewline();
+
+                msg.PushColor(new Color(0.85f, 0.7f, 0.2f));
+                msg.AddText(Loc.GetString("character-info-perks-label"));
+                msg.Pop();
+
+                foreach (var perkId in perks!)
+                {
+                    if (!_prototypeManager.TryIndex(perkId, out PerkPrototype? perk))
+                        continue;
+
+                    msg.PushNewline();
+                    msg.PushColor(new Color(0.85f, 0.8f, 0.65f));
+                    msg.AddText($"- {Loc.GetString(perk.Name)}");
+                    msg.Pop();
+                }
+            }
+
+            return msg;
+        }
         // Ares-tweak end
 
         public void RefreshAntags()
@@ -936,7 +1005,8 @@ namespace Content.Client.Lobby.UI
 
                 var title = Loc.GetString(antag.Name);
                 var description = Loc.GetString(antag.Objective);
-                selector.Setup(items, title, 250, description, guides: antag.Guides);
+                selector.Setup(items, title, 250, description, guides: antag.Guides,
+                    formattedTooltip: BuildRoleTooltip(description, perks: antag.Perks));
                 selector.Select(Profile?.AntagPreferences.Contains(antag.ID) == true ? 0 : 1);
 
                 if (!_requirements.IsAllowed(
@@ -1231,7 +1301,8 @@ namespace Content.Client.Lobby.UI
                     };
                     var jobIcon = _prototypeManager.Index(job.Icon);
                     icon.Texture = _sprite.Frame0(jobIcon.Icon);
-                    selector.Setup(items, job.LocalizedName, 200, job.LocalizedDescription, icon, job.Guides);
+                    selector.Setup(items, job.LocalizedName, 200, job.LocalizedDescription, icon, job.Guides,
+                    BuildRoleTooltip(job.LocalizedDescription, job.Stats, job.Perks));
 
                     if (!_requirements.IsAllowed(job, (HumanoidCharacterProfile?) _preferencesManager.Preferences?.SelectedCharacter, out var reason))
                     {

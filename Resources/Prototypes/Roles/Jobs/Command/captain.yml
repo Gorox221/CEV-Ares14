@@ -40,6 +40,13 @@
   joinNotifyCrew: true
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  stats:
+    Vigilance: 3
+    Robustness: 60
+    Biology: 60
+    Toughness: 100
+    Cognition: 60
+    Mechanical: 1
   accessGroups:
   - AllAccess
   special:
@@ -50,16 +57,6 @@
       - type: CommandStaff
       - type: Condemned # Goobstation - Nanotrasen owns your soul pal.
         soulOwnedNotDevil: true
-  # УБРАТЬ ПОТОМ ЭТО ТЕСТ start
-  - !type:SetStatsSpecial
-    stats:
-      Vigilance: 3
-      Robustness: 60
-      Biology: 60
-      Toughness: 100
-      Cognition: 60
-      Mechanical: 1
-  # УБРАТЬ ПОТОМ ЭТО ТЕСТ end
 
 
 - type: startingGear

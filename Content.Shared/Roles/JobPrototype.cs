@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Shared._Ares.Perks;
+using Content.Shared._Ares.Perks; // Ares-tweak
+using Content.Shared._Ares.Stats; // Ares-tweak
 using Content.Shared.Access;
 using Content.Shared.Guidebook;
 using Content.Shared.Players.PlayTimeTracking;
@@ -114,11 +115,21 @@ namespace Content.Shared.Roles
         [DataField]
         public ProtoId<StartingGearPrototype>? StartingGear { get; private set; }
 
+        // Ares-tweak start
+
         /// <summary>
         ///     Perks granted to players spawned with this job at round start or late join.
         /// </summary>
         [DataField]
         public IReadOnlyCollection<ProtoId<PerkPrototype>> Perks { get; private set; } = Array.Empty<ProtoId<PerkPrototype>>();
+
+        /// <summary>
+        ///     Stats granted to players spawned with this job at round start or late join.
+        /// </summary>
+        [DataField]
+        public Dictionary<ProtoId<StatPrototype>, int> Stats { get; private set; } = new();
+
+        // Ares-tweak end
 
         /// <summary>
         /// Use this to spawn in as a non-humanoid (borg, test subject, etc.)
