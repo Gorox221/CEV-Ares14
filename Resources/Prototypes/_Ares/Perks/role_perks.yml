@@ -1,0 +1,8 @@
+- type: perk
+  id: Survivor
+  name: perk-survivor-name
+  description: perk-survivor-desc
+  roundStartSelectable: false
+  effects:
+    - !type:SurvivorPerkEffect
+      multiplier: 0.5

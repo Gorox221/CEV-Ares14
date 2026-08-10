@@ -17,3 +17,6 @@ perk-nihilist-witness-recover = The death before your eyes strangely calmed you.
 
 perk-moralist-name = Moralist
 perk-moralist-desc = Near sane people (sanity above 60): insight and sanity regeneration +2% per healthy person nearby. Near sick people (sanity below 30 or health below 50%): sanity damage of 0.1 x 1.2 x (1.2 - Vigilance/60) per sick person
+
+perk-survivor-name = Survivor
+perk-survivor-desc = Sanity damage from witnessing a death is halved.
