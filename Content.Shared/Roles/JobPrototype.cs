@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Ares.Perks;
 using Content.Shared.Access;
 using Content.Shared.Guidebook;
 using Content.Shared.Players.PlayTimeTracking;
@@ -112,6 +113,12 @@ namespace Content.Shared.Roles
 
         [DataField]
         public ProtoId<StartingGearPrototype>? StartingGear { get; private set; }
+
+        /// <summary>
+        ///     Perks granted to players spawned with this job at round start or late join.
+        /// </summary>
+        [DataField]
+        public IReadOnlyCollection<ProtoId<PerkPrototype>> Perks { get; private set; } = Array.Empty<ProtoId<PerkPrototype>>();
 
         /// <summary>
         /// Use this to spawn in as a non-humanoid (borg, test subject, etc.)

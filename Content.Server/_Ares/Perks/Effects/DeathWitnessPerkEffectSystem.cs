@@ -12,6 +12,7 @@ namespace Content.Server._Ares.Perks.Effects;
 
 public sealed partial class DeathWitnessPerkEffectSystem : PerkQueryEffectSystem<DeathWitnessPerkEffect>
 {
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly AresStatsSystem _stats = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -22,8 +23,12 @@ public sealed partial class DeathWitnessPerkEffectSystem : PerkQueryEffectSystem
         SubscribeLocalEvent<PerksComponent, DeathWitnessedEvent>(OnDeathWitnessed);
     }
 
+    // Nihilist and Survivor perk in one system
     private void OnDeathWitnessed(Entity<PerksComponent> ent, ref DeathWitnessedEvent args)
     {
+        if (args.Delta < 0f)
+            args.Delta *= GetSurvivorMultiplier(ent);
+
         var effect = GetEffect(ent);
         if (effect == null)
             return;
@@ -52,5 +57,24 @@ public sealed partial class DeathWitnessPerkEffectSystem : PerkQueryEffectSystem
                 _popup.PopupEntity(Loc.GetString("perk-nihilist-witness-recover"), ent, ent);
                 break;
         }
+    }
+
+    private float GetSurvivorMultiplier(Entity<PerksComponent> ent)
+    {
+        var multiplier = 1f;
+
+        foreach (var perkId in ent.Comp.Perks)
+        {
+            if (!_prototypes.TryIndex(perkId, out PerkPrototype? perk))
+                continue;
+
+            foreach (var effect in perk.Effects)
+            {
+                if (effect is SurvivorPerkEffect typed)
+                    multiplier *= typed.Multiplier;
+            }
+        }
+
+        return multiplier;
     }
 }

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Shared._Ares.Perks;
 using Content.Shared.Guidebook;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -51,6 +52,12 @@ public sealed partial class AntagPrototype : IPrototype
     /// </summary>
     [DataField, Access(typeof(SharedRoleSystem), Other = AccessPermissions.None)]
     public HashSet<JobRequirement>? Requirements;
+
+    /// <summary>
+    ///     Perks granted to the player when they receive this antagonist role.
+    /// </summary>
+    [DataField]
+    public IReadOnlyCollection<ProtoId<PerkPrototype>> Perks { get; private set; } = Array.Empty<ProtoId<PerkPrototype>>();
 
     /// <summary>
     /// Optional list of guides associated with this antag. If the guides are opened, the first entry in this list

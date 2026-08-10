@@ -16,6 +16,7 @@
   icon: "JobIconSecurityCadet"
   supervisors: job-supervisors-security
   canBeAntag: false
+  perks: [ Survivor ]
   guides: # goobstation
   - Security
   - OfficerCadetSOP

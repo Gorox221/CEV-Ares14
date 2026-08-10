@@ -27,6 +27,7 @@
   icon: "JobIconHeadOfSecurity"
   supervisors: job-supervisors-captain
   canBeAntag: false
+  perks: [ Survivor ]
   guides: # goobstation
   - Security
   - SpaceLaw

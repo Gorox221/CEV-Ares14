@@ -3,6 +3,7 @@
   name: roles-antag-survivor-name
   antagonist: true
   objective: roles-antag-survivor-objective
+  perks: [ Survivor ]
   # guides: [  ]
 
 # todo goobstation upsreamer note: probably merge this at some point
