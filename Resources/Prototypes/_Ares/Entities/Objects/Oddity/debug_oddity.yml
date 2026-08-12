@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  parent: BaseItem
+  id: OddityPaperDebug
+  name: strange paper
+  description: A sheet of paper shimmering with a golden glow. The light moves across it like it is alive.
+  suffix: DEBUG
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/bureaucracy.rsi
+    state: paper
+  - type: Item
+    size: Tiny
+  - type: Oddity
+    perkChance: 1.0
+    statRanges:
+    - stat: Vigilance
+      min: 4
+      max: 12
+    - stat: Cognition
+      min: 4
+      max: 12
+    - stat: Biology
+      min: 1
+      max: 6
+
+# Удалить это после добавления перков для оддити!!
+- type: perk
+  id: OddityStrangeBlessing
+  name: perk-oddity-strange-blessing-name
+  description: perk-oddity-strange-blessing-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+  - !type:StatDeltaPerkEffect
+    deltas:
+      Vigilance: 3
+      Cognition: 3
+# Удалить это после добавления перков для оддити!!

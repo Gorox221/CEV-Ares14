@@ -25,10 +25,15 @@ public sealed partial class PerkPrototype : IPrototype
 
     /// <summary>
     /// Whether the perk can be picked in the character editor at round start.
-    /// Perks with this set to false are only obtainable by other means.
     /// </summary>
     [DataField]
     public bool RoundStartSelectable { get; private set; } = false;
+
+    /// <summary>
+    /// Whether its giving out a perk when focusing on oddity
+    /// </summary>
+    [DataField]
+    public bool IsOddity { get; private set; } = false;
 
     /// <summary>
     /// Effects applied or queried while the perk is active on an entity.
