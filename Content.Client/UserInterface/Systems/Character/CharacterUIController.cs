@@ -448,21 +448,14 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
                 };
                 btnContainer.AddChild(internalizeBtn);
 
-                var oddityBtn = new Button
+                var oddityHint = new RichTextLabel
                 {
-                    Text = Loc.GetString("rest-button-oddity"),
-                    MinSize = new Vector2(0, 30),
+                    Text = Loc.GetString("rest-oddity-hint"),
+                    StyleClasses = { StyleNano.StyleClassLabelSubText },
                     HorizontalExpand = true,
                     Margin = new Thickness(0, 2, 0, 0),
-                    Disabled = true,
-                    ToolTip = Loc.GetString("rest-button-oddity-desc"),
                 };
-                oddityBtn.OnPressed += _ =>
-                {
-                    if (_ent.EntityNetManager != null)
-                        _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netEnt, "Oddity"));
-                };
-                btnContainer.AddChild(oddityBtn);
+                btnContainer.AddChild(oddityHint);
 
                 insightBox.AddChild(btnContainer);
             }
@@ -511,19 +504,15 @@ public sealed class CharacterUIController : UIController, IOnStateEntered<Gamepl
             };
             btnContainer.AddChild(internalizeBtn);
 
-            var oddityBtn = new Button
+            var oddityHint = new RichTextLabel
             {
-                Text = Loc.GetString("rest-button-oddity"),
-                MinSize = new Vector2(120, 30),
-                Disabled = true,
-                ToolTip = Loc.GetString("rest-button-oddity-desc"),
+                Text = Loc.GetString("rest-oddity-hint"),
+                StyleClasses = { StyleNano.StyleClassLabelSubText },
+                HorizontalExpand = true,
+                VerticalAlignment = Control.VAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0),
             };
-            oddityBtn.OnPressed += _ =>
-            {
-                if (_ent.EntityNetManager != null)
-                    _ent.EntityNetManager.SendSystemNetworkMessage(new RestLevelUpRequestEvent(netId, "Oddity"));
-            };
-            btnContainer.AddChild(oddityBtn);
+            btnContainer.AddChild(oddityHint);
 
             _window.StatsContainer.AddChild(btnContainer);
         }

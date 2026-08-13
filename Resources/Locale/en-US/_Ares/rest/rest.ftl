@@ -4,8 +4,7 @@ rest-levelup-available = You feel ready to transcend. Open your character info t
 rest-levelup-ui = You are ready to transcend. Choose how to focus your experience:
 rest-levelup-complete = You feel enlightened! Your experiences have reshaped you.
 rest-insight-faded = Your insight fades as your desires went unfulfilled...
-rest-button-oddity = Focus on Oddity
-rest-button-oddity-desc = Harness the power of strange artifacts. (Not yet implemented)
+rest-oddity-hint = [color=#808080][italic]Or focus on an oddity[/italic][/color]
 rest-button-internalize = Internalize
 rest-button-internalize-desc = Randomly distribute 45 points across all attributes.
 rest-description-Eat = Find and consume {$group} to fulfill this desire.

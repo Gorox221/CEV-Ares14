@@ -4,9 +4,7 @@ rest-levelup-available = Вы извлекли уроки из пережито�
 rest-levelup-ui = Выберите, на чем сфокусироваться:
 rest-levelup-complete = Вы достигли просветления! Ваш опыт изменил вас.
 rest-insight-faded = Ваше озарение угасло, так как желания остались неисполненными...
-
-rest-button-oddity = Сосредоточиться на предмете
-rest-button-oddity-desc = Сосредоточиться на странном предмете, чтобы с его помощью получить перк.
+rest-oddity-hint = [color=#808080][italic]Или сфокусируйтесь на странном предмете[/italic][/color]
 rest-button-internalize = Интернализация
 rest-button-internalize-desc = Случайным образом распределить 45 очков по всем характеристикам.
 
