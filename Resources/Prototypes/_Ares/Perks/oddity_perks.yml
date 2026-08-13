@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: perk
+  id: FastWalker
+  name: perk-fast-walker-name
+  description: perk-fast-walker-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SprintSpeedPerkEffect
+      sprintSpeedMultiplier: 1.33
+
+- type: perk
+  id: EarOfSilver
+  name: perk-ear-of-silver-name
+  description: perk-ear-of-silver-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:WhisperHearingPerkEffect
+      clearRangeExtension: 2
+
+- type: perk
+  id: Gunslinger
+  name: perk-gunslinger-name
+  description: perk-gunslinger-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GunslingerPerkEffect
+      fireRateMultiplier: 1.33

@@ -20,3 +20,12 @@ perk-moralist-desc = Near sane people (sanity above 60): insight and sanity rege
 
 perk-survivor-name = Survivor
 perk-survivor-desc = Sanity damage from witnessing a death is halved.
+
+perk-fast-walker-name = Fast Walker
+perk-fast-walker-desc = Run speed increased by 33%.
+
+perk-ear-of-silver-name = Ear of Silver
+perk-ear-of-silver-desc = The whisper detection range has been increased by two meters.
+
+perk-gunslinger-name = Gunslinger
+perk-gunslinger-desc = Fire rate increased by 33% with one-handed weapons.

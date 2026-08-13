@@ -20,3 +20,12 @@ perk-moralist-desc = Нахождение рядом со здравомысля
 
 perk-survivor-name = Выживший
 perk-survivor-desc = Урон рассудку от смерти на ваших глазах уменьшен вдвое.
+
+perk-fast-walker-name = Быстроход
+perk-fast-walker-desc = Скорость бега увеличена на 33%.
+
+perk-ear-of-silver-name = Серебряное ухо
+perk-ear-of-silver-desc = Дальность распознования шепота увеличина на два метра.
+
+perk-gunslinger-name = Стрелок
+perk-gunslinger-desc = Скорострельность увеличена на 33% при стрельбе из одноручного оружия.
