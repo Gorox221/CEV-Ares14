@@ -29,3 +29,6 @@ perk-ear-of-silver-desc = The whisper detection range has been increased by two 
 
 perk-gunslinger-name = Gunslinger
 perk-gunslinger-desc = Fire rate increased by 33% with one-handed weapons.
+
+perk-terrible-fate-name = Terrible Fate
+perk-terrible-fate-desc = When you die, everyone who witnessed your death has their sanity dropped to zero. The chance is reduced by the witness' Vigilance.

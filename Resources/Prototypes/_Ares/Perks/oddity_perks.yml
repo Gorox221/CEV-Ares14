@@ -29,3 +29,13 @@
   effects:
     - !type:GunslingerPerkEffect
       fireRateMultiplier: 1.33
+
+- type: perk
+  id: TerribleFate
+  name: perk-terrible-fate-name
+  description: perk-terrible-fate-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:TerribleFatePerkEffect
+      chance: 1
