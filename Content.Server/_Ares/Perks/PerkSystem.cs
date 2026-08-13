@@ -87,4 +87,15 @@ var comp = EnsureComp<PerksComponent>(target);
         var ev = new PerkEffectAppliedEvent<T>(effect);
         RaiseLocalEvent(target, ref ev, true);
     }
+
+    public void RemovePerk(EntityUid target, ProtoId<PerkPrototype> perkId)
+    {
+        if (string.IsNullOrEmpty(perkId) || !TryComp<PerksComponent>(target, out var comp))
+            return;
+
+        if (!comp.Perks.Remove(perkId))
+            return;
+
+        Dirty(target, comp);
+    }
 }

@@ -32,3 +32,6 @@ perk-gunslinger-desc = Скорострельность увеличена на 
 
 perk-terrible-fate-name = Ужасная Судьба
 perk-terrible-fate-desc = Когда вы умираете, все свидетели вашей смерти теряют рассудок до нуля. Бдительность свидетеля снижает шанс потери рассудка.
+
+perk-unfinished-delivery-name = Незавершённая Доставка
+perk-unfinished-delivery-desc = С шансом 33% при воскрешает при смерти.

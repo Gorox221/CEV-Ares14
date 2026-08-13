@@ -32,3 +32,6 @@ perk-gunslinger-desc = Fire rate increased by 33% with one-handed weapons.
 
 perk-terrible-fate-name = Terrible Fate
 perk-terrible-fate-desc = When you die, everyone who witnessed your death has their sanity dropped to zero. The chance is reduced by the witness' Vigilance.
+
+perk-unfinished-delivery-name = Unfinished delivery
+perk-unfinished-delivery-desc = With a 33% chance of resurrecting at death.

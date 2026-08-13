@@ -39,3 +39,18 @@
   effects:
     - !type:TerribleFatePerkEffect
       chance: 1
+
+- type: perk
+  id: UnfinishedDelivery
+  name: perk-unfinished-delivery-name
+  description: perk-unfinished-delivery-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:UnfinishedDeliveryPerkEffect
+      chance: 0.33
+      bruteHeal: 20
+      burnHeal: 20
+      oxyHeal: 100
+      minSleepTicks: 20
+      maxSleepTicks: 30
