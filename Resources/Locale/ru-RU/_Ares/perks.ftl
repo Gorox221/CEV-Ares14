@@ -35,3 +35,9 @@ perk-terrible-fate-desc = Когда вы умираете, все свидет�
 
 perk-unfinished-delivery-name = Незавершённая Доставка
 perk-unfinished-delivery-desc = С шансом 33% при воскрешает при смерти.
+
+perk-lungs-of-iron-name = Железные Лёгкие
+perk-lungs-of-iron-desc = Вдвое меньше урона от удушья.
+
+perk-blood-of-lead-name = Свинцовая Кровь
+perk-blood-of-lead-desc = Вдвое меньше урона от отравления.

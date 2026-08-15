@@ -35,3 +35,9 @@ perk-terrible-fate-desc = When you die, everyone who witnessed your death has th
 
 perk-unfinished-delivery-name = Unfinished delivery
 perk-unfinished-delivery-desc = With a 33% chance of resurrecting at death.
+
+perk-lungs-of-iron-name = Lungs of Iron
+perk-lungs-of-iron-desc = Take half as much asphyxiation damage.
+
+perk-blood-of-lead-name = Blood of Lead
+perk-blood-of-lead-desc = Take half as much poison damage.
