@@ -41,3 +41,9 @@ perk-lungs-of-iron-desc = Take half as much asphyxiation damage.
 
 perk-blood-of-lead-name = Blood of Lead
 perk-blood-of-lead-desc = Take half as much poison damage.
+
+perk-charming-personality-name = Charming Personality
+perk-charming-personality-desc = Restores +2 sanity to people nearby.
+
+perk-horrible-deeds-name = Horrible Deeds
+perk-horrible-deeds-desc = People nearby lose 2 sanity.

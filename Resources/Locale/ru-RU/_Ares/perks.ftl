@@ -41,3 +41,9 @@ perk-lungs-of-iron-desc = Вдвое меньше урона от удушья.
 
 perk-blood-of-lead-name = Свинцовая Кровь
 perk-blood-of-lead-desc = Вдвое меньше урона от отравления.
+
+perk-charming-personality-name = Обаятельная Личность
+perk-charming-personality-desc = Находящиеся рядом люди восстанавливают +2 рассудка.
+
+perk-horrible-deeds-name = Ужасные Деяния
+perk-horrible-deeds-desc = Находящиеся рядом люди теряют −2 рассудка.

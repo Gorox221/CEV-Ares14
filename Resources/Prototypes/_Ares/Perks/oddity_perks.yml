@@ -74,3 +74,23 @@
   effects:
     - !type:DamageResistancePerkEffect
       modifierSetId: PerkBloodOfLead
+
+- type: perk
+  id: CharmingPersonality
+  name: perk-charming-personality-name
+  description: perk-charming-personality-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SanityAuraPerkEffect
+      change: 2
+
+- type: perk
+  id: HorribleDeeds
+  name: perk-horrible-deeds-name
+  description: perk-horrible-deeds-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SanityAuraPerkEffect
+      change: -2
