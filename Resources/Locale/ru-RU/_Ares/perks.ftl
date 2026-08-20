@@ -47,3 +47,6 @@ perk-charming-personality-desc = Находящиеся рядом люди во
 
 perk-horrible-deeds-name = Ужасные Деяния
 perk-horrible-deeds-desc = Находящиеся рядом люди теряют −2 рассудка.
+
+perk-chaingun-smoker-name = Пулемётчик-Курильщик
+perk-chaingun-smoker-desc = Никотин постепенно лечит вас от механических и физических повреждений, а также от отравления.

@@ -55,6 +55,12 @@ entity-condition-guidebook-total-sanity =
                  }
     }
 
+entity-condition-guidebook-has-perk =
+    { $inverted ->
+        [true] the target does not have the {$perk} perk
+        *[other] the target has the {$perk} perk
+    }
+
 entity-condition-guidebook-reagent-threshold =
     { $max ->
         [2147483648] there's at least {NATURALFIXED($min, 2)}u of {$reagent}

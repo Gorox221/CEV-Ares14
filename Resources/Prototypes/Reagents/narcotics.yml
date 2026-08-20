@@ -383,6 +383,16 @@
       # Ares-tweak start
       - !type:AdjustSanity
         amount: 0.5
+      - !type:HealthChange # Chaingun Smoker perk
+        conditions:
+        - !type:PerkCondition
+          perk: ChaingunSmoker
+        damage:
+          groups:
+            Brute: -2
+            Burn: -2
+          types:
+            Poison: -2
       # Ares-tweak end
       - !type:HealthChange
         conditions:

@@ -94,3 +94,10 @@
   effects:
     - !type:SanityAuraPerkEffect
       change: -2
+
+- type: perk
+  id: ChaingunSmoker
+  name: perk-chaingun-smoker-name
+  description: perk-chaingun-smoker-desc
+  roundStartSelectable: false
+  isOddity: true
