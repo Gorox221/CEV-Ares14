@@ -50,3 +50,6 @@ perk-horrible-deeds-desc = Находящиеся рядом люди теряю
 
 perk-chaingun-smoker-name = Пулемётчик-Курильщик
 perk-chaingun-smoker-desc = Никотин постепенно лечит вас от механических и физических повреждений, а также от отравления.
+
+perk-fast-fingers-name = Быстрые Пальцы
+perk-fast-fingers-desc = Вы можете незаметно воровать предметы.

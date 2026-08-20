@@ -50,3 +50,6 @@ perk-horrible-deeds-desc = People nearby lose 2 sanity.
 
 perk-chaingun-smoker-name = Chaingun Smoker
 perk-chaingun-smoker-desc = Metabolizing nicotine heals brute, burn and poison damage.
+
+perk-fast-fingers-name = Fast Fingers
+perk-fast-fingers-desc = You can steal items unnoticed.

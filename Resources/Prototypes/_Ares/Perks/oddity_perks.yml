@@ -101,3 +101,12 @@
   description: perk-chaingun-smoker-desc
   roundStartSelectable: false
   isOddity: true
+
+- type: perk
+  id: FastFingers
+  name: perk-fast-fingers-name
+  description: perk-fast-fingers-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:StealthStripPerkEffect
