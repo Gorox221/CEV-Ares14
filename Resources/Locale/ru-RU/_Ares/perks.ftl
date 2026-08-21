@@ -53,3 +53,6 @@ perk-chaingun-smoker-desc = Никотин постепенно лечит ва�
 
 perk-fast-fingers-name = Быстрые Пальцы
 perk-fast-fingers-desc = Вы можете незаметно воровать предметы.
+
+perk-toxic-revenger-name = Токсичный Мститель
+perk-toxic-revenger-desc = Вы источаете миазмы.

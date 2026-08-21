@@ -53,3 +53,6 @@ perk-chaingun-smoker-desc = Metabolizing nicotine heals brute, burn and poison d
 
 perk-fast-fingers-name = Fast Fingers
 perk-fast-fingers-desc = You can steal items unnoticed.
+
+perk-toxic-revenger-name = Toxic Revenger
+perk-toxic-revenger-desc = You exude a miasma.

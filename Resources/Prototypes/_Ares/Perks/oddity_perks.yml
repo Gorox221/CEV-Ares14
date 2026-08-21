@@ -110,3 +110,13 @@
   isOddity: true
   effects:
     - !type:StealthStripPerkEffect
+
+- type: perk
+  id: ToxicRevenger
+  name: perk-toxic-revenger-name
+  description: perk-toxic-revenger-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GasEmissionPerkEffect
+      molesPerSecond: 5
