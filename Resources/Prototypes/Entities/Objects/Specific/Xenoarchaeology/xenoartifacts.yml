@@ -35,6 +35,11 @@
   - type: MovementSpeedModifier
     baseWalkSpeed: 0.3 # Goobstation
     baseSprintSpeed: 0.5
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Cognition
+    baseFailChance: 80
+  # Ares-tweak end
   - type: UseDelay
   - type: StealTarget
     stealGroup: XenoArtifact

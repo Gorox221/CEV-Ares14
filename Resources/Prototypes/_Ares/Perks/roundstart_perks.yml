@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: perk
+  id: PaperWorm
+  roundStartSelectable: true
+  name: perk-paper-worm-name
+  description: perk-paper-worm-desc
+  effects:
+    - !type:StatDeltaPerkEffect
+      allDelta: -10
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 1.2
+
+- type: perk
+  id: RejectedGenius
+  roundStartSelectable: true
+  name: perk-rejected-genius-name
+  description: perk-rejected-genius-desc
+  effects:
+    - !type:MaxSanityPerkEffect
+      delta: -20
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 0
+    - !type:InsightGainPerkEffect
+      multiplier: 1.5
+
+- type: perk
+  id: Freelancer
+  roundStartSelectable: true
+  name: perk-freelancer-name
+  description: perk-freelancer-desc
+  effects:
+    - !type:StatRedistributionPerkEffect
+      highestDelta: -10
+      otherDelta: 4
+
+- type: perk
+  id: Nihilist
+  roundStartSelectable: true
+  name: perk-nihilist-name
+  description: perk-nihilist-desc
+  effects:
+    - !type:PositiveBreakdownChancePerkEffect
+      multiplier: 1.1
+    - !type:NegativeBreakdownChancePerkEffect
+      multiplier: 1.2
+    - !type:DeathWitnessPerkEffect
+      cognitionDelta: 5
+
+- type: perk
+  id: Moralist
+  roundStartSelectable: true
+  name: perk-moralist-name
+  description: perk-moralist-desc
+  effects:
+    - !type:MoralistPerkEffect
+      saneSanityThreshold: 60
+      multiplierPerSane: 0.02
+      sickSanityThreshold: 30
+      sickHealthPercent: 50
+      damagePerSick: 0.1
+      damageMultiplier: 1.2

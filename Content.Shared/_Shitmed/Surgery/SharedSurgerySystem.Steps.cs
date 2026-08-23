@@ -29,6 +29,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using System.Linq;
 using Content.Shared._Shitmed.Surgery;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Shared._Shitmed.Medical.Surgery;
 
@@ -899,6 +900,7 @@ public abstract partial class SharedSurgerySystem
         return true;
     }
 
+    // Ares-tweak start: added stat bonus to surgery speed
     private float GetSurgeryDuration(EntityUid surgeryStep, EntityUid user, EntityUid target, float toolSpeed)
     {
         if (!_stepQuery.TryComp(surgeryStep, out var stepComp))
@@ -911,8 +913,13 @@ public abstract partial class SharedSurgerySystem
         if (TryComp(user, out SurgerySpeedModifierComponent? surgerySpeedMod))
             speed *= surgerySpeedMod.SpeedModifier;
 
-        return stepComp.Duration / speed;
+        var baseDuration = stepComp.Duration * 1.3f;
+        var statLevel = _stats.GetStatLevel(user, stepComp.Stat);
+        baseDuration = MathF.Max(baseDuration - statLevel, stepComp.Duration * 0.1f);
+
+        return baseDuration / speed;
     }
+    // Ares-tweak end
     private (Entity<SurgeryComponent> Surgery, int Step)? GetNextStep(EntityUid body, EntityUid part, Entity<SurgeryComponent?> surgery, List<EntityUid> requirements, EntityUid user)
     {
         if (!Resolve(surgery, ref surgery.Comp))

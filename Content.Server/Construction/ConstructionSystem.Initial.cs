@@ -267,6 +267,17 @@ namespace Content.Server.Construction
                 return null;
             }
 
+            // Ares-tweak start
+            if (doAfterTime > 0)
+            {
+                var category = GetCategoryForGraph(graph.ID);
+                if (IsCraftingCategory(category))
+                    doAfterTime = GetCognitionCraftTime(user, doAfterTime);
+                else if (IsMechanicalCategory(category))
+                    doAfterTime = GetMechanicalCraftTime(user, doAfterTime);
+            }
+            // Ares-tweak end
+
             var doAfterArgs = new DoAfterArgs(EntityManager, user, doAfterTime, new AwaitedDoAfterEvent(), null)
             {
                 BreakOnDamage = true,

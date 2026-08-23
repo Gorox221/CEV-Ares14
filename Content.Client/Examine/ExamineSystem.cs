@@ -3,6 +3,7 @@
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Content.Client._Ares.Sanity.Systems; // Ares-tweak
 using Content.Client.Verbs;
 using Content.Shared.Examine;
 using Content.Shared.IdentityManagement;
@@ -33,6 +34,7 @@ namespace Content.Client.Examine
         [Dependency] private readonly IEyeManager _eyeManager = default!;
         [Dependency] private readonly VerbSystem _verbSystem = default!;
         [Dependency] private readonly SpriteSystem _sprite = default!;
+        [Dependency] private readonly FabricBreakdownClientSystem? _fabric = default; // Ares-tweak
 
         private List<Verb> _verbList = new();
 
@@ -240,7 +242,11 @@ namespace Content.Client.Examine
 
             if (knowTarget)
             {
-                var itemName = FormattedMessage.EscapeText(Identity.Name(target, EntityManager, player));
+                // Ares-tweak start
+                var itemName = _fabric is { } fabric && fabric.IsHallucinated(target)
+                    ? Loc.GetString("sanity-fabric-unknown-name")
+                    : FormattedMessage.EscapeText(Identity.Name(target, EntityManager, player));
+                // Ares-tweak end
                 var labelMessage = FormattedMessage.FromMarkupPermissive($"[bold]{itemName}[/bold]");
                 var label = new RichTextLabel();
                 label.SetMessage(labelMessage);
@@ -264,6 +270,11 @@ namespace Content.Client.Examine
         /// </summary>
         public void UpdateTooltipInfo(EntityUid player, EntityUid target, FormattedMessage message, List<Verb>? verbs=null, bool getVerbs = true)
         {
+            // Ares-tweak start
+            if (_fabric is { } fabric && fabric.IsHallucinated(target))
+                message = FormattedMessage.FromMarkupPermissive(Loc.GetString("sanity-fabric-hidden-flavor"));
+            // Ares-tweak end
+
             var vBox = _examineTooltipOpen?.GetChild(0).GetChild(0);
             if (vBox == null)
             {

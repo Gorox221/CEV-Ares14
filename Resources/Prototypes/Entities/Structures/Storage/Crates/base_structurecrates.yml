@@ -141,3 +141,10 @@
   - type: RecyclableOnUnlock #Goobstation - Recycle update
   - type: Paintable
     group: CrateSecure
+  # Ares-tweak start: Added lock hacking support
+  - type: LockHack
+  - type: UserInterface
+    interfaces:
+      enum.LockHackUiKey.Key:
+        type: LockHackBoundUserInterface
+  # Ares-tweak end: Added lock hacking support

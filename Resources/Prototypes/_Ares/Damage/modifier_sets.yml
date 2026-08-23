@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: damageModifierSet
+  id: PerkLungsOfIron
+  coefficients:
+    Asphyxiation: 0.5
+
+- type: damageModifierSet
+  id: PerkBloodOfLead
+  coefficients:
+    Poison: 0.5

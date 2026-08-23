@@ -104,6 +104,10 @@
     - Welding
     - Axing # Goobstation
     - Ignition
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: WeldingSparks # Goobstation
   - type: ToolTileCompatible # Goobstation
     delay: 2
@@ -145,6 +149,10 @@
     sprite: Objects/Tools/welder_industrial.rsi
   - type: Item
     sprite: Objects/Tools/welder_industrial.rsi
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 30
+  # Ares-tweak end
   - type: SolutionContainerManager
     solutions:
       Welder:
@@ -163,6 +171,10 @@
     sprite: Objects/Tools/welder_industrialadv.rsi
   - type: Item
     sprite: Objects/Tools/welder_industrialadv.rsi
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 35
+  # Ares-tweak end
   - type: SolutionContainerManager
     solutions:
       Welder:
@@ -208,6 +220,10 @@
       Plasma: 50
   - type: StaticPrice #Goobstation - Recycle update
     price: 50
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 40
+  # Ares-tweak end
   - type: WeldingSparks # Goobstation
     effect: EffectWeldingSparksExp
 
@@ -224,6 +240,10 @@
     sprite: Objects/Tools/welder_mini.rsi
   - type: RefillableSolution
     solution: Welder
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 15
+  # Ares-tweak end
   - type: SolutionContainerManager
     solutions:
       Welder:

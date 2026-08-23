@@ -48,7 +48,7 @@ public sealed partial class InjectorModePrototype : IPrototype, IInheritingProto
     /// Injection/Drawing delay (seconds) when the target is a mob.
     /// </summary>
     [DataField]
-    public TimeSpan MobTime = TimeSpan.FromSeconds(5);
+    public TimeSpan MobTime = TimeSpan.FromSeconds(6); // Ares-tweak 5 -> 6
 
     /// <summary>
     /// The delay to draw Reagents from Containers.

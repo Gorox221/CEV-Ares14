@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: stat
+  id: Vigilance
+  name: stat-vigilance-name
+  description: stat-vigilance-desc
+  color: "#f0c040"
+
+- type: stat
+  id: Cognition
+  name: stat-cognition-name
+  description: stat-cognition-desc
+  color: "#6080f0"
+
+- type: stat
+  id: Biology
+  name: stat-biology-name
+  description: stat-biology-desc
+  color: "#40c060"
+
+- type: stat
+  id: Robustness
+  name: stat-robustness-name
+  description: stat-robustness-desc
+  color: "#e08040"
+
+- type: stat
+  id: Toughness
+  name: stat-toughness-name
+  description: stat-toughness-desc
+  color: "#d04040"
+
+- type: stat
+  id: Mechanical
+  name: stat-mechanical-name
+  description: stat-mechanical-desc
+  color: "#80a0c0"

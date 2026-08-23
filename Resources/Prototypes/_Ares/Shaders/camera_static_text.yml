@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: shader
+  id: camera_static_text
+  kind: source
+  path: "/Textures/_Ares/Shaders/camera_static_text.swsl"
+  params:
+    scale: 1500.0
+    speed: 12.0

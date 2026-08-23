@@ -2,10 +2,13 @@
 
 using Content.Server.Construction.Components;
 using Content.Server.Stack;
+using Content.Shared._Ares.Stats; // Ares-tweak
 using Content.Shared.Construction;
+using Content.Shared.Construction.Prototypes; // Ares-tweak
 using Content.Shared.DoAfter;
 using JetBrains.Annotations;
 using Robust.Server.Containers;
+using Robust.Shared.Prototypes; // Ares-tweak
 using Robust.Shared.Random;
 using SharedToolSystem = Content.Shared.Tools.Systems.SharedToolSystem;
 
@@ -22,6 +25,7 @@ namespace Content.Server.Construction
         [Dependency] private readonly ContainerSystem _container = default!;
         [Dependency] private readonly StackSystem _stackSystem = default!;
         [Dependency] private readonly SharedToolSystem _toolSystem = default!;
+        [Dependency] private readonly AresStatsSystem _statsManager = default!; // Ares-tweak
 
         public override void Initialize()
         {

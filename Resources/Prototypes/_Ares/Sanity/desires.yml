@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: desire
+  id: Eat
+  objective: DesireEatObjective
+  weight: 1
+
+- type: desire
+  id: Drink
+  objective: DesireDrinkObjective
+  weight: 1
+
+- type: desire
+  id: Smoke
+  objective: DesireSmokeObjective
+  weight: 1

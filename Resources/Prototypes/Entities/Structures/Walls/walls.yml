@@ -62,6 +62,11 @@
   - type: ExaminableDamage
     messages: WindowMessages
   # </Goobstation>
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 50
+  # Ares-tweak end
 
 - type: entity
   abstract: true
@@ -718,7 +723,12 @@
           Quantity: 33
         - ReagentId: Carbon
           Quantity: 7
-  # </Goobstation>
+  # </Goobstation> 
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 80
+  # Ares-tweak end
   - type: CosmicCorruptible # DeltaV - Cosmic Cult
     convertTo: WallCosmicCult
 
@@ -749,7 +759,7 @@
         acts: ["Destruction"]
       - !type:PlaySoundBehavior
         sound:
-          collection: MetalSlam
+          collection: WoodDestroyHeavy
     - trigger:
         !type:DamageTrigger
         damage: 350
@@ -1411,7 +1421,7 @@
         acts: ["Destruction"]
       - !type:PlaySoundBehavior
         sound:
-          collection: WoodDestroyHeavy
+          collection: MetalSlam
     - trigger:
         !type:DamageTrigger
         damage: 150

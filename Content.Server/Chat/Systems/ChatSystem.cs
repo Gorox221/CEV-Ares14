@@ -34,6 +34,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Players;
 using Content.Shared.Players.RateLimiting;
+using Content.Shared._Ares.Perks; // Ares-tweak
 using Content.Shared.Radio;
 using Content.Shared.Station.Components;
 using Content.Shared.Whitelist;
@@ -737,9 +738,15 @@ public sealed partial class ChatSystem : SharedChatSystem
             // Result is the intermediate message derived from the perceived one via obfuscation
             // Wrapped message is the result wrapped in an "x says y" string
             // Floof: handle languages that require LOS
+            // Ares-tweak start
+            float whisperClearRange = WhisperClearRange;
+            if (TryComp<WhisperHearingComponent>(listener, out var whisperHearing))
+                whisperClearRange += whisperHearing.ClearRangeExtension;
+
             string result, wrappedMessage;
-            if (!language.SpeechOverride.RequireLOS && data.Range <= WhisperClearRange
-                || _examineSystem.InRangeUnOccluded(source, listener, WhisperClearRange)
+            if (!language.SpeechOverride.RequireLOS && data.Range <= whisperClearRange
+                || _examineSystem.InRangeUnOccluded(source, listener, whisperClearRange)
+            // Ares-tweak end
                 || data.Observer)
             {
                 // Scenario 1: the listener can clearly understand the message

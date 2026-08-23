@@ -252,6 +252,26 @@
   - type: MindControllable # Goobstation
   - type: VisibleContraband # Goobstation
   - type: MomentumSteering # Goobstation - No steer
+  - type: Sanity # Ares-Tweak
+    changes:
+    - !type:RegenSanityChangeBehavior
+      delay: 600
+      amount: 0.2
+    - !type:PuddleSanityChangeBehavior
+      change: -0.5
+      range: 7
+      minFraction: 0.4
+    - !type:ChatSanityChangeBehavior
+      change: 1
+      minCooldown: 30
+      maxCooldown: 45
+    - !type:DamageSanityChangeBehavior
+      changePerDamage: 0.12
+    - !type:DeathSanityChangeBehavior
+      change: -10
+      range: 8
+  - type: Insight # Ares-Tweak
+  - type: Rest # Ares-Tweak
 
 - type: entity
   save: false

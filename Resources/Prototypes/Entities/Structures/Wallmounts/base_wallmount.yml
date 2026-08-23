@@ -50,6 +50,11 @@
   id: BaseWallmountMachine
   abstract: true
   components:
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 30
+  # Ares-tweak end
   - type: ApcPowerReceiver
     powerLoad: 100
   - type: ExtensionCableReceiver

@@ -395,3 +395,17 @@ reagent-effect-guidebook-plant-seeds-remove =
         [1] Убирает
        *[other] убирают
     } семена из растения
+
+ares-effect-guidebook-stat-modifier =
+    { $chance ->
+        [1] Временно изменяет
+       *[other] временно изменяют
+    } [color={$statColor}]{$stat}[/color] на [color={$amountColor}]{$amount}[/color] на {NATURALFIXED($time, 3)} {MANY("секунду", $time)}
+
+ares-sanity-guidebook-word = рассудок
+
+ares-effect-guidebook-adjust-sanity =
+    { $chance ->
+        [1] Изменяет
+       *[other] изменяют
+    } {$sanityWord} на [color={$amountColor}]{$amount}[/color] 

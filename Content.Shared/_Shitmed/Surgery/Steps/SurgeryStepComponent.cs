@@ -2,6 +2,7 @@
 
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Shared._Shitmed.Medical.Surgery.Steps;
 
@@ -45,4 +46,9 @@ public sealed partial class SurgeryStepComponent : Component
 
     [DataField]
     public float Duration = 2f;
+
+    // Ares-tweak start
+    [DataField]
+    public ProtoId<StatPrototype> Stat = "Biology";
+    // Ares-tweak end
 }

@@ -37,6 +37,13 @@
     containers:
       stash: !type:ContainerSlot {}
   - type: Pullable
+  # Ares-tweak start
+  - type: SanityAffector
+    behavior: !type:AuraSanityChangeBehavior
+      change: 0.1
+      range: 8
+      requiresAlive: false
+  # Ares-tweak end
   - type: Damageable
     damageContainer: StructuralInorganic # The pot. Not the plant. Or is it plastic?
   - type: Destructible

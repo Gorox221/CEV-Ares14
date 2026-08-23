@@ -14,6 +14,9 @@ using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Client.Sprite;
 using Content.Client.UserInterface.Systems.Guidebook;
+using Content.Shared._Ares.Origins; // Ares-tweak
+using Content.Shared._Ares.Perks; // Ares-tweak
+using Content.Shared._Ares.Stats; // Ares-tweak
 using Content.Shared.CCVar;
 using Content.Shared.Clothing;
 using Content.Shared.GameTicking;
@@ -105,6 +108,10 @@ namespace Content.Client.Lobby.UI
         public HumanoidCharacterProfile? Profile;
 
         private List<SpeciesPrototype> _species = new();
+
+        private readonly List<OriginPrototype> _origins = new(); // Ares-tweak
+
+        private readonly List<PerkPrototype> _perks = new(); // Ares-tweak
 
         private List<(string, RequirementsSelector)> _jobPriorities = new();
 
@@ -435,9 +442,38 @@ namespace Content.Client.Lobby.UI
 
             #endregion Appearance
 
+            #region Origin
+
+            // Ares-tweak start
+            TabContainer.SetTabTitle(1, Loc.GetString("humanoid-profile-editor-origin-tab"));
+
+            OriginButton.OnItemSelected += args =>
+            {
+                OriginButton.SelectId(args.Id);
+                SetOrigin(args.Id == 0 ? string.Empty : _origins[args.Id - 1].ID);
+            };
+
+            RefreshOrigins();
+            UpdateOriginDetails();
+
+            PerkButton.OnItemSelected += args =>
+            {
+                PerkButton.SelectId(args.Id);
+                SetPerk(args.Id == 0 ? string.Empty : _perks[args.Id - 1].ID);
+            };
+
+            RefreshPerks();
+            UpdatePerkDetails();
+
+            OriginScroll.OnResized += UpdateOriginDescriptionWidth;
+            OriginScroll.OnResized += UpdatePerkDescriptionWidth;
+            // Ares-tweak end
+
+            #endregion Origin
+
             #region Jobs
 
-            TabContainer.SetTabTitle(1, Loc.GetString("humanoid-profile-editor-jobs-tab"));
+            TabContainer.SetTabTitle(2, Loc.GetString("humanoid-profile-editor-jobs-tab"));
 
             PreferenceUnavailableButton.AddItem(
                 Loc.GetString("humanoid-profile-editor-preference-unavailable-stay-in-lobby-button"),
@@ -461,13 +497,13 @@ namespace Content.Client.Lobby.UI
 
             #endregion Jobs
 
-            TabContainer.SetTabTitle(2, Loc.GetString("humanoid-profile-editor-antags-tab"));
+            TabContainer.SetTabTitle(3, Loc.GetString("humanoid-profile-editor-antags-tab"));
 
             RefreshTraits();
 
             #region Markings
 
-            TabContainer.SetTabTitle(4, Loc.GetString("humanoid-profile-editor-markings-tab"));
+            TabContainer.SetTabTitle(5, Loc.GetString("humanoid-profile-editor-markings-tab"));
 
             Markings.OnMarkingAdded += OnMarkingChange;
             Markings.OnMarkingRemoved += OnMarkingChange;
@@ -553,7 +589,7 @@ namespace Content.Client.Lobby.UI
             TraitsList.RemoveAllChildren();
 
             var traits = _prototypeManager.EnumeratePrototypes<TraitPrototype>().OrderBy(t => Loc.GetString(t.Name)).ToList();
-            TabContainer.SetTabTitle(3, Loc.GetString("humanoid-profile-editor-traits-tab"));
+            TabContainer.SetTabTitle(4, Loc.GetString("humanoid-profile-editor-traits-tab"));
 
             if (traits.Count < 1)
             {
@@ -699,6 +735,247 @@ namespace Content.Client.Lobby.UI
             }
         }
 
+        // Ares-tweak start
+        public void RefreshOrigins()
+        {
+            OriginButton.Clear();
+            _origins.Clear();
+
+            OriginButton.AddItem(Loc.GetString("humanoid-profile-editor-origin-none"));
+
+            foreach (var origin in _prototypeManager.EnumeratePrototypes<OriginPrototype>()
+                         .OrderBy(o => Loc.GetString(o.Name)))
+            {
+                _origins.Add(origin);
+                OriginButton.AddItem(Loc.GetString(origin.Name));
+            }
+
+            UpdateOriginControls();
+        }
+
+        public void UpdateOriginControls()
+        {
+            var origin = Profile?.Origin ?? string.Empty;
+            OriginButton.SelectId(0);
+
+            for (var i = 0; i < _origins.Count; i++)
+            {
+                if (_origins[i].ID == origin)
+                {
+                    OriginButton.SelectId(i + 1);
+                    break;
+                }
+            }
+
+            UpdateOriginDetails();
+        }
+
+        private void SetOrigin(ProtoId<OriginPrototype> origin)
+        {
+            if (Profile == null)
+                return;
+
+            Profile = Profile.WithOrigin(origin);
+            SetDirty();
+            UpdateOriginDetails();
+        }
+
+        private void UpdateOriginDetails()
+        {
+            OriginStats.RemoveAllChildren();
+
+            var originId = Profile?.Origin ?? string.Empty;
+            if (string.IsNullOrEmpty(originId) ||
+                !_prototypeManager.TryIndex(originId, out OriginPrototype? origin))
+            {
+                OriginDescription.SetMessage(string.Empty);
+                return;
+            }
+
+            foreach (var (statId, delta) in origin.Stats)
+            {
+                if (!_prototypeManager.TryIndex(statId, out StatPrototype? stat))
+                    continue;
+
+                var row = new BoxContainer
+                {
+                    Orientation = LayoutOrientation.Horizontal,
+                    SeparationOverride = 8,
+                    Margin = new Thickness(0, 2, 0, 2),
+                };
+
+                row.AddChild(new Label
+                {
+                    Text = Loc.GetString(stat.Name),
+                    FontColorOverride = stat.Color,
+                });
+
+                row.AddChild(new Label
+                {
+                    Text = delta >= 0 ? $"+{delta}" : delta.ToString(),
+                    FontColorOverride = delta >= 0 ? Color.FromHex("#7ee787") : Color.FromHex("#ff7b72"),
+                });
+
+                OriginStats.AddChild(row);
+            }
+
+            if (origin.Description != null)
+                OriginDescription.SetMessage(Loc.GetString(origin.Description.Value));
+            else
+                OriginDescription.SetMessage(string.Empty);
+
+            UpdateOriginDescriptionWidth();
+        }
+
+        private void UpdateOriginDescriptionWidth()
+        {
+            if (OriginDescription == null)
+                return;
+
+            OriginDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
+        }
+
+        public void RefreshPerks()
+        {
+            PerkButton.Clear();
+            _perks.Clear();
+
+            PerkButton.AddItem(Loc.GetString("humanoid-profile-editor-perk-none"));
+
+            foreach (var perk in _prototypeManager.EnumeratePrototypes<PerkPrototype>()
+                         .Where(p => p.RoundStartSelectable)
+                         .OrderBy(p => Loc.GetString(p.Name)))
+            {
+                _perks.Add(perk);
+                PerkButton.AddItem(Loc.GetString(perk.Name));
+            }
+
+            UpdatePerkControls();
+        }
+
+        public void UpdatePerkControls()
+        {
+            var perk = Profile?.Perk ?? string.Empty;
+            PerkButton.SelectId(0);
+
+            for (var i = 0; i < _perks.Count; i++)
+            {
+                if (_perks[i].ID == perk)
+                {
+                    PerkButton.SelectId(i + 1);
+                    break;
+                }
+            }
+
+            UpdatePerkDetails();
+        }
+
+        private void SetPerk(ProtoId<PerkPrototype> perk)
+        {
+            if (Profile == null)
+                return;
+
+            Profile = Profile.WithPerk(perk);
+            SetDirty();
+            UpdatePerkDetails();
+        }
+
+        private void UpdatePerkDetails()
+        {
+            var perkId = Profile?.Perk ?? string.Empty;
+            if (string.IsNullOrEmpty(perkId) ||
+                !_prototypeManager.TryIndex(perkId, out PerkPrototype? perk))
+            {
+                PerkDescription.SetMessage(string.Empty);
+                return;
+            }
+
+            if (perk.Description != null)
+                PerkDescription.SetMessage(Loc.GetString(perk.Description.Value));
+            else
+                PerkDescription.SetMessage(string.Empty);
+
+            UpdatePerkDescriptionWidth();
+        }
+
+        private void UpdatePerkDescriptionWidth()
+        {
+            if (PerkDescription == null)
+                return;
+
+            PerkDescription.MaxWidth = Math.Max(0, OriginScroll.Width - 20);
+        }
+
+        private FormattedMessage? BuildRoleTooltip(
+            string? description,
+            Dictionary<ProtoId<StatPrototype>, int>? stats = null,
+            IReadOnlyCollection<ProtoId<PerkPrototype>>? perks = null)
+        {
+            var hasDescription = !string.IsNullOrEmpty(description);
+            var hasStats = stats is { Count: > 0 };
+            var hasPerks = perks is { Count: > 0 };
+
+            if (!hasDescription && !hasStats && !hasPerks)
+                return null;
+
+            var msg = new FormattedMessage();
+
+            if (hasDescription)
+                msg.AddText(description!);
+
+            if (hasStats)
+            {
+                if (hasDescription)
+                {
+                    msg.PushNewline();
+                    msg.PushNewline();
+                }
+
+                msg.PushColor(new Color(0.55f, 0.7f, 1f));
+                msg.AddText(Loc.GetString("character-info-stats-header"));
+                msg.Pop();
+
+                foreach (var (statId, delta) in stats!)
+                {
+                    if (!_prototypeManager.TryIndex(statId, out StatPrototype? stat))
+                        continue;
+
+                    msg.PushNewline();
+                    msg.PushColor(stat.Color);
+                    msg.AddText(Loc.GetString(stat.Name));
+                    msg.Pop();
+                    msg.AddText(" ");
+                    msg.PushColor(delta >= 0 ? Color.FromHex("#7ee787") : Color.FromHex("#ff7b72"));
+                    msg.AddText(delta >= 0 ? $"+{delta}" : delta.ToString());
+                    msg.Pop();
+                }
+            }
+
+            if (hasPerks)
+            {
+                msg.PushNewline();
+                msg.PushNewline();
+
+                msg.PushColor(new Color(0.85f, 0.7f, 0.2f));
+                msg.AddText(Loc.GetString("character-info-perks-label"));
+                msg.Pop();
+
+                foreach (var perkId in perks!)
+                {
+                    if (!_prototypeManager.TryIndex(perkId, out PerkPrototype? perk))
+                        continue;
+
+                    msg.PushNewline();
+                    msg.PushColor(new Color(0.85f, 0.8f, 0.65f));
+                    msg.AddText($"- {Loc.GetString(perk.Name)}");
+                    msg.Pop();
+                }
+            }
+
+            return msg;
+        }
+        // Ares-tweak end
+
         public void RefreshAntags()
         {
             AntagList.RemoveAllChildren();
@@ -728,7 +1005,8 @@ namespace Content.Client.Lobby.UI
 
                 var title = Loc.GetString(antag.Name);
                 var description = Loc.GetString(antag.Objective);
-                selector.Setup(items, title, 250, description, guides: antag.Guides);
+                selector.Setup(items, title, 250, description, guides: antag.Guides,
+                    formattedTooltip: BuildRoleTooltip(description, perks: antag.Perks));
                 selector.Select(Profile?.AntagPreferences.Contains(antag.ID) == true ? 0 : 1);
 
                 if (!_requirements.IsAllowed(
@@ -875,6 +1153,8 @@ namespace Content.Client.Lobby.UI
             RefreshJobs();
             RefreshLoadouts();
             RefreshSpecies();
+            RefreshOrigins(); // Ares-tweak
+            RefreshPerks(); // Ares-tweak
             RefreshTraits();
             RefreshFlavorText();
             ReloadPreview();
@@ -1021,7 +1301,8 @@ namespace Content.Client.Lobby.UI
                     };
                     var jobIcon = _prototypeManager.Index(job.Icon);
                     icon.Texture = _sprite.Frame0(jobIcon.Icon);
-                    selector.Setup(items, job.LocalizedName, 200, job.LocalizedDescription, icon, job.Guides);
+                    selector.Setup(items, job.LocalizedName, 200, job.LocalizedDescription, icon, job.Guides,
+                    BuildRoleTooltip(job.LocalizedDescription, job.Stats, job.Perks));
 
                     if (!_requirements.IsAllowed(job, (HumanoidCharacterProfile?) _preferencesManager.Preferences?.SelectedCharacter, out var reason))
                     {

@@ -4,6 +4,7 @@ using Content.Server.Chat.Managers;
 using Content.Shared.IdentityManagement;
 using Content.Goobstation.Common.Examine; // Goobstation Change
 using Content.Goobstation.Common.CCVar; // Goobstation Change
+using Content.Shared._Ares.Sanity.Components; // Ares-tweak
 using Content.Shared._Goobstation.Heretic.Components; // Goobstation Change
 using Content.Shared.Chat;
 using Content.Shared.Examine;
@@ -129,6 +130,10 @@ public sealed class ExaminableCharacterSystem : EntitySystem
         message.Pop();
         if (showExamine && _netConfigManager.GetClientCVar(actorComponent.PlayerSession.Channel, GoobCVars.LogInChat))
         {
+            // Ares-tweak start
+            if (IsFabricHallucinated(args.Examiner, uid))
+                message = BuildFabricMaskedMessage();
+            // Ares-tweak end
             _chatManager.ChatMessageToOne(ChatChannel.Emotes, message.ToString(), ToMarkup(message), EntityUid.Invalid, false, actorComponent.PlayerSession.Channel, recordReplay: false, canCoalesce: false); // Goobstation Edit
         }
     }
@@ -163,9 +168,41 @@ public sealed class ExaminableCharacterSystem : EntitySystem
             AddLine(message);
             message.Pop();
 
+            // Ares-tweak start
+            if (IsFabricHallucinated(args.Examiner, args.Examined))
+                message = BuildFabricMaskedMessage();
+            // Ares-tweak end
+
             _chatManager.ChatMessageToOne(ChatChannel.Emotes, message.ToString(), ToMarkup(message), EntityUid.Invalid, false, actorComponent.PlayerSession.Channel, recordReplay: false, canCoalesce: false); // Goobstation Edit
         }
     }
+
+    // Ares-tweak start
+    /// <summary>
+    /// True if the examiner is hallucinating the examined entity during The Fabric breakdown.
+    /// </summary>
+    private bool IsFabricHallucinated(EntityUid examiner, EntityUid examined)
+    {
+        return TryComp<TheFabricBreakdownComponent>(examiner, out var fabric)
+            && fabric.Targets.Contains(GetNetEntity(examined));
+    }
+
+    /// <summary>
+    /// Masked examine chat box shown instead of the real name/description while hallucinating.
+    /// </summary>
+    private FormattedMessage BuildFabricMaskedMessage()
+    {
+        FormattedMessage message = new();
+        message.PushTag(new MarkupNode("examineborder", null, null)); // border
+        message.PushNewline();
+        message.AddMarkupPermissive($"[color=DarkGray][font size=11][bold]{Loc.GetString("sanity-fabric-unknown-name")}[/bold][/font][/color]");
+        message.PushNewline();
+        message.AddMarkupPermissive($"[color=DarkGray][font size=10]{Loc.GetString("sanity-fabric-hidden-flavor")}[/font][/color]");
+        message.PushNewline();
+        message.Pop();
+        return message;
+    }
+    // Ares-tweak end
 
     private void AddLine(FormattedMessage message)
     {

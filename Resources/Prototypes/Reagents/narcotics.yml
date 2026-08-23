@@ -15,6 +15,18 @@
     Poison:
       # Main effects
       effects:
+      # Ares-tweak start
+      - !type:StatModifier
+        stat: Toughness
+        amount: 13
+        time: 2
+        source: BattleStim
+      - !type:StatModifier
+        stat: Cognition
+        amount: -8
+        time: 2
+        source: BattleStim
+      # Ares-tweak end
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Goobstation - Yowie
@@ -50,6 +62,10 @@
     Narcotic:
       effects:
       # Main effects
+      # Ares-tweak start
+      - !type:AdjustSanity
+        amount: -1
+      # Ares-tweak end
       - !type:MovementSpeedModifier
         walkSpeedModifier: 1.20
         sprintSpeedModifier: 1.20
@@ -364,6 +380,20 @@
   metabolisms:
     Narcotic:
       effects:
+      # Ares-tweak start
+      - !type:AdjustSanity
+        amount: 0.5
+      - !type:HealthChange # Chaingun Smoker perk
+        conditions:
+        - !type:PerkCondition
+          perk: ChaingunSmoker
+        damage:
+          groups:
+            Brute: -2
+            Burn: -2
+          types:
+            Poison: -2
+      # Ares-tweak end
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition # Goobstation - Yowie

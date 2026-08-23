@@ -34,6 +34,10 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Reagent;
 using System.Globalization;
 using Content.Goobstation.Shared.Disease.Components;
+// Ares-tweak start
+using Content.Shared._Ares.Stats;
+using Robust.Client.Player;
+// Ares-tweak end
 
 namespace Content.Client.HealthAnalyzer.UI
 {
@@ -47,6 +51,10 @@ namespace Content.Client.HealthAnalyzer.UI
 
         // Shitmed Change Start
         private readonly WoundSystem _wound;
+        // Ares-tweak start
+        private readonly IPlayerManager _playerManager;
+        private readonly AresStatsSystem _stats;
+        // Ares-tweak end
         public event Action<TargetBodyPart?, EntityUid>? OnBodyPartSelected;
         public event Action<HealthAnalyzerMode, EntityUid>? OnModeChanged;
         private EntityUid _spriteViewEntity;
@@ -69,6 +77,10 @@ namespace Content.Client.HealthAnalyzer.UI
             _cache = dependencies.Resolve<IResourceCache>();
             // Shitmed Change Start
             _wound = _entityManager.System<WoundSystem>();
+            // Ares-tweak start
+            _playerManager = dependencies.Resolve<IPlayerManager>();
+            _stats = _entityManager.System<AresStatsSystem>();
+            // Ares-tweak end
             _bodyPartControls = new Dictionary<TargetBodyPart, TextureButton>
             {
                 { TargetBodyPart.Head, HeadButton },
@@ -244,6 +256,11 @@ namespace Content.Client.HealthAnalyzer.UI
 
             ConditionsListContainer.RemoveAllChildren();
 
+            // Ares-tweak start: biology skill check
+            if (TryShowLowSkillMessage())
+                return;
+            // Ares-tweak end
+
             // Goob start - low blood alert
             if (msg.BloodLevelLow)
                 ConditionsListContainer.AddChild(new RichTextLabel
@@ -345,6 +362,9 @@ namespace Content.Client.HealthAnalyzer.UI
 
             ConditionsListContainer.RemoveAllChildren();
             GroupsContainer.RemoveAllChildren();
+            // Ares-tweak: biology skill check
+            if (TryShowLowSkillMessage())
+                return;
             foreach (var (organ, data) in msg.Organs)
             {
                 var organEnt = _entityManager.GetEntity(organ);
@@ -407,6 +427,28 @@ namespace Content.Client.HealthAnalyzer.UI
                 Margin = new Thickness(0, 4),
             });
         }
+
+        // Ares-tweak start
+        private bool TryShowLowSkillMessage()
+        {
+            var playerEntity = _playerManager.LocalEntity;
+            if (playerEntity == null)
+                return false;
+
+            var biologyLevel = _stats.GetStatLevel(playerEntity.Value, new ProtoId<StatPrototype>("Biology"));
+            if (biologyLevel >= 40)
+                return false;
+
+            ConditionsListContainer.RemoveAllChildren();
+            ConditionsListContainer.AddChild(new Label
+            {
+                Text = Loc.GetString("ares-healthanalyzer-low-skill"),
+                Margin = new Thickness(0, 4),
+                FontColorOverride = Color.Red,
+            });
+            return true;
+        }
+        // Ares-tweak end
 
         private bool TryGetEntityName(NetEntity ent, out string name)
         {

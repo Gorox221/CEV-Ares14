@@ -1220,6 +1220,16 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("oocnotes");
 
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("origin");
+
+                    b.Property<string>("Perk")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("perk");
+
                     b.Property<int>("PreferenceId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("preference_id");

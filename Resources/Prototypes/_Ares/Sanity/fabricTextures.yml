@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: fabricTexture
+  id: TheFabricGhost
+  rsiPath: _Goobstation/Mobs/Demons/spookyghost/ghost1.rsi
+  rsiState: spookyghost
+
+- type: fabricTexture
+  id: TheFabricCurse
+  rsiPath: _Goobstation/Mobs/Demons/curse.rsi
+  rsiState: curse

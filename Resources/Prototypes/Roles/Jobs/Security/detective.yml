@@ -13,6 +13,7 @@
   icon: "JobIconDetective"
   supervisors: job-supervisors-hos
   canBeAntag: false
+  perks: [ Survivor ]
   guides: # goobstation
   - Forensics
   - Security

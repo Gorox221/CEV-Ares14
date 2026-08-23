@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from CEV-Eris https://github.com/discordia-space/CEV-Eris/commit/3df49479e3ec9c6b5ce4c8ae8fb6b1331dc24a53.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "sanity5",
+      "delays": [
+        [
+            0.5,
+            0.5
+        ]
+      ]
+    },
+    {
+      "name": "sanity4"
+    },
+    {
+      "name": "sanity3"
+    },
+    {
+      "name": "sanity2"
+    },
+    {
+      "name": "sanity1"
+    },
+    {
+      "name": "sanity0"
+    }
+  ]
+}

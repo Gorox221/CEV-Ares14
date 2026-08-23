@@ -32,6 +32,7 @@ using Content.Shared.EntityEffects;
 using Content.Shared.Kitchen.Components;
 using Content.Shared.Labels.Components;
 using Content.Shared.Labels.Components;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Server.Botany.Systems;
 
@@ -53,6 +54,7 @@ public sealed class PlantHolderSystem : EntitySystem
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly SharedEntityEffectsSystem _entityEffects = default!;
+    [Dependency] private readonly AresStatsSystem _stats = default!; // Ares-tweak
 
     public const float HydroponicsSpeedMultiplier = 1f;
     public const float HydroponicsConsumptionMultiplier = 2f;
@@ -295,7 +297,12 @@ public sealed class PlantHolderSystem : EntitySystem
                 return;
             }
 
-            component.Health -= (_random.Next(3, 5) * 10);
+            // Ares-tweak start
+            var sampleDamage = _random.Next(3, 5) * 10;
+            var biologyLevel = _stats.GetStatLevel(args.User, new ProtoId<StatPrototype>("Biology"));
+            sampleDamage = Math.Max(5, sampleDamage - biologyLevel);
+            component.Health -= sampleDamage;
+            // Ares-tweak end
 
             float? healthOverride;
             if (component.Harvest)

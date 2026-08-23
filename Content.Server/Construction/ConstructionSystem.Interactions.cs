@@ -292,7 +292,19 @@ namespace Content.Server.Construction
                     {
                         var doAfterEv = new ConstructionInteractDoAfterEvent(EntityManager, interactUsing);
 
-                        var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, step.DoAfter, doAfterEv, uid, uid, interactUsing.Used)
+                        // Ares-tweak start
+                        var doAfterTime = step.DoAfter;
+                        if (construction != null)
+                        {
+                            var category = GetCategoryForGraph(construction.Graph);
+                            if (IsCraftingCategory(category))
+                                doAfterTime = GetCognitionCraftTime(interactUsing.User, doAfterTime);
+                            else if (IsMechanicalCategory(category))
+                                doAfterTime = GetMechanicalCraftTime(interactUsing.User, doAfterTime);
+                        }
+
+                        var doAfterEventArgs = new DoAfterArgs(EntityManager, interactUsing.User, doAfterTime, doAfterEv, uid, uid, interactUsing.Used)
+                        // Ares-tweak end
                         {
                             BreakOnDamage = false,
                             BreakOnMove = true,

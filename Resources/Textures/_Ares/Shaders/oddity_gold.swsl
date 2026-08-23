@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+light_mode unshaded;
+
+const mediump vec3 goldColor = vec3(1.0, 0.84, 0.32);
+
+void fragment() {
+    highp vec4 sprite = zTexture(UV);
+    if (sprite.a == 0.0) {
+        discard;
+    }
+
+    mediump float luma = dot(sprite.rgb, vec3(0.299, 0.587, 0.114));
+    mediump vec3 golden = mix(sprite.rgb, luma * goldColor, 0.35);
+
+    mediump float band = pow(0.5 + 0.5 * sin((UV.x + UV.y) * 6.0 - TIME * 1.6), 5.0);
+    mediump float pulse = 0.6 + 0.4 * sin(TIME * 2.0);
+
+    COLOR = vec4(golden + goldColor * band * 0.45 * pulse, sprite.a);
+}

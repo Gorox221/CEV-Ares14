@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  parent: BaseObjective
+  id: DesireEatObjective
+  components:
+  - type: Objective
+    icon:
+      sprite: Objects/Consumable/Food/burger.rsi
+      state: plain
+    difficulty: 0.1
+    issuer: objective-issuer-desires
+  - type: DesireCondition
+    desireType: Eat
+    behavior: !type:EatDesireBehavior
+      groups:
+      - id: DessertAndPastry
+        recipes: [Dessert, Cake, BarsAndCookies]
+      - id: Breakfast
+        recipes: [Breakfast]
+      - id: Pasta
+        recipes: [Pasta]
+      - id: PieAndTart
+        recipes: [Pie]
+      - id: Pizza
+        recipes: [Pizza]
+      - id: Salad
+        recipes: [Salad]
+      - id: SoupAndStew
+        recipes: [Soup]
+      - id: Bread
+        recipes: [Breads]
+
+- type: entity
+  parent: BaseObjective
+  id: DesireDrinkObjective
+  components:
+  - type: Objective
+    icon:
+      sprite: Objects/Consumable/Drinks/beer.rsi
+      state: icon
+    difficulty: 0.1
+    issuer: objective-issuer-desires
+  - type: DesireCondition
+    desireType: Drink
+    behavior: !type:DrinkDesireBehavior
+
+- type: entity
+  parent: BaseObjective
+  id: DesireSmokeObjective
+  components:
+  - type: Objective
+    icon:
+      sprite: Objects/Consumable/Smokeables/Cigarettes/cigarette.rsi
+      state: unlit-icon
+    difficulty: 0.1
+    issuer: objective-issuer-desires
+  - type: DesireCondition
+    desireType: Smoke
+    behavior: !type:SmokeDesireBehavior
+      reagents: [Nicotine]

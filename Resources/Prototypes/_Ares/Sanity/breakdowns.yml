@@ -1,0 +1,101 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: sanityBreakdown
+  id: Stalwart
+  name: sanity-breakdown-stalwart-name
+  popup: sanity-breakdown-stalwart-popup
+  weight: 10
+  positive: true
+  behavior: !type:StalwartBreakdownBehavior
+    sanityReturn: 100
+    healing:
+      types:
+        Blunt: -25
+        Heat: -25
+        Asphyxiation: -45
+
+- type: sanityBreakdown
+  id: SelfHarm
+  name: sanity-breakdown-selfharm-name
+  popup: sanity-breakdown-selfharm-popup
+  weight: 90
+  behavior: !type:SelfHarmBreakdownBehavior
+    sanityReturn: 25
+    duration: 60
+    interval: 2.5
+    damage:
+      types:
+        Blunt: 5
+    emotes:
+      - SelfPeelSkin
+      - SelfBiteLimb
+      - SelfBiteTongue
+    emoteInterval: 2
+    emoteChance: 0.5
+
+- type: sanityBreakdown
+  id: LessonLearnt
+  name: sanity-breakdown-lessonlearnt-name
+  popup: sanity-breakdown-lessonlearnt-popup
+  weight: 10
+  positive: true
+  behavior: !type:LessonLearntBreakdownBehavior
+    sanityReturn: 100
+
+- type: sanityBreakdown
+  id: AbsoluteConcentration
+  name: sanity-breakdown-absoluteconcentration-name
+  popup: sanity-breakdown-absoluteconcentration-popup
+  weight: 10
+  positive: true
+  behavior: !type:AbsoluteConcentrationBreakdownBehavior
+    duration: 1200
+
+- type: sanityBreakdown
+  id: Hysteric
+  name: sanity-breakdown-hysteric-name
+  popup: sanity-breakdown-hysteric-popup
+  weight: 90
+  behavior: !type:HystericBreakdownBehavior
+    sanityReturn: 50
+    duration: 180
+    knockdownTicks: 4
+    staminaInterval: 2
+    staminaDamage: 25
+    emotes:
+      - Scream
+      - Crying
+    emoteInterval: 2
+    emoteChance: 0.5
+
+- type: sanityBreakdown
+  id: TheFabric
+  name: sanity-breakdown-fabric-name
+  popup: sanity-breakdown-fabric-popup
+  weight: 90
+  behavior: !type:TheFabricBreakdownBehavior
+    duration: 180
+    range: 12
+    updateInterval: 1
+    textures:
+      - TheFabricGhost
+      - TheFabricCurse
+
+- type: sanityBreakdown
+  id: DownwardSpiral
+  name: sanity-breakdown-downwardspiral-name
+  popup: sanity-breakdown-downwardspiral-popup
+  weight: 90
+  behavior: !type:DownwardSpiralBreakdownBehavior
+    sanityReturn: 50
+    maxSanityPenalty: 20
+
+- type: sanityBreakdown
+  id: Herald
+  name: sanity-breakdown-herald-name
+  popup: sanity-breakdown-herald-popup
+  weight: 60
+  behavior: !type:HeraldBreakdownBehavior
+    sanityReturn: 45
+    duration: 300
+    quoteInterval: 10

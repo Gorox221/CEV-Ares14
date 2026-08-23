@@ -52,6 +52,8 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Content.Shared._ADT.CCVar;
+using Content.Shared._Ares.Origins; // Ares-tweak
+using Content.Shared._Ares.Perks; // Ares-tweak
 using Content.Shared._ADT.CharecterFlavor;
 using Content.Shared.CCVar;
 using Content.Shared.Dataset;
@@ -156,6 +158,14 @@ namespace Content.Shared.Preferences
         [DataField] // Goob Station - Barks
         public ProtoId<BarkPrototype> BarkVoice { get; set; } = SharedHumanoidAppearanceSystem.DefaultBarkVoice; // Goob Station - Barks
 
+        // Ares-tweak start
+        [DataField]
+        public ProtoId<OriginPrototype> Origin { get; set; } = string.Empty;
+
+        [DataField]
+        public ProtoId<PerkPrototype> Perk { get; set; } = string.Empty;
+        // Ares-tweak end
+
         [DataField]
         public int Age { get; set; } = 18;
 
@@ -230,9 +240,11 @@ namespace Content.Shared.Preferences
             ProtoId<BarkPrototype> barkVoice, // Goob Station - Barks
             //ADT-tweak-start
             string oocNotes,
-            string headshotUrl
-            )
+            string headshotUrl,
             //ADT-tweak-end
+            ProtoId<OriginPrototype> origin, // Ares-tweak
+            ProtoId<PerkPrototype> perk // Ares-tweak
+            )
         {
             Name = name;
             FlavorText = flavortext;
@@ -254,6 +266,8 @@ namespace Content.Shared.Preferences
             OOCNotes = oocNotes;
             HeadshotUrl = headshotUrl;
             // ADT end
+            Origin = origin; // Ares-tweak
+            Perk = perk; // Ares-tweak
 
             var hasHighPrority = false;
             foreach (var (key, value) in _jobPriorities)
@@ -290,9 +304,11 @@ namespace Content.Shared.Preferences
                 other.BarkVoice, // Goob Station - Barks
                 // ADT start
                 other.OOCNotes,
-                other.HeadshotUrl
-                )
+                other.HeadshotUrl,
                 // ADT end
+                other.Origin, // Ares-tweak
+                other.Perk // Ares-tweak
+                )
         {
         }
 
@@ -459,6 +475,18 @@ namespace Content.Shared.Preferences
         }
         // Goob Station - Barks End
 
+        // Ares-tweak start
+        public HumanoidCharacterProfile WithOrigin(ProtoId<OriginPrototype> origin)
+        {
+            return new(this) { Origin = origin };
+        }
+
+        public HumanoidCharacterProfile WithPerk(ProtoId<PerkPrototype> perk)
+        {
+            return new(this) { Perk = perk };
+        }
+        // Ares-tweak end
+
         public HumanoidCharacterProfile WithJobPriorities(IEnumerable<KeyValuePair<ProtoId<JobPrototype>, JobPriority>> jobPriorities)
         {
             var dictionary = new Dictionary<ProtoId<JobPrototype>, JobPriority>(jobPriorities);
@@ -621,6 +649,8 @@ namespace Content.Shared.Preferences
             if (Height != other.Height) return false; // Goobstation: port EE height/width sliders
             if (Width != other.Width) return false; // Goobstation: port EE height/width sliders
             if (BarkVoice != other.BarkVoice) return false; // Goob Station - Barks
+            if (Origin != other.Origin) return false; // Ares-tweak
+            if (Perk != other.Perk) return false; // Ares-tweak
             if (PreferenceUnavailable != other.PreferenceUnavailable) return false;
             if (SpawnPriority != other.SpawnPriority) return false;
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
@@ -727,6 +757,16 @@ namespace Content.Shared.Preferences
 
             var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
 
+            // Ares-tweak start
+            var origin = Origin;
+            if (!prototypeManager.HasIndex<OriginPrototype>(origin))
+                origin = string.Empty;
+
+            var perk = Perk;
+            if (!prototypeManager.TryIndex<PerkPrototype>(perk, out var perkProto) || !perkProto.RoundStartSelectable)
+                perk = string.Empty;
+            // Ares-tweak end
+
             //ADT-tweak-start
             string oocNotes = OOCNotes; // Initialize with the property value
             if (oocNotes.Length > maxFlavorTextLength)
@@ -795,6 +835,8 @@ namespace Content.Shared.Preferences
             Sex = sex;
             Gender = gender;
             Appearance = appearance;
+            Origin = origin; // Ares-tweak
+            Perk = perk; // Ares-tweak
             SpawnPriority = spawnPriority;
 
             _jobPriorities.Clear();
@@ -922,6 +964,8 @@ namespace Content.Shared.Preferences
             hashCode.Add((int) Gender);
             hashCode.Add(Appearance);
             hashCode.Add(BarkVoice); // Goob Station - Barks
+            hashCode.Add(Origin); // Ares-tweak
+            hashCode.Add(Perk); // Ares-tweak
             hashCode.Add((int) SpawnPriority);
             hashCode.Add((int) PreferenceUnavailable);
             return hashCode.ToHashCode();

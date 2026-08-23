@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using Content.Client.Administration.Managers;
+using Content.Client._Ares.Sanity.Systems; // Ares-tweak
 using Content.Client.Chat;
 using Content.Client.Chat.Managers;
 using Content.Client.Chat.TypingIndicator;
@@ -71,6 +72,7 @@ public sealed partial class ChatUIController : UIController
     [UISystemDependency] private readonly TransformSystem? _transform = default;
     [UISystemDependency] private readonly MindSystem? _mindSystem = default!;
     [UISystemDependency] private readonly RoleCodewordSystem? _roleCodewordSystem = default!;
+    [UISystemDependency] private readonly FabricBreakdownClientSystem? _fabric = default; // Ares - Fabric breakdown chat garble
 
     private static readonly ProtoId<ColorPalettePrototype> ChatNamePalette = "ChatNames";
     private string[] _chatNameColors = default!;
@@ -870,6 +872,7 @@ public sealed partial class ChatUIController : UIController
     private void OnChatMessage(MsgChatMessage message)
     {
         var msg = message.Message;
+        GarbleIfFabric(msg); // Ares-tweak
         ProcessChatMessage(msg);
 
         if ((msg.Channel & ChatChannel.AdminRelated) == 0 ||
@@ -878,6 +881,29 @@ public sealed partial class ChatUIController : UIController
             _replayRecording.RecordClientMessage(msg);
         }
     }
+
+    // Ares-tweak start
+    private void GarbleIfFabric(ChatMessage msg)
+    {
+        if (_fabric is not { } fabric || !fabric.HasFabric())
+            return;
+
+        if (msg.SenderEntity == default)
+            return;
+
+        if (_player.LocalSession?.AttachedEntity is not { } local)
+            return;
+
+        if (msg.SenderEntity == _ent.GetNetEntity(local))
+            return;
+
+        if ((msg.Channel & (ChatChannel.Local | ChatChannel.Whisper | ChatChannel.Radio | ChatChannel.Emotes | ChatChannel.Dead | ChatChannel.Telepathic | ChatChannel.CollectiveMind)) == 0)
+            return;
+
+        msg.Message = fabric.Garble(msg.Message) ?? msg.Message;
+        msg.WrappedMessage = fabric.Garble(msg.WrappedMessage) ?? msg.WrappedMessage;
+    }
+    // Ares-tweak end
 
     public void ProcessChatMessage(ChatMessage msg, bool speechBubble = true)
     {

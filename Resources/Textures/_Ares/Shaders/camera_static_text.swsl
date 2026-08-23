@@ -1,0 +1,21 @@
+light_mode unshaded;
+
+uniform lowp float scale;
+uniform lowp float speed;
+
+void fragment() {
+    highp vec4 sprite = zTexture(UV);
+
+    if (sprite.a == 0.0) {
+        discard;
+    }
+
+    // Per-pixel monochrome noise that shuffles over time, so it maps onto
+    // every letter rather than a few large coarsely-tiled cells.
+    highp vec2 coords = UV * scale + floor(TIME * speed);
+    highp vec2 value = zRandom(coords);
+    highp float grain = fract(value.x * 2.0 + value.y);
+
+    highp float intensity = 0.2 + 0.8 * grain;
+    COLOR = vec4(vec3(intensity * 0.45), sprite.a);
+}

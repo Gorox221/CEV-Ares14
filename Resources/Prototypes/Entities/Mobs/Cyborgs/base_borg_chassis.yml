@@ -327,6 +327,11 @@
   parent: BaseBorgChassisNotIonStormable
   id: BaseBorgChassis
   components:
+  # Ares-tweak start
+  - type: ToolActionFail
+    stat: Mechanical
+    baseFailChance: 60
+  # Ares-tweak end
   - type: IonStormTarget
 
 - type: entity

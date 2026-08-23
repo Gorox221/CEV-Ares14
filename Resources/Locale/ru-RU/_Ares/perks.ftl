@@ -1,0 +1,62 @@
+perk-paper-worm-name = Бумажный Червь
+perk-paper-worm-desc = −10 ко всем характеристикам, +20% к шансу положительных срывов
+
+perk-rejected-genius-name = Отвергнутый Гений
+perk-rejected-genius-desc = −20 к максимальному рассудку, 0% шанс положительных срывов, озарение ×1.5
+
+perk-freelancer-name = Фрилансер
+perk-freelancer-desc = Высшая характеристика −10, остальные +4
+
+perk-nihilist-name = Нигилист
+perk-nihilist-desc = +10% к шансу положительных срывов, +20% к шансу отрицательных. Смерть на ваших глазах вызывает случайный эффект: отсутствие урона по рассудку, ±5 к Когнитивности или превращение урона по рассудку в его восстановление
+
+perk-nihilist-witness-zero = Смерть на ваших глазах оставила вас равнодушным.
+perk-nihilist-witness-cognition-up = Смерть на ваших глазах обострила ваш разум.
+perk-nihilist-witness-cognition-down = Смерть на ваших глазах подкосила ваш разум.
+perk-nihilist-witness-recover = Смерть на ваших глазах странно успокоила вас.
+
+perk-moralist-name = Моралист
+perk-moralist-desc = Нахождение рядом со здравомыслящими людьми ускоряет получение озарения и восстановления рассудка на 2% за каждого здравомыслящего рядом. Нахождение рядом с раненым или сумасшедшим человеком будет понижать ваш рассудок.
+
+perk-survivor-name = Выживший
+perk-survivor-desc = Урон рассудку от смерти на ваших глазах уменьшен вдвое.
+
+perk-fast-walker-name = Быстроход
+perk-fast-walker-desc = Скорость бега увеличена на 33%.
+
+perk-ear-of-silver-name = Серебряное ухо
+perk-ear-of-silver-desc = Дальность распознования шепота увеличина на два метра.
+
+perk-gunslinger-name = Стрелок
+perk-gunslinger-desc = Скорострельность увеличена на 33% при стрельбе из одноручного оружия.
+
+perk-terrible-fate-name = Ужасная Судьба
+perk-terrible-fate-desc = Когда вы умираете, все свидетели вашей смерти теряют рассудок до нуля. Бдительность свидетеля снижает шанс потери рассудка.
+
+perk-unfinished-delivery-name = Незавершённая Доставка
+perk-unfinished-delivery-desc = С шансом 33% при воскрешает при смерти.
+
+perk-lungs-of-iron-name = Железные Лёгкие
+perk-lungs-of-iron-desc = Вдвое меньше урона от удушья.
+
+perk-blood-of-lead-name = Свинцовая Кровь
+perk-blood-of-lead-desc = Вдвое меньше урона от отравления.
+
+perk-charming-personality-name = Обаятельная Личность
+perk-charming-personality-desc = Находящиеся рядом люди восстанавливают +2 рассудка.
+
+perk-horrible-deeds-name = Ужасные Деяния
+perk-horrible-deeds-desc = Находящиеся рядом люди теряют −2 рассудка.
+
+perk-chaingun-smoker-name = Пулемётчик-Курильщик
+perk-chaingun-smoker-desc = Никотин постепенно лечит вас от механических и физических повреждений, а также от отравления.
+
+perk-fast-fingers-name = Быстрые Пальцы
+perk-fast-fingers-desc = Вы можете незаметно воровать предметы.
+
+perk-toxic-revenger-name = Токсичный Мститель
+perk-toxic-revenger-desc = Вы источаете миазмы.
+
+perk-absolute-grab-name = Абсолютный Захват
+perk-absolute-grab-desc = Вы можете брать в захват на 1 метр дальше.
+

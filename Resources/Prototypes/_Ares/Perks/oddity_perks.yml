@@ -1,0 +1,133 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: perk
+  id: FastWalker
+  name: perk-fast-walker-name
+  description: perk-fast-walker-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SprintSpeedPerkEffect
+      sprintSpeedMultiplier: 1.33
+
+- type: perk
+  id: EarOfSilver
+  name: perk-ear-of-silver-name
+  description: perk-ear-of-silver-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:WhisperHearingPerkEffect
+      clearRangeExtension: 2
+
+- type: perk
+  id: Gunslinger
+  name: perk-gunslinger-name
+  description: perk-gunslinger-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GunslingerPerkEffect
+      fireRateMultiplier: 1.33
+
+- type: perk
+  id: TerribleFate
+  name: perk-terrible-fate-name
+  description: perk-terrible-fate-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:TerribleFatePerkEffect
+      chance: 1
+
+- type: perk
+  id: UnfinishedDelivery
+  name: perk-unfinished-delivery-name
+  description: perk-unfinished-delivery-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:UnfinishedDeliveryPerkEffect
+      chance: 0.33
+      bruteHeal: 20
+      burnHeal: 20
+      oxyHeal: 100
+      minSleepTicks: 20
+      maxSleepTicks: 30
+
+- type: perk
+  id: LungsOfIron
+  name: perk-lungs-of-iron-name
+  description: perk-lungs-of-iron-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:DamageResistancePerkEffect
+      modifierSetId: PerkLungsOfIron
+
+- type: perk
+  id: BloodOfLead
+  name: perk-blood-of-lead-name
+  description: perk-blood-of-lead-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:DamageResistancePerkEffect
+      modifierSetId: PerkBloodOfLead
+
+- type: perk
+  id: CharmingPersonality
+  name: perk-charming-personality-name
+  description: perk-charming-personality-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SanityAuraPerkEffect
+      change: 2
+
+- type: perk
+  id: HorribleDeeds
+  name: perk-horrible-deeds-name
+  description: perk-horrible-deeds-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:SanityAuraPerkEffect
+      change: -2
+
+- type: perk
+  id: ChaingunSmoker
+  name: perk-chaingun-smoker-name
+  description: perk-chaingun-smoker-desc
+  roundStartSelectable: false
+  isOddity: true
+
+- type: perk
+  id: FastFingers
+  name: perk-fast-fingers-name
+  description: perk-fast-fingers-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:StealthStripPerkEffect
+
+- type: perk
+  id: ToxicRevenger
+  name: perk-toxic-revenger-name
+  description: perk-toxic-revenger-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GasEmissionPerkEffect
+      molesPerSecond: 5
+
+- type: perk
+  id: AbsoluteGrab
+  name: perk-absolute-grab-name
+  description: perk-absolute-grab-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GrabRangePerkEffect
+      rangeExtension: 1
+

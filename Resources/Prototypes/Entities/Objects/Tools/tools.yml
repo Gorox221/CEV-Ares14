@@ -53,6 +53,10 @@
   - type: PhysicalComposition
     materialComposition:
       Steel: 100
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: StaticPrice
     price: 30
   - type: Retractor # Shitmed
@@ -122,6 +126,10 @@
       Steel: 100
   - type: StaticPrice
     price: 30
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: Retractor # Shitmed
     speed: 0.45
   - type: Tending # Shitmed
@@ -184,6 +192,10 @@
       Steel: 100
   - type: StaticPrice
     price: 22
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: GuideHelp
     guides:
     - Construction
@@ -244,6 +256,10 @@
       Plastic: 100
   - type: StaticPrice
     price: 56
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 30
+  # Ares-tweak end
   - type: GuideHelp
     guides:
     - Networking
@@ -363,6 +379,10 @@
         Piercing: 10
     soundHit:
       path: "/Audio/Items/drill_hit.ogg"
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 40
+  # Ares-tweak end
   - type: Tending # Shitmed
     speed: 0.75
   - type: Drill # Shitmed
@@ -540,6 +560,10 @@
     - Screwing
     speedModifier: 1.2 # Kept for future adjustments. Currently 1.2x for balance
     useSound: /Audio/Items/drill_use.ogg
+  # Ares-tweak start
+  - type: ToolQuality
+    quality: 25
+  # Ares-tweak end
   - type: ToolTileCompatible
   - type: MultipleTool
     statusShowBehavior: true

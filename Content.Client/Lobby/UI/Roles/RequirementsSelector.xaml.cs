@@ -83,7 +83,8 @@ public sealed partial class RequirementsSelector : BoxContainer
         int titleSize,
         string? description,
         TextureRect? icon = null,
-        List<ProtoId<GuideEntryPrototype>>? guides = null)
+        List<ProtoId<GuideEntryPrototype>>? guides = null,
+        FormattedMessage? formattedTooltip = null)
     {
         foreach (var (text, value) in items)
         {
@@ -96,6 +97,13 @@ public sealed partial class RequirementsSelector : BoxContainer
         TitleLabel.Text = title;
         TitleLabel.MinSize = new Vector2(titleSize, 0f);
         TitleLabel.ToolTip = description;
+
+        if (formattedTooltip != null)
+        {
+            var tooltip = new Tooltip();
+            tooltip.SetMessage(formattedTooltip);
+            TitleLabel.TooltipSupplier = _ => tooltip;
+        }
 
         if (icon != null)
         {

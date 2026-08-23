@@ -35,6 +35,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Content.Shared.Body.Organ;
+using Content.Shared._Ares.Stats; // Ares-tweak
 
 namespace Content.Shared._Shitmed.Medical.Surgery;
 
@@ -62,6 +63,9 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     [Dependency] private readonly PainSystem _pain = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] protected readonly StatusEffectsSystem Status = default!;
+    // Ares-tweak start
+    [Dependency] private readonly AresStatsSystem _stats = default!;
+    // Ares-tweak end
 
     private EntityQuery<BodyComponent> _bodyQuery;
     private EntityQuery<StackComponent> _stackQuery;
