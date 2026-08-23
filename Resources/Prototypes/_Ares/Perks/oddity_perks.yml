@@ -120,3 +120,14 @@
   effects:
     - !type:GasEmissionPerkEffect
       molesPerSecond: 5
+
+- type: perk
+  id: AbsoluteGrab
+  name: perk-absolute-grab-name
+  description: perk-absolute-grab-desc
+  roundStartSelectable: false
+  isOddity: true
+  effects:
+    - !type:GrabRangePerkEffect
+      rangeExtension: 1
+

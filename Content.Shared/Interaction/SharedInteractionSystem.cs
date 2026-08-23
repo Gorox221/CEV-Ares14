@@ -302,7 +302,10 @@ namespace Content.Shared.Interaction
                 return HandleTryPullObject(session, coords, relay.RelayEntity.Value);
             // </Trauma>
 
-            if (!InRangeUnobstructed(userEntity.Value, uid, popup: true))
+            // Ares-tweak start
+            var pullRange = _pullSystem.GetPullRange(userEntity.Value);
+            if (!InRangeUnobstructed(userEntity.Value, uid, range: pullRange, popup: true))
+            // Ares-tweak end
                 return false;
 
             _pullSystem.TogglePull(uid, userEntity.Value);

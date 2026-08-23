@@ -56,3 +56,7 @@ perk-fast-fingers-desc = Вы можете незаметно воровать �
 
 perk-toxic-revenger-name = Токсичный Мститель
 perk-toxic-revenger-desc = Вы источаете миазмы.
+
+perk-absolute-grab-name = Абсолютный Захват
+perk-absolute-grab-desc = Вы можете брать в захват на 1 метр дальше.
+

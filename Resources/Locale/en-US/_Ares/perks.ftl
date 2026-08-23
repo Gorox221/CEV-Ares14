@@ -56,3 +56,7 @@ perk-fast-fingers-desc = You can steal items unnoticed.
 
 perk-toxic-revenger-name = Toxic Revenger
 perk-toxic-revenger-desc = You exude a miasma.
+
+perk-absolute-grab-name = Absolute Grab
+perk-absolute-grab-desc = You can grab entities from 1 metr further away.
+

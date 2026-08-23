@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Goobstation.Common.Grab;
+using Content.Shared._Ares.Perks; // Ares-tweak
 using Content.Shared._Shitcode.Heretic.Components;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
@@ -694,4 +695,15 @@ public sealed class PullingSystem : EntitySystem
 
         return uid;
     }
+
+    // Ares-tweak start
+    public float GetPullRange(EntityUid uid)
+    {
+        var range = SharedInteractionSystem.InteractionRange;
+        if (TryComp<GrabRangeComponent>(uid, out var grabRange))
+            range += grabRange.RangeExtension;
+
+        return range;
+    }
+    // Ares-tweak end
 }
